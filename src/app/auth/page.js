@@ -17,7 +17,7 @@ export default function AuthCallbackPage() {
     } else {
       router.push("/login");
     }
-  }, [router]);
+  }, []);
 
   return <div>Processing sign-in...</div>;
 }
