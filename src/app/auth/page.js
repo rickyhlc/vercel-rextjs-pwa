@@ -9,7 +9,8 @@ export default function AuthCallbackPage() {
   useEffect(() => {
     const hashParams = new URLSearchParams(window.location.hash.substring(1));
     const token = hashParams.get("id_token");
-
+    console.log(hashParams);
+    console.log(token);
     if (token) {
       localStorage.setItem("googleAuthToken", token);
       router.push("/");
