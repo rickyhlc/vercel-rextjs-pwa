@@ -1,7 +1,7 @@
 {
     "name": "PWA",
     "short_name": "App shot name",
-    "theme_color": "#00ff00",
+    "theme_color": "#24227a",
     "background_color": "#ffffff",
     "display": "standalone",
     "orientation": "any",

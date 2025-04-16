@@ -12,7 +12,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Rickyzero PWA",
+  title: "RickyZero PWA",
   description: "Rickyzero PWA test",
   generator: "Next.js",
   manifest: "/manifest.json",
