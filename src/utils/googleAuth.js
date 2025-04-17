@@ -18,6 +18,6 @@ export async function checkSignInStatus() {
 }
 
 export function signInWithGoogle() {
-  const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${window.location.origin}/auth&response_type=token&scope=email profile openid`;
+  const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${window.location.origin}/auth&response_type=token&scope=openid email profile`;
   window.location.href = authUrl;
 }
