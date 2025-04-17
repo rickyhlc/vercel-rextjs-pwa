@@ -18,6 +18,11 @@ export async function checkSignInStatus() {
 }
 
 export function signInWithGoogle() {
-  const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${window.location.origin}/auth&response_type=id_token&scope=openid email profile`;
+  // Generate a random nonce
+  const nonce = crypto.randomUUID(); // Modern browsers support this
+  localStorage.setItem("googleAuthNonce", nonce); // Store the nonce securely
+
+  // Construct the auth URL with the nonce
+  const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${window.location.origin}/auth&response_type=id_token&scope=openid email profile&nonce=${nonce}`;
   window.location.href = authUrl;
 }
