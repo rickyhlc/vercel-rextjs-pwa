@@ -4,7 +4,7 @@ import withPWA from 'next-pwa';
 const nextConfig = {
     reactStrictMode: true,      // Enable React strict mode for improved error handling
     compiler: {
-        removeConsole: false // process.env.NODE_ENV !== "development"     // Remove console.log in production
+        removeConsole: process.env.NODE_ENV !== "development"     // Remove console.log in production
     }
 };
 
