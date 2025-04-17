@@ -7,7 +7,7 @@ import { checkSignInStatus } from "../utils/googleAuth";
 
 export default function HomePage() {
   const router = useRouter();
-
+console.log("~~~~~~~~~~~~~~~~~root page");
   useEffect(() => {
     async function verifySignIn() {
       const isSignedIn = await checkSignInStatus();
