@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { decodeIdToken } from "../../utils/googleAuth"; // Adjust the import path as necessary
 
 export default function AuthCallbackPage() {
   const router = useRouter();
@@ -11,6 +12,7 @@ export default function AuthCallbackPage() {
     console.log(window.location.hash);
     const hashParams = new URLSearchParams(window.location.hash.substring(1));
     const token = hashParams.get("id_token");
+console.log(decodeIdToken(token));
     if (token) {
       localStorage.setItem("googleAuthToken", token);
       router.push("/");

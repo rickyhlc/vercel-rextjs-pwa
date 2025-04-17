@@ -8,7 +8,7 @@ export async function checkSignInStatus() {
     const response = await fetch("https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" + token);
     if (response.ok) {
       const data = await response.json();
-      return data && data.aud === GOOGLE_CLIENT_ID; // Replace with your Google Client ID
+      return data && data.aud === GOOGLE_CLIENT_ID;
     }
     return false;
   } catch (error) {
@@ -26,3 +26,21 @@ export function signInWithGoogle() {
   const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${window.location.origin}/auth&response_type=id_token&scope=openid email profile&nonce=${nonce}`;
   window.location.href = authUrl;
 }
+
+export function decodeIdToken(idToken) {
+    try {
+      // Split the JWT into its three parts
+      const parts = idToken.split(".");
+      if (parts.length !== 3) {
+        throw new Error("Invalid ID token format");
+      }
+  
+      // Decode the payload (second part of the JWT)
+      const payload = JSON.parse(atob(parts[1]));
+  
+      return payload; // Returns the decoded payload as a JavaScript object
+    } catch (error) {
+      console.error("Error decoding ID token:", error);
+      return null;
+    }
+  }
