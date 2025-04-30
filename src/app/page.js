@@ -1,26 +1,51 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
-import { checkSignInStatus } from "../utils/googleAuth";
+import { getSession, logout } from "@/auth/authAction";
 
 export default function HomePage() {
   const router = useRouter();
-console.log("~~~~~~~~~~~~~~~~~root page");
+
+  const [count, setCount] = useState(0);
+  const [expTime, setExpTime] = useState(0);
   useEffect(() => {
-    async function verifySignIn() {
-      const isSignedIn = await checkSignInStatus();
-      if (!isSignedIn) {
-        router.push("/login");
-      }
+    const getSess = async () => {
+      const exp = (await getSession())?.expires;
+      setExpTime(new Date(exp));
+    } 
+    getSess();
+    return () => {
+      console.log("Cleanup for count:", count);
     }
-    verifySignIn();
+  }, [count]);
+
+  useEffect(() => {
+    if (process.env.NODE_ENV !== "development") {
+      async function verifySignIn() {
+        //TODO
+        // const isSignedIn = await checkSignInStatus();
+        // if (!isSignedIn) {
+        //   router.push("/login");
+        // }
+      }
+      verifySignIn();
+    }
   }, [router]);
 
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
+        <div className="flex gap-8 items-center">
+          <button className="bg-blue-300 text-white px-30 py-2 rounded hover:bg-blue-400 active:bg-blue-500" onClick={() => setCount(count + 1)}>Add 1</button>
+          <div className="">{expTime?.toString()}({count})</div>
+        </div>
+        <div className="flex gap-8 items-center">
+          <button className="bg-blue-800 text-white px-4 py-2 rounded hover:bg-blue-900" onClick={() => router.push("/signIn")}>Go login</button>
+          <button className="bg-blue-300 text-white px-4 py-2 rounded hover:bg-blue-400" onClick={() => logout()}>logout</button>
+        </div>
+
         <Image
           className="dark:invert"
           src="/next.svg"
