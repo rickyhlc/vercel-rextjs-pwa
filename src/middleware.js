@@ -8,7 +8,7 @@ export default async function middleware(request) {
 
     console.log("middleware runs for ", request.url, pathname, origin, new URL("/signIn", request.url));
 
-    if (session) {
+    if (session?.user?.email) {
         if (process.env.VALID_EMAILS.split(",").includes(session.user.email)) {
             return NextResponse.next();
         }
