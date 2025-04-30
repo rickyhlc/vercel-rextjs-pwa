@@ -4,16 +4,16 @@ import { auth } from "./auth/authConfig";
 export default async function middleware(request) {
     const session = await auth();
 
-    const { pathname } = request.nextUrl;
+    const { pathname, origin } = request.nextUrl;
 
-    console.log("middleware runs for ", pathname);
+    console.log("middleware runs for ", request.url, pathname, origin, new URL("/signIn", request.url));
 
     if (session) {
         if (process.env.VALID_EMAILS.split(",").includes(session.user.email)) {
             return NextResponse.next();
         }
     }
-    return NextResponse.redirect(new URL("/signIn", request.url)); 
+    return NextResponse.redirect(new URL(`${origin}/signIn`, request.url)); 
 }
 
 export const config = {
