@@ -12,8 +12,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "RickyZero PWA",
-  description: "Rickyzero PWA test",
+  title: "RickyZero",
+  description: "RickyZero PWA for testing",
   generator: "Next.js",
   manifest: "/manifest.json",
   keywords: ["nextjs", "next14", "pwa", "next-pwa"],

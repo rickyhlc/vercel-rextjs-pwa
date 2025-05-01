@@ -1,8 +1,8 @@
 {
-    "name": "PWA",
-    "short_name": "App shot name",
-    "theme_color": "#24227a",
-    "background_color": "#ffffff",
+    "name": "RickyZero",
+    "short_name": "Zero",
+    "theme_color": "#222222",
+    "background_color": "#000000",
     "display": "standalone",
     "orientation": "any",
     "scope": "/",
