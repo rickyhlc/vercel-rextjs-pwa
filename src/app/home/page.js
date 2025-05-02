@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { getSession, logout } from "@/auth/authAction";
+import { getSession, logout } from "@/actions/auth";
 
 export default function HomePage() {
   const router = useRouter();
@@ -26,8 +26,8 @@ export default function HomePage() {
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
         <div className="flex gap-8 items-center">
           <button className="bg-blue-300 text-white px-30 py-2 rounded hover:bg-blue-400 active:bg-blue-500" onClick={() => setCount(count + 1)}>Add 1</button>
-          <div className="">{expTime?.toString()}({count})</div>
         </div>
+        <div className="">{expTime?.toString()}({count})</div>
         <div className="flex gap-8 items-center">
           <button className="bg-blue-800 text-white px-4 py-2 rounded hover:bg-blue-900" onClick={() => router.push("/signIn")}>Go login</button>
           <button className="bg-blue-300 text-white px-4 py-2 rounded hover:bg-blue-400" onClick={() => logout()}>logout</button>

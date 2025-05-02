@@ -1,6 +1,6 @@
 "use server";
 
-import { auth, handlers, signIn, signOut } from "./authConfig";
+import { auth, handlers, signIn, signOut } from "../authConfig";
 
 export const login = async (options) => {
     await signIn("google", options || { redirectTo: "/" });

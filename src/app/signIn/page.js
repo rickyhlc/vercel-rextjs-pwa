@@ -1,6 +1,6 @@
 "use client";
 
-import { login } from "@/auth/authAction";
+import { login } from "@/actions/auth";
 
 export default function SignInPage() {
   return (
