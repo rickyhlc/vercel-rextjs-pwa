@@ -1,10 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function CameraPage() {
+
+    useEffect(() => {
+        console.log(navigator.mediaDevices.getSupportedConstraints());
+    }, []);
+
     const [source, setSource] = useState(null);
-    const handleCapture = (target) => {;alert("~~~~~~~~~~~~~~~~", target);
+
+    const handleCapture = (target) => {
         if (target.files) {
           if (target.files.length !== 0) {
                 const file = target.files[0];
@@ -18,7 +24,7 @@ export default function CameraPage() {
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
         <label className="rounded bg-blue-600 p-2.5 text-center text-white active:bg-blue-800 hover:bg-blue-700">
             <input
-                accept="image/*"
+                accept="image/*,video/*"
                 className="hidden"
                 type="file"
                 capture="environment"
