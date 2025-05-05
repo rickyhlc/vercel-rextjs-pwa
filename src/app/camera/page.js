@@ -22,19 +22,33 @@ export default function CameraPage() {
 
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-        <label className="rounded bg-blue-600 p-2.5 text-center text-white active:bg-blue-800 hover:bg-blue-700">
-            <input
-                accept="image/*,video/*"
-                className="hidden"
-                type="file"
-                capture="environment"
-                onChange={(e) => handleCapture(e.target)}
-            />
-            <svg className="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 18">
-                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 12.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"/>
-                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 3h-2l-.447-.894A2 2 0 0 0 12.764 1H7.236a2 2 0 0 0-1.789 1.106L5 3H3a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V5a2 2 0 0 0-2-2Z"/>
-            </svg>
-        </label>
+        <div className="flex gap-8 items-center">
+            <label className="rounded bg-blue-600 p-2.5 text-center text-white active:bg-blue-800 hover:bg-blue-700">
+                <input
+                    accept="image/*"
+                    className="hidden"
+                    type="file"
+                    capture="environment"
+                    onChange={(e) => handleCapture(e.target)}
+                />
+                <svg className="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 18">
+                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 12.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"/>
+                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 3h-2l-.447-.894A2 2 0 0 0 12.764 1H7.236a2 2 0 0 0-1.789 1.106L5 3H3a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V5a2 2 0 0 0-2-2Z"/>
+                </svg>
+            </label>
+            <label className="rounded bg-blue-600 p-2.5 text-center text-white active:bg-blue-800 hover:bg-blue-700">
+                <input
+                    accept="video/*"
+                    className="hidden"
+                    type="file"
+                    capture="environment"
+                    onChange={(e) => handleCapture(e.target)}
+                />
+                <svg className="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 6H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1Zm7 11-6-2V9l6-2v10Z"/>
+                </svg>
+            </label>
+        </div>
         {source && <img src={source} alt={"Preview!~"} className=""></img>}
     </div>
   );
