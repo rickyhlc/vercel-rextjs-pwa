@@ -4,7 +4,7 @@ import { useState } from "react";
 
 export default function CameraPage() {
     const [source, setSource] = useState(null);
-    const handleCapture = (target) => {;console.log("~~~~~~~~~~~~~~~~", target);
+    const handleCapture = (target) => {;alert("~~~~~~~~~~~~~~~~", target);
         if (target.files) {
           if (target.files.length !== 0) {
                 const file = target.files[0];
