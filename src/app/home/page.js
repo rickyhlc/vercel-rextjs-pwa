@@ -29,11 +29,13 @@ export default function HomePage() {
         </div>
         <div className="">{expTime?.toString()}({count})</div>
         <div className="flex gap-8 items-center">
-          <button className="bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-800 active:bg-blue-900" onClick={() => router.push("/signIn")}>Login</button>
-          <button className="bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-800 active:bg-blue-900" onClick={() => router.push("/camera")}>Camera</button>
-          <button className="bg-blue-300 text-white px-4 py-2 rounded hover:bg-blue-400 active:bg-blue-500" onClick={() => logout()}>Logout</button>
+          <button className="bg-blue-700 text-white w-20 py-2 rounded hover:bg-blue-800 active:bg-blue-900" onClick={() => router.push("/signIn")}>Login</button>
+          <button className="bg-blue-300 text-white w-20 py-2 rounded hover:bg-blue-400 active:bg-blue-500" onClick={() => logout()}>Logout</button>
         </div>
-
+        <div className="flex gap-8 items-center">
+          <button className="bg-blue-700 text-white w-20 py-2 rounded hover:bg-blue-800 active:bg-blue-900" onClick={() => router.push("/camera")}>Camera</button>
+          <button className="bg-blue-700 text-white w-20 py-2 rounded hover:bg-blue-800 active:bg-blue-900" onClick={() => router.push("/bank")}>Bank</button>
+        </div>
         <Image
           className="dark:invert"
           src="/next.svg"

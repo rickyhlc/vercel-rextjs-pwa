@@ -2,10 +2,16 @@
 
 import { useEffect, useState } from "react";
 
-export default function CameraPage() {
+export default function BankPage() {
 
     useEffect(() => {
-        console.log(navigator.mediaDevices.getSupportedConstraints());
+        const persistStore = async () => {
+            if (navigator.storage && navigator.storage.persist) {
+                const isPersisted = await navigator.storage.persist();
+                console.log("Storage persistence status: ", isPersisted ? "Persisted" : "Not persisted");
+            }
+        }
+        persistStore();
     }, []);
 
     const [source, setSource] = useState(null);
@@ -60,17 +66,7 @@ export default function CameraPage() {
                 </svg>
             </label>
             <label className="rounded bg-blue-600 p-2.5 text-center text-white active:bg-blue-800 hover:bg-blue-700">
-                <input
-                    accept="video/*,image/*"
-                    className="hidden"
-                    type="file"
-                    multiple
-                    onChange={(e) => handleSelect(e.target)}
-                />
-                <svg className="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                    <path fill="currentColor" d="M16 18H8l2.5-6 2 4 1.5-2 2 4Zm-1-8.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0Z"/>
-                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 3v4a1 1 0 0 1-1 1H5m14-4v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1ZM8 18h8l-2-4-1.5 2-2-4L8 18Zm7-8.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0Z"/>
-                </svg>
+
             </label>
         </div>
         {source && <img src={source} alt={"Preview!~"} className=""></img>}
