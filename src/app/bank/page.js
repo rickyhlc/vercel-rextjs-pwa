@@ -16,7 +16,7 @@ import './bank.css';
 export default function BankPage() {
 
   const today = getToday();
-  const [calendarView, setCalendarView] = useState("month");
+  const [calendarView, setCalendarView] = useState("day");
   const [calendarDate, setCalendarDate] = useState(today);  // only for calendar component display
   const [startDate, _setStartDate] = useState(today);  // selected date from calendar
   const [catTypeMap, setCatTypeMap] = useState({});
@@ -118,9 +118,9 @@ export default function BankPage() {
       <div className="flex gap-4 items-center justify-between px-[16px] py-2">
         <div>
           <div className={`${TXT_ZINC} text-xs`}>Expenses in</div>
-          <div className={`${TXT_ZINC} text-2xl`}>{dateFormat(startDate, calendarView === "month" ? "month" : "day")}</div>
+          <div className={`${TXT_ZINC} text-2xl`}>{dateFormat(startDate, calendarView === "month" ? "month" : null)}</div>
         </div>
-        <div className="text-4xl">${summary.total}</div>
+        <div className="text-5xl">${summary.total?.toFixed(1)}</div>
       </div>
       <div>
         {CAT_LIST.map(cat => {
@@ -129,7 +129,7 @@ export default function BankPage() {
               <AccordionSummary expandIcon={<DownArrowIcon colorClass={TXT_ZINC} />}>
                 <div className="flex justify-between items-center w-full pe-4">
                   <span>{cat}</span>
-                  <span>${summary[cat]}</span>
+                  <span>${summary[cat]?.toFixed(1)}</span>
                 </div>
               </AccordionSummary>
               <AccordionDetails>
