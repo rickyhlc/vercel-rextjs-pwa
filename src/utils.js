@@ -8,8 +8,6 @@ export const getToday = () => {
   return today;
 }
 
-export const ONE_DAY = 86400000;
-
 export const TXT_ZINC = "text-zinc-800 dark:text-zinc-200";
 export const BG_ZINC = "bg-zinc-200 dark:bg-zinc-800";
 export const TXT_DISABLED = "disabled:text-zinc-400 dark:disabled:text-zinc-600";

@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState, useRef, useTransition } from "react";
+import { useEffect, useState, useRef, useCallback, useTransition } from "react";
 import { initDB, CAT_LIST } from "./db";
-import { getToday, ONE_DAY, BTN_BLUE, PLAIN_BTN_BLUE, ALL_ZINC, TXT_ZINC } from "@/utils";
+import { getToday, BTN_BLUE, PLAIN_BTN_BLUE, ALL_ZINC, TXT_ZINC } from "@/utils";
 
 import DownArrowIcon from "@/icons/downArrow";
 import EditIcon from "@/icons/edit";
@@ -17,13 +17,20 @@ export default function BankPage() {
 
   const today = getToday();
   const [calendarView, setCalendarView] = useState("month");
-  const [calendarDate, setCalendarDate] = useState(today);
+  const [calendarDate, setCalendarDate] = useState(today);  // only for calendar component display
+  const [startDate, _setStartDate] = useState(today);  // selected date from calendar
   const [catTypeMap, setCatTypeMap] = useState({});
   const [costs, setCosts] = useState([]);
   const dbRef = useRef(null);
 
   const [isPending, startTransition] = useTransition();
   const [newCost, setNewCost] = useState(null);
+
+  const setStartDate = useCallback((date) => {
+    _setStartDate(date);
+    setCalendarDate(date)
+  }, []);
+
 
   // init page display
   useEffect(() => {
@@ -46,7 +53,13 @@ export default function BankPage() {
   }
   async function reloadCostAsync() {
     if (dbRef.current){
-      let data = await dbRef.current.getCosts(calendarDate, calendarDate + ONE_DAY);
+      let endDate = new Date(startDate);
+      if (calendarView === "month") {
+        endDate.setMonth(startDate.getMonth() + 1);
+      } else {
+        endDate.setDate(startDate.getDate() + 1);
+      }
+      let data = await dbRef.current.getCosts(startDate.getTime(),  endDate.getTime());
       if (data) {
         data = Object.groupBy(data, (item) => item.cat);
         setCosts(data);
@@ -135,11 +148,10 @@ export default function BankPage() {
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <MobileDatePicker
                 orientation="portrait"
-                label="Date"
                 disableFuture={true}
-                view={calendarView}
-                views={["day", "month"]}
+                views={calendarView === "month" ? ["year", "month"] : ["year", "month", "day"]}
                 value={calendarDate}
+                onAccept={setStartDate}
                 onChange={setCalendarDate}
                 slotProps={{
                   textField: {
