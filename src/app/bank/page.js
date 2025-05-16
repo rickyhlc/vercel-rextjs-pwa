@@ -2,17 +2,22 @@
 
 import { useEffect, useState, useRef, useTransition } from "react";
 import { initDB, CAT_LIST } from "./db";
-import { getToday, ONE_DAY } from "@/utils";
+import { getToday, ONE_DAY, BTN_BLUE, PLAIN_BTN_BLUE, ALL_ZINC, TXT_ZINC } from "@/utils";
 
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import { TextField, NativeSelect } from '@mui/material';
+import DownArrowIcon from "@/icons/downArrow";
+import EditIcon from "@/icons/edit";
+import AddIcon from "@/icons/add";
+import { Accordion, AccordionSummary, AccordionDetails, TextField, NativeSelect } from '@mui/material';
+import { MobileDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+
+import './bank.css';
 
 export default function BankPage() {
 
   const today = getToday();
-  const [dateRange, setDateRange] = useState([today, today + ONE_DAY]);
+  const [calendarView, setCalendarView] = useState("month");
+  const [calendarDate, setCalendarDate] = useState(today);
   const [catTypeMap, setCatTypeMap] = useState({});
   const [costs, setCosts] = useState([]);
   const dbRef = useRef(null);
@@ -26,7 +31,7 @@ export default function BankPage() {
       dbRef.current = db;
       reloadCostAsync();
       reloadCatTypeAsync().then(map => {
-        setNewCost({ date: today, value: "", cat: CAT_LIST[0], type: map[CAT_LIST[0]]?.[0] });  
+        setNewCost({ date: today.getTime(), value: "", cat: CAT_LIST[0], type: map[CAT_LIST[0]]?.[0] });  
       });
     });
     return () => dbRef.current?.close();
@@ -41,7 +46,7 @@ export default function BankPage() {
   }
   async function reloadCostAsync() {
     if (dbRef.current){
-      let data = await dbRef.current.getCosts(dateRange[0], dateRange[1]);
+      let data = await dbRef.current.getCosts(calendarDate, calendarDate + ONE_DAY);
       if (data) {
         data = Object.groupBy(data, (item) => item.cat);
         setCosts(data);
@@ -65,17 +70,13 @@ export default function BankPage() {
     });
   }
 
-  const DownArrow = <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 9-7 7-7-7"/>
-  </svg>;
-
   return (
-    <div className="flex flex-col justify-between min-h-screen">
+    <div className={`flex flex-col justify-between min-h-screen ${ALL_ZINC}`}>
       <div>
         {CAT_LIST.map(cat => {
           return (
             <Accordion key={cat}>
-              <AccordionSummary expandIcon={DownArrow}>
+              <AccordionSummary expandIcon={<DownArrowIcon colorClass={TXT_ZINC} />}>
                 <div className="flex justify-between items-center w-full pe-4">
                   <span>{cat}</span>
                   <span>${costs[cat]?.reduce((total, item) => total + item.value, 0)}</span>
@@ -83,10 +84,15 @@ export default function BankPage() {
               </AccordionSummary>
               <AccordionDetails>
                 {costs[cat]?.map(item => (
-                  <div key={item.id} className="flex w-full">
-                    <span className="w-30">{new Date(item.date).toLocaleDateString("en-GB")}</span>
-                    <span>{item.type}</span>
-                    <span className="w-20 text-right">${item.value}</span>
+                  <div key={item.id} className="flex">
+                    <span className="grow-0">{new Date(item.date).toLocaleDateString("en-GB")}</span>
+                    <span className="grow">{item.type}</span>
+                    <span className="grow text-right pe-4">${item.value}</span>
+                    <button
+                      className={`rounded-full p-1 ${PLAIN_BTN_BLUE}`}
+                    >
+                      <EditIcon className="w-4 h-4 text-inherit" />
+                    </button>
                   </div>
                 ))}
               </AccordionDetails>
@@ -96,7 +102,7 @@ export default function BankPage() {
       </div>
       {newCost && (
         <div className="min-w-full">
-          <div className="flex gap-8 items-center min-w-full bg-white">
+          <div className="flex gap-8 items-center min-w-full">
             <NativeSelect
               value={newCost.cat}
               disabled={isPending}
@@ -118,7 +124,7 @@ export default function BankPage() {
               {catTypeMap[newCost.cat]?.map(type => <option key={type} value={type}>{type}</option>)}
             </NativeSelect>
           </div>
-          <div className="flex gap-8 items-center min-w-full bg-white">
+          <div className={`flex gap-8 items-center min-w-full ${ALL_ZINC}`}>
             <TextField
               label="$"
               type="number"
@@ -126,12 +132,29 @@ export default function BankPage() {
               onChange={(e) => setNewCost({ ...newCost, value: parseFloat(e.target.value) })}
               disabled={isPending}
             />
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <MobileDatePicker
+                orientation="portrait"
+                label="Date"
+                disableFuture={true}
+                view={calendarView}
+                views={["day", "month"]}
+                value={calendarDate}
+                onChange={setCalendarDate}
+                slotProps={{
+                  textField: {
+                    // fullWidth: true,
+                    // margin: "normal",
+                  },
+                }}
+              />
+            </LocalizationProvider>
             <button
-              className="rounded bg-blue-600 p-2.5 text-white active:bg-blue-800 hover:bg-blue-700 disabled:bg-gray-400"
+              className={`rounded-full p-1.5 ${BTN_BLUE}`}
               disabled={isPending || !newCost.value || !newCost.cat || !newCost.type}
               onClick={handleAdd}
             >
-              Add
+              <AddIcon/>
             </button>
           </div>
         </div>
