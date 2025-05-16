@@ -8,6 +8,22 @@ export const getToday = () => {
   return today;
 }
 
+export const dateFormat = (date, fmt) => {
+  let options = {
+    month: "short"
+  }
+
+  if (fmt === "day") {
+    options.day = "2-digit"
+  } else if (fmt === "month") {
+    options.year = "numeric";
+  } else {
+    options.year = "numeric";
+    options.day = "2-digit";
+  }
+  return date.toLocaleDateString("en-GB", options);
+}
+
 export const TXT_ZINC = "text-zinc-800 dark:text-zinc-200";
 export const BG_ZINC = "bg-zinc-200 dark:bg-zinc-800";
 export const TXT_DISABLED = "disabled:text-zinc-400 dark:disabled:text-zinc-600";

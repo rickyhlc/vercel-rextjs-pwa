@@ -2,12 +2,12 @@
 
 import { useEffect, useState, useRef, useCallback, useTransition } from "react";
 import { initDB, CAT_LIST } from "./db";
-import { getToday, BTN_BLUE, PLAIN_BTN_BLUE, ALL_ZINC, TXT_ZINC } from "@/utils";
+import { getToday, dateFormat, BTN_BLUE, PLAIN_BTN_BLUE, ALL_ZINC, TXT_ZINC } from "@/utils";
 
 import DownArrowIcon from "@/icons/downArrow";
 import EditIcon from "@/icons/edit";
 import AddIcon from "@/icons/add";
-import { Accordion, AccordionSummary, AccordionDetails, TextField, NativeSelect } from '@mui/material';
+import { Accordion, AccordionSummary, AccordionDetails, TextField, NativeSelect, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { MobileDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 
@@ -20,7 +20,8 @@ export default function BankPage() {
   const [calendarDate, setCalendarDate] = useState(today);  // only for calendar component display
   const [startDate, _setStartDate] = useState(today);  // selected date from calendar
   const [catTypeMap, setCatTypeMap] = useState({});
-  const [costs, setCosts] = useState([]);
+  const [costs, _setCosts] = useState([]);
+  const [summary, setSummary] = useState({});
   const dbRef = useRef(null);
 
   const [isPending, startTransition] = useTransition();
@@ -30,6 +31,28 @@ export default function BankPage() {
     _setStartDate(date);
     setCalendarDate(date)
   }, []);
+
+  const selectCalendarView = useCallback((e, view) => {
+    if (view) {
+      setCalendarView(view);
+      if (view === "month") {
+        setStartDate(new Date(startDate.getFullYear(), startDate.getMonth(), 1));
+      } else {
+        // stay on 1st of the month
+        reloadCostAsync();
+      }
+    }
+  }, []);
+
+  const setCosts = (data) => {
+    _setCosts(data);
+    let s = { total: 0 };
+    CAT_LIST.forEach(cat => {
+      s[cat] = data[cat]?.reduce((total, item) => total + item.value, 0) || 0;
+      s.total += s[cat];
+    });
+    setSummary(s); 
+  };
 
   // init page display
   useEffect(() => {
@@ -88,9 +111,17 @@ export default function BankPage() {
       }
     });
   }
+  
 
   return (
     <div className={`flex flex-col justify-between min-h-screen ${ALL_ZINC}`}>
+      <div className="flex gap-4 items-center justify-between px-[16px] py-2">
+        <div>
+          <div className={`${TXT_ZINC} text-xs`}>Expenses in</div>
+          <div className={`${TXT_ZINC} text-2xl`}>{dateFormat(startDate, calendarView === "month" ? "month" : "day")}</div>
+        </div>
+        <div className="text-4xl">${summary.total}</div>
+      </div>
       <div>
         {CAT_LIST.map(cat => {
           return (
@@ -98,13 +129,13 @@ export default function BankPage() {
               <AccordionSummary expandIcon={<DownArrowIcon colorClass={TXT_ZINC} />}>
                 <div className="flex justify-between items-center w-full pe-4">
                   <span>{cat}</span>
-                  <span>${costs[cat]?.reduce((total, item) => total + item.value, 0)}</span>
+                  <span>${summary[cat]}</span>
                 </div>
               </AccordionSummary>
               <AccordionDetails>
                 {costs[cat]?.map(item => (
                   <div key={item.id} className="flex">
-                    <span className="grow-0">{new Date(item.date).toLocaleDateString("en-GB")}</span>
+                    <span className="grow-0">{dateFormat(new Date(item.date), "day")}</span>
                     <span className="grow">{item.type}</span>
                     <span className="grow text-right pe-4">${item.value}</span>
                     <button
@@ -151,6 +182,16 @@ export default function BankPage() {
               onChange={(e) => setNewCost({ ...newCost, value: parseFloat(e.target.value) })}
               disabled={isPending}
             />
+            <ToggleButtonGroup
+              color="primary"
+              classes={{"MuiToggleButton-root": "rounded-full"}}
+              value={calendarView}
+              exclusive
+              onChange={selectCalendarView}
+            >
+              <ToggleButton value="month">Monthly</ToggleButton>
+              <ToggleButton value="day">Daily</ToggleButton>
+            </ToggleButtonGroup>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <MobileDatePicker
                 orientation="portrait"
@@ -159,12 +200,6 @@ export default function BankPage() {
                 value={calendarDate}
                 onAccept={setStartDate}
                 onChange={setCalendarDate}
-                slotProps={{
-                  textField: {
-                    // fullWidth: true,
-                    // margin: "normal",
-                  },
-                }}
               />
             </LocalizationProvider>
             <button
