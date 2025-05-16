@@ -1,7 +1,7 @@
-/* .MuiPaper-root.MuiPaper-root {
+.MuiPaper-root.MuiAccordion-root {
   background-color: inherit;
   color: inherit;
-} */
+}
 
 .MuiPickersTextField-root .MuiPickersInputBase-root {
   padding: 0;
@@ -9,11 +9,27 @@
 .MuiPickersTextField-root .MuiPickersInputBase-root .MuiPickersInputBase-sectionsContainer {
   display: none;
 }
-
 .MuiPickersTextField-root .MuiPickersInputBase-root .MuiInputAdornment-root {
   margin-left: 0;
   max-height: none;
 }
 .MuiPickersTextField-root .MuiPickersInputBase-root .MuiInputAdornment-root .MuiIconButton-root {
   margin-right: 0;
+}
+
+.MuiPaper-root.MuiDialog-paper {
+  background-color: #3f3f46;
+  color: #f4f4f5;
+ }
+.MuiPaper-root.MuiDialog-paper .MuiPickersToolbar-content .MuiTypography-root,
+.MuiPaper-root.MuiDialog-paper .MuiPickersDay-root,
+.MuiPaper-root.MuiDialog-paper .MuiSvgIcon-root {
+  color: #f4f4f5;
+}
+.MuiPaper-root.MuiDialog-paper .Mui-disabled.Mui-disabled,
+.MuiPaper-root.MuiDialog-paper .Mui-disabled .MuiSvgIcon-root {
+  color: #71717a
+}
+.MuiPaper-root.MuiDialog-paper .MuiTypography-root {
+  color: #d4d4d8;
 }
