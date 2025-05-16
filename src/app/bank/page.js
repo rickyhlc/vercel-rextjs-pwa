@@ -31,7 +31,6 @@ export default function BankPage() {
     setCalendarDate(date)
   }, []);
 
-
   // init page display
   useEffect(() => {
     initDB().then(db => {
@@ -43,6 +42,13 @@ export default function BankPage() {
     });
     return () => dbRef.current?.close();
   }, []);
+
+  // reload data when selection changed
+  useEffect(() => {
+    if (dbRef.current) {
+      reloadCostAsync();
+    }
+  }, [startDate]);
 
   async function reloadCatTypeAsync() {
     if (dbRef.current){
