@@ -7,7 +7,7 @@ import { getToday, dateFormat, BTN_BLUE, PLAIN_BTN_BLUE, ALL_ZINC, TXT_ZINC } fr
 import DownArrowIcon from "@/icons/downArrow";
 import EditIcon from "@/icons/edit";
 import AddIcon from "@/icons/add";
-import { Accordion, AccordionSummary, AccordionDetails, TextField, NativeSelect, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { Accordion, AccordionSummary, AccordionDetails, TextField, NativeSelect, ToggleButton, ToggleButtonGroup, Checkbox } from '@mui/material';
 import { MobileDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 
@@ -204,6 +204,22 @@ export default function BankPage() {
             >
               <AddIcon sizeClass="w-8 h-8"/>
             </button>
+          </div>
+          <div className="">{/* flex flex-col items-start */}
+            {flags.map(flag => (
+              <label key={flag.id}>
+                <Checkbox color="primary" onChange={e => {
+                  let c = { ...newCost };
+                  if (e.target.checked) {
+                    c[flag.id] = true;
+                  } else {
+                    delete c[flag.id];
+                  }
+                  setNewCost(c);
+                }} />
+                {flag.name}
+              </label>
+            ))}
           </div>
         </>
       )}
