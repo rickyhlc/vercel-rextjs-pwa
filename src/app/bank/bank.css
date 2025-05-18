@@ -3,6 +3,7 @@
   color: inherit;
 }
 
+/* DatePicker button */
 .MuiPickersTextField-root .MuiPickersInputBase-root {
   padding: 0;
 }
@@ -15,21 +16,52 @@
 }
 .MuiPickersTextField-root .MuiPickersInputBase-root .MuiInputAdornment-root .MuiIconButton-root {
   margin-right: 0;
+  background-color: var(--color-blue-400);
+}
+.MuiPickersTextField-root .MuiPickersInputBase-root .MuiInputAdornment-root .MuiIconButton-root  .MuiSvgIcon-root {
+  width: calc(var(--spacing) * 8);
+  height: calc(var(--spacing) * 8);
+  fill: var(--color-zinc-200);
+}
+.MuiPickersTextField-root .MuiPickersInputBase-root>.MuiPickersOutlinedInput-notchedOutline {
+  display: none;
 }
 
+/* DatePicker calendar popup */
 .MuiPaper-root.MuiDialog-paper {
-  background-color: #3f3f46;
-  color: #f4f4f5;
+  background-color: var(--color-zinc-700);
+  color: var(--color-zinc-200);
  }
 .MuiPaper-root.MuiDialog-paper .MuiPickersToolbar-content .MuiTypography-root,
 .MuiPaper-root.MuiDialog-paper .MuiPickersDay-root,
 .MuiPaper-root.MuiDialog-paper .MuiSvgIcon-root {
-  color: #f4f4f5;
+  color: var(--color-zinc-200);
 }
 .MuiPaper-root.MuiDialog-paper .Mui-disabled.Mui-disabled,
 .MuiPaper-root.MuiDialog-paper .Mui-disabled .MuiSvgIcon-root {
-  color: #71717a
+  color: var(--color-zinc-500);
 }
 .MuiPaper-root.MuiDialog-paper .MuiTypography-root {
-  color: #d4d4d8;
+  color: var(--color-zinc-400);
+}
+
+/* toggle button */
+.MuiToggleButtonGroup-root .MuiButtonBase-root {
+  text-transform: none;
+  font-size: 1rem;
+  line-height: 1.5;
+  background-color: var(--color-zinc-700);
+  color: var(--color-zinc-400);
+}
+.MuiToggleButtonGroup-root .MuiButtonBase-root:hover {
+  opacity: 0.85;
+  background-color: var(--color-zinc-700);
+}
+.MuiToggleButtonGroup-root .MuiButtonBase-root.Mui-selected {
+  background-color: var(--color-blue-400);
+  color: var(--color-zinc-200);
+}
+.MuiToggleButtonGroup-root .MuiButtonBase-root.Mui-selected:hover {
+  background-color: var(--color-blue-400);
+  color: var(--color-zinc-200);
 }

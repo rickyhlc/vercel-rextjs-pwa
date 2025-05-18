@@ -16,17 +16,26 @@ const DEFAULT_CAT_TYPE = {
  */
 export const initDB = (a, data) => {
   return new Promise((resolve, reject) => {
-    const request = window.indexedDB.open("BankDB", 2);
+    const request = window.indexedDB.open("BankDB", 3);
     request.onupgradeneeded = function(event) {
-      if (event.oldVersion == 0) { // dont have DB yet, create schema
-        const db = event.target.result;
-        const costStore = db.createObjectStore("cost", { keyPath: 'id', autoIncrement: true });
-        costStore.createIndex("byDate", "date");
-      }
-      if (event.oldVersion < 2) { // DB exists, but schema changed
-        const db = event.target.result;
-        const typeStore = db.createObjectStore("catType");
-        typeStore.put(DEFAULT_CAT_TYPE, "catTypeMap");
+      const db = event.target.result;
+      switch (event.oldVersion) {
+        case 0: // dont have DB yet, create schema
+          const costStore = db.createObjectStore("cost", { keyPath: 'id', autoIncrement: true });
+          costStore.createIndex("byDate", "date");
+        case 1:
+          const typeStore = db.createObjectStore("catType");
+          typeStore.put(DEFAULT_CAT_TYPE, "catTypeMap");
+        case 2:
+          db.deleteObjectStore("catType");
+          const configStore = db.createObjectStore("config");
+          configStore.put(DEFAULT_CAT_TYPE, "catTypeMap");
+          const flagStore = db.createObjectStore("flag");
+          flagStore.put("Regular", "REGULAR");
+          flagStore.put("Special", "SPECIAL");
+          flagStore.put("For others", "FOR_OTHER");
+        default:
+          console.log("DB version changed");
       }
     }
     request.onsuccess = function() {
@@ -115,7 +124,7 @@ class BankDB {
    * @description update the cat type map
    */
   updateCatTypes(data) {
-    return this.#openObjectStore("catType", true, (objectStore, resolve, reject) => {
+    return this.#openObjectStore("config", true, (objectStore, resolve, reject) => {
       const request = objectStore.add(data);
       request.onsuccess = () => resolve(request.result);
       request.onerror = (event) => reject(event);
@@ -127,7 +136,7 @@ class BankDB {
    * @description get all type of the given cat
    */
   getCatTypes() {
-    return this.#openObjectStore("catType", false, (objectStore, resolve, reject) => {
+    return this.#openObjectStore("config", false, (objectStore, resolve, reject) => {
       const request = objectStore.get("catTypeMap");
       request.onsuccess = () => resolve(request.result);
       request.onerror = (event) => reject(event);

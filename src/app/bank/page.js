@@ -174,7 +174,7 @@ export default function BankPage() {
               {catTypeMap[newCost.cat]?.map(type => <option key={type} value={type}>{type}</option>)}
             </NativeSelect>
           </div>
-          <div className={`flex gap-8 items-center min-w-full ${ALL_ZINC}`}>
+          <div className={`flex gap-8 items-center justify-between px-[16px] py-2 ${ALL_ZINC}`}>
             <TextField
               label="$"
               type="number"
@@ -184,13 +184,12 @@ export default function BankPage() {
             />
             <ToggleButtonGroup
               color="primary"
-              classes={{"MuiToggleButton-root": "rounded-full"}}
               value={calendarView}
               exclusive
               onChange={selectCalendarView}
             >
-              <ToggleButton value="month">Monthly</ToggleButton>
-              <ToggleButton value="day">Daily</ToggleButton>
+              <ToggleButton value="month">Month</ToggleButton>
+              <ToggleButton value="day">Day</ToggleButton>
             </ToggleButtonGroup>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <MobileDatePicker
@@ -203,11 +202,11 @@ export default function BankPage() {
               />
             </LocalizationProvider>
             <button
-              className={`rounded-full p-1.5 ${BTN_BLUE}`}
+              className={`rounded-full p-2 ${BTN_BLUE}`}
               disabled={isPending || !newCost.value || !newCost.cat || !newCost.type}
               onClick={handleAdd}
             >
-              <AddIcon/>
+              <AddIcon sizeClass="w-8 h-8"/>
             </button>
           </div>
         </div>
