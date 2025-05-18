@@ -20,11 +20,12 @@ export default function BankPage() {
   const [calendarDate, setCalendarDate] = useState(today);  // only for calendar component display
   const [startDate, _setStartDate] = useState(today);  // selected date from calendar
   const [catTypeMap, setCatTypeMap] = useState({});
-  const [costs, _setCosts] = useState([]);
+  const [flags, setFlags] = useState([]);
+  const [costs, _setCosts] = useState(null);
   const [summary, setSummary] = useState({});
   const dbRef = useRef(null);
 
-  const [isPending, startTransition] = useTransition();
+  const [savingCost, startSaveCost] = useTransition();
   const [newCost, setNewCost] = useState(null);
 
   const setStartDate = useCallback((date) => {
@@ -59,7 +60,7 @@ export default function BankPage() {
     initDB().then(db => {
       dbRef.current = db;
       reloadCostAsync();
-      reloadCatTypeAsync().then(map => {
+      Promise.all([reloadFlagsAsync(), reloadCatTypeAsync()]).then(map => {
         setNewCost({ date: today.getTime(), value: "", cat: CAT_LIST[0], type: map[CAT_LIST[0]]?.[0] });  
       });
     });
@@ -73,6 +74,13 @@ export default function BankPage() {
     }
   }, [startDate]);
 
+  async function reloadFlagsAsync() {
+    if (dbRef.current){
+      let data = await dbRef.current.getFlags();
+      setFlags(data);
+      return data;
+    }
+  }
   async function reloadCatTypeAsync() {
     if (dbRef.current){
       let data = await dbRef.current.getCatTypes();
@@ -93,13 +101,18 @@ export default function BankPage() {
         data = Object.groupBy(data, (item) => item.cat);
         setCosts(data);
         return data;
+      } else {
+        setCosts([]);
+        return [];
       }
     }
   }
 
+  function showAddCostPanel(){}
+
   // save new cost to db
   function handleAdd() {
-    startTransition(async () => {
+    startSaveCost(async () => {
       const cat = newCost.cat;
       try {
         const res = await dbRef.current?.addCost(newCost);
@@ -115,47 +128,49 @@ export default function BankPage() {
 
   return (
     <div className={`flex flex-col justify-between min-h-screen ${ALL_ZINC}`}>
-      <div className="flex gap-4 items-center justify-between px-[16px] py-2">
-        <div>
-          <div className={`${TXT_ZINC} text-xs`}>Expenses in</div>
-          <div className={`${TXT_ZINC} text-2xl`}>{dateFormat(startDate, calendarView === "month" ? "month" : null)}</div>
-        </div>
-        <div className="text-5xl">${summary.total?.toFixed(1)}</div>
-      </div>
       <div>
-        {CAT_LIST.map(cat => {
-          return (
-            <Accordion key={cat}>
-              <AccordionSummary expandIcon={<DownArrowIcon colorClass={TXT_ZINC} />}>
-                <div className="flex justify-between items-center w-full pe-4">
-                  <span>{cat}</span>
-                  <span>${summary[cat]?.toFixed(1)}</span>
-                </div>
-              </AccordionSummary>
-              <AccordionDetails>
-                {costs[cat]?.map(item => (
-                  <div key={item.id} className="flex">
-                    <span className="grow-0">{dateFormat(new Date(item.date), "day")}</span>
-                    <span className="grow">{item.type}</span>
-                    <span className="grow text-right pe-4">${item.value}</span>
-                    <button
-                      className={`rounded-full p-1 ${PLAIN_BTN_BLUE}`}
-                    >
-                      <EditIcon className="w-4 h-4 text-inherit" />
-                    </button>
+        <div className="flex gap-4 items-center justify-between px-[16px] py-2 mb-4">
+          <div>
+            <div className={`${TXT_ZINC} text-xs`}>Expenses in</div>
+            <div className={`${TXT_ZINC} text-2xl`}>{dateFormat(startDate, calendarView === "month" ? "month" : null)}</div>
+          </div>
+          <div className="text-5xl">${summary.total?.toFixed(1)}</div>
+        </div>
+        <div>
+          {costs && CAT_LIST.map(cat => {
+            return (
+              <Accordion key={cat}>
+                <AccordionSummary expandIcon={<DownArrowIcon colorClass={TXT_ZINC} />}>
+                  <div className="flex justify-between items-center w-full pe-4">
+                    <span>{cat}</span>
+                    <span>${summary[cat]?.toFixed(1)}</span>
                   </div>
-                ))}
-              </AccordionDetails>
-            </Accordion>
-          )
-        })}
+                </AccordionSummary>
+                <AccordionDetails>
+                  {costs[cat]?.map(item => (
+                    <div key={item.id} className="flex">
+                      <span className="grow-0">{dateFormat(new Date(item.date), "day")}</span>
+                      <span className="grow">{item.type}</span>
+                      <span className="grow text-right pe-4">${item.value}</span>
+                      <button
+                        className={`rounded-full p-1 ${PLAIN_BTN_BLUE}`}
+                      >
+                        <EditIcon className="w-4 h-4 text-inherit" />
+                      </button>
+                    </div>
+                  ))}
+                </AccordionDetails>
+              </Accordion>
+            )
+          })}
+        </div>
       </div>
       {newCost && (
-        <div className="min-w-full">
-          <div className="flex gap-8 items-center min-w-full">
+        <>
+          <div className="flex gap-8 items-center px-[16px] py-2">
             <NativeSelect
               value={newCost.cat}
-              disabled={isPending}
+              disabled={savingCost}
               className="w-1/2"
               onChange={(e) => {
                 setNewCost({ ...newCost, cat: e.target.value, type: catTypeMap[e.target.value]?.[0] });
@@ -165,7 +180,7 @@ export default function BankPage() {
             </NativeSelect>
             <NativeSelect
               value={newCost.type}
-              disabled={isPending}
+              disabled={savingCost}
               className="w-1/2"
               onChange={(e) => {
                 setNewCost({ ...newCost, type: e.target.value });
@@ -174,41 +189,48 @@ export default function BankPage() {
               {catTypeMap[newCost.cat]?.map(type => <option key={type} value={type}>{type}</option>)}
             </NativeSelect>
           </div>
-          <div className={`flex gap-8 items-center justify-between px-[16px] py-2 ${ALL_ZINC}`}>
+          <div className="flex gap-8 items-center justify-between px-[16px] py-2">
             <TextField
               label="$"
               type="number"
               value={isNaN(newCost.value) ? "" : newCost.value}
               onChange={(e) => setNewCost({ ...newCost, value: parseFloat(e.target.value) })}
-              disabled={isPending}
+              disabled={savingCost}
             />
-            <ToggleButtonGroup
-              color="primary"
-              value={calendarView}
-              exclusive
-              onChange={selectCalendarView}
-            >
-              <ToggleButton value="month">Month</ToggleButton>
-              <ToggleButton value="day">Day</ToggleButton>
-            </ToggleButtonGroup>
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
-              <MobileDatePicker
-                orientation="portrait"
-                disableFuture={true}
-                views={calendarView === "month" ? ["year", "month"] : ["year", "month", "day"]}
-                value={calendarDate}
-                onAccept={setStartDate}
-                onChange={setCalendarDate}
-              />
-            </LocalizationProvider>
             <button
               className={`rounded-full p-2 ${BTN_BLUE}`}
-              disabled={isPending || !newCost.value || !newCost.cat || !newCost.type}
+              disabled={savingCost || !newCost.value || !newCost.cat || !newCost.type}
               onClick={handleAdd}
             >
               <AddIcon sizeClass="w-8 h-8"/>
             </button>
           </div>
+        </>
+      )}
+      {costs && (
+        <div className="flex items-center justify-between px-[16px] py-4">
+          <ToggleButtonGroup
+            color="primary"
+            value={calendarView}
+            exclusive
+            onChange={selectCalendarView}
+          >
+            <ToggleButton value="month">Month</ToggleButton>
+            <ToggleButton value="day">Day</ToggleButton>
+          </ToggleButtonGroup>
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <MobileDatePicker
+              orientation="portrait"
+              disableFuture={true}
+              views={calendarView === "month" ? ["year", "month"] : ["year", "month", "day"]}
+              value={calendarDate}
+              onAccept={setStartDate}
+              onChange={setCalendarDate}
+            />
+          </LocalizationProvider>
+          <button className={`rounded-full p-2 ${BTN_BLUE}`} onClick={showAddCostPanel}>
+            <AddIcon sizeClass="w-8 h-8"/>
+          </button>
         </div>
       )}
     </div>

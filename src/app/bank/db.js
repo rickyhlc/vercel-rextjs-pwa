@@ -1,3 +1,5 @@
+import { id } from "date-fns/locale";
+
 export const CAT_LIST = ["HOUSING", "FOOD", "ENTERTAINMENT", "TRAFFIC", "HEALTH", "OTHERS"];
 
 const DEFAULT_CAT_TYPE = {
@@ -8,6 +10,12 @@ const DEFAULT_CAT_TYPE = {
     HOUSING: ["HOUSING", "OTHERS"],
     OTHERS: ["INSURANCE", "CLOTHES", "OTHERS"]
 };
+
+const DEFAULT_FLAG_LIST = [
+  { id: "REGULAR", name: "Regular" },
+  { id: "SPECIAL", name: "Special" },
+  { id: "FOR_OTHER",name: "For others" }
+];
 
 /**
  *
@@ -30,10 +38,7 @@ export const initDB = (a, data) => {
           db.deleteObjectStore("catType");
           const configStore = db.createObjectStore("config");
           configStore.put(DEFAULT_CAT_TYPE, "catTypeMap");
-          const flagStore = db.createObjectStore("flag");
-          flagStore.put("Regular", "REGULAR");
-          flagStore.put("Special", "SPECIAL");
-          flagStore.put("For others", "FOR_OTHER");
+          configStore.put(DEFAULT_FLAG_LIST, "flagList");
         default:
           console.log("DB version changed");
       }
@@ -125,7 +130,7 @@ class BankDB {
    */
   updateCatTypes(data) {
     return this.#openObjectStore("config", true, (objectStore, resolve, reject) => {
-      const request = objectStore.add(data);
+      const request = objectStore.put(data, "catTypeMap");
       request.onsuccess = () => resolve(request.result);
       request.onerror = (event) => reject(event);
     });
@@ -138,6 +143,32 @@ class BankDB {
   getCatTypes() {
     return this.#openObjectStore("config", false, (objectStore, resolve, reject) => {
       const request = objectStore.get("catTypeMap");
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = (event) => reject(event);
+    });
+  }
+
+  /**
+   * 
+   * @param data
+   * @returns promise
+   * @description update the flag list
+   */
+    updateFlags(data) {
+      return this.#openObjectStore("config", true, (objectStore, resolve, reject) => {
+        const request = objectStore.put(data, "flagList");
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = (event) => reject(event);
+      });
+    }
+  /**
+   * 
+   * @returns promise
+   * @description get all flags
+   */
+  getFlags() {
+    return this.#openObjectStore("config", false, (objectStore, resolve, reject) => {
+      const request = objectStore.get("flagList");
       request.onsuccess = () => resolve(request.result);
       request.onerror = (event) => reject(event);
     });
