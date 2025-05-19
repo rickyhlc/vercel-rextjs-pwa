@@ -17,6 +17,7 @@
 .MuiPickersTextField-root .MuiPickersInputBase-root .MuiInputAdornment-root .MuiIconButton-root {
   margin-right: 0;
   background-color: var(--color-blue-400);
+  border-radius: 0;
 }
 .MuiPickersTextField-root .MuiPickersInputBase-root .MuiInputAdornment-root .MuiIconButton-root  .MuiSvgIcon-root {
   width: calc(var(--spacing) * 8);
@@ -43,6 +44,9 @@
 }
 .MuiPaper-root.MuiDialog-paper .MuiTypography-root {
   color: var(--color-zinc-400);
+}
+.MuiPaper-root.MuiDialog-paper .MuiPickersLayout-actionBar .MuiButtonBase-root {
+  border-color: transparent;
 }
 
 /* toggle button */

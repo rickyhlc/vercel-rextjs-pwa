@@ -10,7 +10,7 @@ import AddIcon from "@/icons/add";
 import CalendarIcon from "@/icons/calendar";
 import PeopleIcon from "@/icons/people";
 import AlarmIcon from "@/icons/alarm";
-import { Accordion, AccordionSummary, AccordionDetails, TextField, NativeSelect, ToggleButton, ToggleButtonGroup, Checkbox } from '@mui/material';
+import { Accordion, AccordionSummary, AccordionDetails, TextField, NativeSelect, ToggleButton, Button, ToggleButtonGroup, ButtonGroup , Checkbox } from '@mui/material';
 import { MobileDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 
@@ -35,6 +35,23 @@ export default function BankPage() {
     _setStartDate(date);
     setCalendarDate(date)
   }, []);
+
+  const shiftStartDate = (isBackward) => {
+    let newDate;
+    if (calendarView === "month") {
+      if (isBackward || (startDate.getMonth() < today.getMonth())) {
+        newDate = new Date(startDate);
+        newDate.setMonth(newDate.getMonth() + (isBackward ? -1 : 1));
+        setStartDate(newDate);
+      }
+    } else {
+      if (isBackward || (startDate.getDate() < today.getDate())) {
+        newDate = new Date(startDate);
+        newDate.setDate(newDate.getDate() + (isBackward ? -1 : 1));
+        setStartDate(newDate);
+      }
+    }
+  }
 
   const selectCalendarView = useCallback((e, view) => {
     if (view) {
@@ -252,16 +269,20 @@ export default function BankPage() {
               <ToggleButton value="month">Month</ToggleButton>
               <ToggleButton value="day">Day</ToggleButton>
             </ToggleButtonGroup>
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
-              <MobileDatePicker
-                orientation="portrait"
-                disableFuture={true}
-                views={calendarView === "month" ? ["year", "month"] : ["year", "month", "day"]}
-                value={calendarDate}
-                onAccept={setStartDate}
-                onChange={setCalendarDate}
-              />
-            </LocalizationProvider>
+            <ButtonGroup>
+              <Button onClick={() => shiftStartDate(true)}>{"<"}</Button>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <MobileDatePicker
+                  orientation="portrait"
+                  disableFuture={true}
+                  views={calendarView === "month" ? ["year", "month"] : ["year", "month", "day"]}
+                  value={calendarDate}
+                  onAccept={setStartDate}
+                  onChange={setCalendarDate}
+                />
+              </LocalizationProvider>
+              <Button onClick={() => shiftStartDate()}>{">"}</Button>
+            </ButtonGroup >
           </div>
           <button className={`rounded-full p-2 ${BTN_BLUE}`} onClick={showAddCostPanel}>
             <AddIcon sizeClass="w-8 h-8"/>
