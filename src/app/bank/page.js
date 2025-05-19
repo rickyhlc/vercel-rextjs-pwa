@@ -7,6 +7,9 @@ import { getToday, dateFormat, BTN_BLUE, PLAIN_BTN_BLUE, ALL_ZINC, TXT_ZINC } fr
 import DownArrowIcon from "@/icons/downArrow";
 import EditIcon from "@/icons/edit";
 import AddIcon from "@/icons/add";
+import CalendarIcon from "@/icons/calendar";
+import PeopleIcon from "@/icons/people";
+import AlarmIcon from "@/icons/alarm";
 import { Accordion, AccordionSummary, AccordionDetails, TextField, NativeSelect, ToggleButton, ToggleButtonGroup, Checkbox } from '@mui/material';
 import { MobileDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
@@ -148,9 +151,22 @@ export default function BankPage() {
                 </AccordionSummary>
                 <AccordionDetails>
                   {costs[cat]?.map(item => (
-                    <div key={item.id} className="flex">
+                    <div key={item.id} className="flex gap-4 items-center">
                       <span className="grow-0">{dateFormat(new Date(item.date), "day")}</span>
                       <span className="grow">{item.type}</span>
+                      <span className="grow-0 flex gap-1">
+                        {flags?.map(f => {
+                          if (item[f.id]) {
+                            if (f.id === "REGULAR") {
+                              return <CalendarIcon key={f.id} className="w-4 h-4 text-inherit" />;
+                            } else if (f.id === "FOR_OTHER") {
+                              return <PeopleIcon key={f.id} className="w-4 h-4 text-inherit" />;
+                            } else if (f.id === "SPECIAL") {
+                              return <AlarmIcon key={f.id} className="w-4 h-4 text-inherit" />;
+                            }
+                          }
+                        })}
+                      </span>
                       <span className="grow text-right pe-4">${item.value}</span>
                       <button
                         className={`rounded-full p-1 ${PLAIN_BTN_BLUE}`}
@@ -226,25 +242,27 @@ export default function BankPage() {
       )}
       {costs && (
         <div className="flex items-center justify-between px-[16px] py-4">
-          <ToggleButtonGroup
-            color="primary"
-            value={calendarView}
-            exclusive
-            onChange={selectCalendarView}
-          >
-            <ToggleButton value="month">Month</ToggleButton>
-            <ToggleButton value="day">Day</ToggleButton>
-          </ToggleButtonGroup>
-          <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <MobileDatePicker
-              orientation="portrait"
-              disableFuture={true}
-              views={calendarView === "month" ? ["year", "month"] : ["year", "month", "day"]}
-              value={calendarDate}
-              onAccept={setStartDate}
-              onChange={setCalendarDate}
-            />
-          </LocalizationProvider>
+          <div className="flex gap-8 items-center">
+            <ToggleButtonGroup
+              color="primary"
+              value={calendarView}
+              exclusive
+              onChange={selectCalendarView}
+            >
+              <ToggleButton value="month">Month</ToggleButton>
+              <ToggleButton value="day">Day</ToggleButton>
+            </ToggleButtonGroup>
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <MobileDatePicker
+                orientation="portrait"
+                disableFuture={true}
+                views={calendarView === "month" ? ["year", "month"] : ["year", "month", "day"]}
+                value={calendarDate}
+                onAccept={setStartDate}
+                onChange={setCalendarDate}
+              />
+            </LocalizationProvider>
+          </div>
           <button className={`rounded-full p-2 ${BTN_BLUE}`} onClick={showAddCostPanel}>
             <AddIcon sizeClass="w-8 h-8"/>
           </button>
