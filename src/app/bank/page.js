@@ -208,7 +208,8 @@ export default function BankPage() {
           <div className="">{/* flex flex-col items-start */}
             {flags.map(flag => (
               <label key={flag.id}>
-                <Checkbox color="primary" onChange={e => {
+                {/* use "|| false" to prevent ctrl/un-ctrl component error */}
+                <Checkbox color="primary" checked={newCost[flag.id] || false} onChange={e => {
                   let c = { ...newCost };
                   if (e.target.checked) {
                     c[flag.id] = true;
