@@ -34,6 +34,7 @@ export default function BankPage() {
   const setStartDate = useCallback((date) => {
     _setStartDate(date);
     setCalendarDate(date)
+    reloadCostAsync();
   }, []);
 
   const shiftStartDate = (isBackward) => {
@@ -53,17 +54,12 @@ export default function BankPage() {
     }
   }
 
-  const selectCalendarView = useCallback((e, view) => {
-    if (view) {
+  const selectCalendarView = (e, view) => {
+    if (view) { // dont allow unselect view
       setCalendarView(view);
-      if (view === "month") {
-        setStartDate(new Date(startDate.getFullYear(), startDate.getMonth(), 1));
-      } else {
-        // stay on 1st of the month
-        reloadCostAsync();
-      }
+      setStartDate(new Date(startDate.getFullYear(), startDate.getMonth(), 1));
     }
-  }, []);
+  }
 
   const setCosts = (data) => {
     _setCosts(data);
@@ -111,6 +107,7 @@ export default function BankPage() {
   async function reloadCostAsync() {
     if (dbRef.current){
       let endDate = new Date(startDate);
+;console.log("~~~~~~~~~~~~~~~~~", calendarView, startDate.toString());
       if (calendarView === "month") {
         endDate.setMonth(startDate.getMonth() + 1);
       } else {
@@ -259,7 +256,7 @@ export default function BankPage() {
       )}
       {costs && (
         <div className="flex items-center justify-between px-[16px] py-4">
-          <div className="flex gap-8 items-center">
+          <div className="flex gap-4 items-center">
             <ToggleButtonGroup
               color="primary"
               value={calendarView}
@@ -282,7 +279,7 @@ export default function BankPage() {
                 />
               </LocalizationProvider>
               <Button onClick={() => shiftStartDate()}>{">"}</Button>
-            </ButtonGroup >
+            </ButtonGroup>
           </div>
           <button className={`rounded-full p-2 ${BTN_BLUE}`} onClick={showAddCostPanel}>
             <AddIcon sizeClass="w-8 h-8"/>
