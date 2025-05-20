@@ -28,13 +28,13 @@ export default function BankPage() {
   const [summary, setSummary] = useState({});
   const dbRef = useRef(null);
 
-  const [savingCost, startSaveCost] = useTransition();
+  const [loadingCost, startLoadCost] = useTransition();
   const [newCost, setNewCost] = useState(null);
 
   const setStartDate = useCallback((date) => {
     _setStartDate(date);
-    setCalendarDate(date)
-    reloadCostAsync();
+    setCalendarDate(date);
+    reloadCostAsync(calendarView, date);
   }, []);
 
   const shiftStartDate = (isBackward) => {
@@ -75,20 +75,13 @@ export default function BankPage() {
   useEffect(() => {
     initDB().then(db => {
       dbRef.current = db;
-      reloadCostAsync();
+      reloadCostAsync(calendarView, startDate);
       Promise.all([reloadFlagsAsync(), reloadCatTypeAsync()]).then(map => {
         setNewCost({ date: today.getTime(), value: "", cat: CAT_LIST[0], type: map[CAT_LIST[0]]?.[0] });  
       });
     });
     return () => dbRef.current?.close();
   }, []);
-
-  // reload data when selection changed
-  useEffect(() => {
-    if (dbRef.current) {
-      reloadCostAsync();
-    }
-  }, [startDate]);
 
   async function reloadFlagsAsync() {
     if (dbRef.current){
@@ -104,16 +97,15 @@ export default function BankPage() {
       return data;
     }
   }
-  async function reloadCostAsync() {
+  async function reloadCostAsync(cView, sDate) {
     if (dbRef.current){
-      let endDate = new Date(startDate);
-;console.log("~~~~~~~~~~~~~~~~~", calendarView, startDate.toString());
-      if (calendarView === "month") {
-        endDate.setMonth(startDate.getMonth() + 1);
+      let endDate = new Date(sDate);
+      if (cView === "month") {
+        endDate.setMonth(sDate.getMonth() + 1);
       } else {
-        endDate.setDate(startDate.getDate() + 1);
-      }
-      let data = await dbRef.current.getCosts(startDate.getTime(),  endDate.getTime());
+        endDate.setDate(sDate.getDate() + 1);
+      };
+      let data = await dbRef.current.getCosts(sDate.getTime(),  endDate.getTime());
       if (data) {
         data = Object.groupBy(data, (item) => item.cat);
         setCosts(data);
@@ -129,7 +121,7 @@ export default function BankPage() {
 
   // save new cost to db
   function handleAdd() {
-    startSaveCost(async () => {
+    startLoadCost(async () => {
       const cat = newCost.cat;
       try {
         const res = await dbRef.current?.addCost(newCost);
@@ -137,23 +129,23 @@ export default function BankPage() {
         setCosts({ ...costs, [cat]: catData });
       } catch (err) {
         console.log("add cost error", err);
-        await reloadCostAsync();
+        await reloadCostAsync(calendarView, startDate);
       }
     });
   }
   
 
   return (
-    <div className={`flex flex-col justify-between min-h-screen ${ALL_ZINC}`}>
-      <div>
-        <div className="flex gap-4 items-center justify-between px-[16px] py-2 mb-4">
+    <div className={`flex flex-col min-h-screen max-h-screen ${ALL_ZINC}`}>
+
+        <div className="flex gap-4 items-center justify-between mx-[16px] py-4 mb-2 border-b border-solid border-zinc-400">
           <div>
             <div className={`${TXT_ZINC} text-xs`}>Expenses in</div>
             <div className={`${TXT_ZINC} text-2xl`}>{dateFormat(startDate, calendarView === "month" ? "month" : null)}</div>
           </div>
           <div className="text-5xl">${summary.total?.toFixed(1)}</div>
         </div>
-        <div>
+        <div className="grow-1 basis-0 overflow-auto">
           {costs && CAT_LIST.map(cat => {
             return (
               <Accordion key={cat}>
@@ -194,13 +186,13 @@ export default function BankPage() {
             )
           })}
         </div>
-      </div>
+
       {newCost && (
         <>
           <div className="flex gap-8 items-center px-[16px] py-2">
             <NativeSelect
               value={newCost.cat}
-              disabled={savingCost}
+              disabled={loadingCost}
               className="w-1/2"
               onChange={(e) => {
                 setNewCost({ ...newCost, cat: e.target.value, type: catTypeMap[e.target.value]?.[0] });
@@ -210,7 +202,7 @@ export default function BankPage() {
             </NativeSelect>
             <NativeSelect
               value={newCost.type}
-              disabled={savingCost}
+              disabled={loadingCost}
               className="w-1/2"
               onChange={(e) => {
                 setNewCost({ ...newCost, type: e.target.value });
@@ -225,11 +217,11 @@ export default function BankPage() {
               type="number"
               value={isNaN(newCost.value) ? "" : newCost.value}
               onChange={(e) => setNewCost({ ...newCost, value: parseFloat(e.target.value) })}
-              disabled={savingCost}
+              disabled={loadingCost}
             />
             <button
               className={`rounded-full p-2 ${BTN_BLUE}`}
-              disabled={savingCost || !newCost.value || !newCost.cat || !newCost.type}
+              disabled={loadingCost || !newCost.value || !newCost.cat || !newCost.type}
               onClick={handleAdd}
             >
               <AddIcon sizeClass="w-8 h-8"/>

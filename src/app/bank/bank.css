@@ -80,3 +80,11 @@
 .MuiNativeSelect-root .MuiNativeSelect-icon {
   color: var(--color-zinc-200);
 }
+.MuiNativeSelect-root.MuiNativeSelect-root {
+  &:before {
+    border-bottom-color: transparent;
+  }
+  &:hover:not(.Mui-disabled, .Mui-error):before {
+    border-bottom-color: var(--color-blue-400);
+  }
+}
