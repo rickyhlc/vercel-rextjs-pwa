@@ -76,8 +76,8 @@ export default function BankPage() {
     initDB().then(db => {
       dbRef.current = db;
       reloadCostAsync(calendarView, startDate);
-      Promise.all([reloadFlagsAsync(), reloadCatTypeAsync()]).then(map => {
-        setNewCost({ date: today.getTime(), value: "", cat: CAT_LIST[0], type: map[CAT_LIST[0]]?.[0] });  
+      Promise.all([reloadFlagsAsync(), reloadCatTypeAsync()]).then((res) => {
+        setNewCost({ date: today.getTime(), value: "", cat: CAT_LIST[0], type: res[1][CAT_LIST[0]]?.[0] });  
       });
     });
     return () => dbRef.current?.close();
@@ -117,7 +117,9 @@ export default function BankPage() {
     }
   }
 
-  function showAddCostPanel(){}
+  function showAddCostPanel(){
+    //TODO
+  }
 
   // save new cost to db
   function handleAdd() {
@@ -134,6 +136,15 @@ export default function BankPage() {
     });
   }
   
+  function getFlagIcon(flag, cls){
+    if (flag.id === "REGULAR") {
+      return <CalendarIcon key={flag.id} className={cls}/>;
+    } else if (flag.id === "FOR_OTHER") {
+      return <PeopleIcon key={flag.id} className={cls}/>;
+    } else if (flag.id === "SPECIAL") {
+      return <AlarmIcon key={flag.id} className={cls}/>;
+    }
+  }
 
   return (
     <div className={`flex flex-col min-h-screen max-h-screen ${ALL_ZINC}`}>
@@ -161,17 +172,7 @@ export default function BankPage() {
                       <span className="grow-0">{dateFormat(new Date(item.date), "day")}</span>
                       <span className="grow">{item.type}</span>
                       <span className="grow-0 flex gap-1">
-                        {flags?.map(f => {
-                          if (item[f.id]) {
-                            if (f.id === "REGULAR") {
-                              return <CalendarIcon key={f.id} className="w-4 h-4 text-inherit" />;
-                            } else if (f.id === "FOR_OTHER") {
-                              return <PeopleIcon key={f.id} className="w-4 h-4 text-inherit" />;
-                            } else if (f.id === "SPECIAL") {
-                              return <AlarmIcon key={f.id} className="w-4 h-4 text-inherit" />;
-                            }
-                          }
-                        })}
+                        {flags?.map(f => item[f.id] ? getFlagIcon(f, "w-4 h-4 text-inherit") : null)}
                       </span>
                       <span className="grow text-right pe-4">${item.value}</span>
                       <button
@@ -211,7 +212,24 @@ export default function BankPage() {
               {catTypeMap[newCost.cat]?.map(type => <option key={type} value={type}>{type}</option>)}
             </NativeSelect>
           </div>
-          <div className="flex gap-8 items-center justify-between px-[16px] py-2">
+          <div className={`flex justify-between ps-[4px] pe-[16px] py-2 ${TXT_ZINC}`}>
+            {flags.map(f => (
+              <label key={f.id} className="flex items-center">
+                {/* use "|| false" to prevent ctrl/un-ctrl component error */}
+                <Checkbox color="primary" checked={newCost[f.id] || false} onChange={e => {
+                  let c = { ...newCost };
+                  if (e.target.checked) {
+                    c[f.id] = true;
+                  } else {
+                    delete c[f.id];
+                  }
+                  setNewCost(c);
+                }}/>
+                {f.name}{getFlagIcon(f, "ms-1 w-4 h-4 text-inherit")}
+              </label>
+            ))}
+          </div>
+          <div className="flex justify-between px-[16px] py-2">
             <TextField
               label="$"
               type="number"
@@ -226,23 +244,6 @@ export default function BankPage() {
             >
               <AddIcon sizeClass="w-8 h-8"/>
             </button>
-          </div>
-          <div className="">{/* flex flex-col items-start */}
-            {flags.map(flag => (
-              <label key={flag.id}>
-                {/* use "|| false" to prevent ctrl/un-ctrl component error */}
-                <Checkbox color="primary" checked={newCost[flag.id] || false} onChange={e => {
-                  let c = { ...newCost };
-                  if (e.target.checked) {
-                    c[flag.id] = true;
-                  } else {
-                    delete c[flag.id];
-                  }
-                  setNewCost(c);
-                }} />
-                {flag.name}
-              </label>
-            ))}
           </div>
         </>
       )}

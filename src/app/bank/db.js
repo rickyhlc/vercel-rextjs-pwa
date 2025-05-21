@@ -1,6 +1,4 @@
-import { id } from "date-fns/locale";
-
-export const CAT_LIST = ["HOUSING", "FOOD", "ENTERTAINMENT", "TRAFFIC", "HEALTH", "OTHERS"];
+export const CAT_LIST = ["TRAFFIC", "FOOD", "ENTERTAINMENT", "HEALTH", "HOUSING", "OTHERS"];
 
 const DEFAULT_CAT_TYPE = {
     FOOD: ["FOOD", "SNACK", "OTHERS"],
