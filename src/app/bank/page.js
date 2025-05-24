@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef, useCallback, useTransition } from "react";
+import { useEffect, useState, useRef, useCallback, useTransition, use } from "react";
 import { initDB, CAT_LIST } from "./db";
 import { getToday, dateFormat, BTN_BLUE, PLAIN_BTN_BLUE, ALL_ZINC, TXT_ZINC } from "@/utils";
 
@@ -10,6 +10,7 @@ import AddIcon from "@/icons/add";
 import CalendarIcon from "@/icons/calendar";
 import PeopleIcon from "@/icons/people";
 import AlarmIcon from "@/icons/alarm";
+import MoneyIcon from "@/icons/money";
 import { Accordion, AccordionSummary, AccordionDetails, TextField, NativeSelect, ToggleButton, Button, ToggleButtonGroup, ButtonGroup , Checkbox } from '@mui/material';
 import { MobileDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
@@ -31,10 +32,16 @@ export default function BankPage() {
   const [loadingCost, startLoadCost] = useTransition();
   const [newCost, setNewCost] = useState(null);
 
+  // watch param change cost display
+  useEffect(() => {
+    if (dbRef.current) {
+      reloadCostAsync(calendarView, startDate);
+    }
+  }, [startDate]);
+
   const setStartDate = useCallback((date) => {
     _setStartDate(date);
     setCalendarDate(date);
-    reloadCostAsync(calendarView, date);
   }, []);
 
   const shiftStartDate = (isBackward) => {
@@ -121,14 +128,18 @@ export default function BankPage() {
     //TODO
   }
 
-  // save new cost to db
-  function handleAdd() {
+  // add or update cost to db
+  function handleSaveCost() {
     startLoadCost(async () => {
       const cat = newCost.cat;
       try {
-        const res = await dbRef.current?.addCost(newCost);
-        const catData = [...(costs[cat] || []), {id: res, ...newCost}];
-        setCosts({ ...costs, [cat]: catData });
+        const res = await dbRef.current?.saveCost(x);
+        if (newCost.id === undefined) {
+          const catData = [...(costs[cat] || []), {id: res, ...newCost}];
+          setCosts({ ...costs, [cat]: catData });
+        } else {
+          await reloadCostAsync(calendarView, startDate);  
+        }
       } catch (err) {
         console.log("add cost error", err);
         await reloadCostAsync(calendarView, startDate);
@@ -143,6 +154,8 @@ export default function BankPage() {
       return <PeopleIcon key={flag.id} className={cls}/>;
     } else if (flag.id === "SPECIAL") {
       return <AlarmIcon key={flag.id} className={cls}/>;
+    } else if (flag.id === "INCOME") {
+      return <MoneyIcon key={flag.id} className={cls}/>;
     }
   }
 
@@ -212,9 +225,9 @@ export default function BankPage() {
               {catTypeMap[newCost.cat]?.map(type => <option key={type} value={type}>{type}</option>)}
             </NativeSelect>
           </div>
-          <div className={`flex justify-between ps-[4px] pe-[16px] py-2 ${TXT_ZINC}`}>
+          <div className={`flex justify-between flex-wrap ps-[4px] pe-[16px] py-2 ${TXT_ZINC}`}>
             {flags.map(f => (
-              <label key={f.id} className="flex items-center">
+              <label key={f.id} className="flex items-center w-1/2">
                 {/* use "|| false" to prevent ctrl/un-ctrl component error */}
                 <Checkbox color="primary" checked={newCost[f.id] || false} onChange={e => {
                   let c = { ...newCost };
@@ -240,13 +253,14 @@ export default function BankPage() {
             <button
               className={`rounded-full p-2 ${BTN_BLUE}`}
               disabled={loadingCost || !newCost.value || !newCost.cat || !newCost.type}
-              onClick={handleAdd}
+              onClick={handleSaveCost}
             >
               <AddIcon sizeClass="w-8 h-8"/>
             </button>
           </div>
         </>
       )}
+
       {costs && (
         <div className="flex items-center justify-between px-[16px] py-4">
           <div className="flex gap-4 items-center">
@@ -279,6 +293,7 @@ export default function BankPage() {
           </button>
         </div>
       )}
+
     </div>
   );
 }

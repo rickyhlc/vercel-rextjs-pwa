@@ -12,6 +12,7 @@ const DEFAULT_CAT_TYPE = {
 const DEFAULT_FLAG_LIST = [
   { id: "REGULAR", name: "Regular" },
   { id: "SPECIAL", name: "Special" },
+  { id: "INCOME", name: "Income" },
   { id: "FOR_OTHER",name: "For others" }
 ];
 
@@ -22,7 +23,7 @@ const DEFAULT_FLAG_LIST = [
  */
 export const initDB = (a, data) => {
   return new Promise((resolve, reject) => {
-    const request = window.indexedDB.open("BankDB", 3);
+    const request = window.indexedDB.open("BankDB", 4);
     request.onupgradeneeded = function(event) {
       const db = event.target.result;
       switch (event.oldVersion) {
@@ -33,7 +34,12 @@ export const initDB = (a, data) => {
           const typeStore = db.createObjectStore("catType");
           typeStore.put(DEFAULT_CAT_TYPE, "catTypeMap");
         case 2:
-          db.deleteObjectStore("catType");
+        case 3:
+          if (db.objectStoreNames.contains("catType")) {
+            db.deleteObjectStore("catType");
+          } else if (db.objectStoreNames.contains("config")) {
+            db.deleteObjectStore("config");
+          }
           const configStore = db.createObjectStore("config");
           configStore.put(DEFAULT_CAT_TYPE, "catTypeMap");
           configStore.put(DEFAULT_FLAG_LIST, "flagList");
@@ -80,13 +86,13 @@ class BankDB {
 
   /**
    * 
-   * @param data (date, cat, type, value, desc)
+   * @param data (id[update], date, cat, type, value, desc)
    * @returns promise the new key
-   * @description add a new cost type to the DB
+   * @description add or update cost type to the DB
    */
-  addCost(data) {
+  saveCost(data) {
     return this.#openObjectStore("cost", true, (objectStore, resolve, reject) => {
-      const request = objectStore.add(data);
+      const request = objectStore.put(data);
       request.onsuccess = () => resolve(request.result);
       request.onerror = (event) => reject(event);
     });
