@@ -133,7 +133,7 @@ export default function BankPage() {
     startLoadCost(async () => {
       const cat = newCost.cat;
       try {
-        const res = await dbRef.current?.saveCost(x);
+        const res = await dbRef.current?.saveCost(newCost);
         if (newCost.id === undefined) {
           const catData = [...(costs[cat] || []), {id: res, ...newCost}];
           setCosts({ ...costs, [cat]: catData });
