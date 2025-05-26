@@ -10,6 +10,7 @@ import EditIcon from "@/icons/edit";
 import AddIcon from "@/icons/add";
 import { Accordion, AccordionSummary, AccordionDetails, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import DatePicker from "@/components/datePicker";
+import BottomDrawer from "@/components/bottomDrawer";
 
 import './bank.css';
 
@@ -95,7 +96,7 @@ export default function BankPage() {
 
   function showAddCostPanel(){
     //TODO
-    setNewCost({ date: today.getTime(), value: "", cat: CAT_LIST[0], type: catTypeMap[CAT_LIST[0]]?.[0] });  
+    setNewCost({ date: today.getTime(), value: "", cat: CAT_LIST[0], type: catTypeMap[CAT_LIST[0]][0] });  
   }
 
   // add or update cost to db
@@ -177,14 +178,19 @@ export default function BankPage() {
         <button className={`rounded-full p-2 ${BTN_BLUE}`} disabled={!catTypeMap || !flags} onClick={showAddCostPanel}>
           <AddIcon sizeClass="w-8 h-8"/>
         </button>
-        <EditCostModal
+        <BottomDrawer
           isOpen={newCost != null}
-          onSave={handleSaveCost}
           onCancel={() => setNewCost(null)}
-          catTypeMap={catTypeMap}
-          flags={flags}
-          cost={newCost}
-        />
+        >
+          {newCost && (
+            <EditCostModal
+              cost={newCost}
+              catTypeMap={catTypeMap}
+              flags={flags}
+              onSave={handleSaveCost}
+            />
+          )}
+        </BottomDrawer>
       </div>
 
     </div>

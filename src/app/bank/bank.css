@@ -30,8 +30,7 @@
 }
 
 /* checkbox */
-.MuiPaper-root.MuiDialog-paper .MuiCheckbox-root .MuiSvgIcon-root,
-.MuiCheckbox-root .MuiSvgIcon-root {
+.MuiCheckbox-root.MuiCheckbox-root .MuiSvgIcon-root {
   color: var(--color-blue-400);
 }
 

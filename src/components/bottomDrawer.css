@@ -1,0 +1,21 @@
+.MuiPaper-root.MuiDrawer-paper {
+  background-color: var(--color-zinc-700);
+  color: var(--color-zinc-200);
+  .MuiPickersToolbar-content .MuiTypography-root,
+  .MuiPickersDay-root,
+  .MuiSvgIcon-root {
+    color: var(--color-zinc-200);
+  }
+  .Mui-disabled.Mui-disabled {
+    color: var(--color-zinc-500);
+    .MuiSvgIcon-root {
+      color: inherit;
+    }
+  }
+  .MuiTypography-root {
+    color: var(--color-zinc-400);
+  }
+  .MuiPickersLayout-actionBar .MuiButtonBase-root {
+    border-color: transparent;
+  }
+ }
