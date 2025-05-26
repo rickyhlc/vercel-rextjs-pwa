@@ -1,0 +1,48 @@
+
+/* DatePicker button */
+.MuiPickersTextField-root .MuiPickersInputBase-root {
+  padding: 0;
+  .MuiPickersInputBase-sectionsContainer {
+    display: none;
+  }
+  .MuiInputAdornment-root {
+    margin-left: 0;
+    max-height: none;
+    .MuiIconButton-root {
+      margin-right: 0;
+      background-color: var(--color-blue-400);
+      border-radius: 0;
+      .MuiSvgIcon-root {
+        width: calc(var(--spacing) * 8);
+        height: calc(var(--spacing) * 8);
+        fill: var(--color-zinc-200);
+      }
+    }
+  }
+  &>.MuiPickersOutlinedInput-notchedOutline {
+    display: none;
+  }
+}
+
+/* DatePicker calendar popup */
+.MuiPaper-root.MuiDialog-paper {
+  background-color: var(--color-zinc-700);
+  color: var(--color-zinc-200);
+  .MuiPickersToolbar-content .MuiTypography-root,
+  .MuiPickersDay-root,
+  .MuiSvgIcon-root {
+    color: var(--color-zinc-200);
+  }
+  .Mui-disabled.Mui-disabled {
+    color: var(--color-zinc-500);
+    .MuiSvgIcon-root {
+      color: inherit;
+    }
+  }
+  .MuiTypography-root {
+    color: var(--color-zinc-400);
+  }
+  .MuiPickersLayout-actionBar .MuiButtonBase-root {
+    border-color: transparent;
+  }
+ }

@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState, useRef, useCallback, useTransition, use } from "react";
+import { useEffect, useState, useRef, useCallback, useTransition } from "react";
 import { initDB, CAT_LIST } from "./db";
+import EditCostModal from "./editCostModal";
 import { getToday, dateFormat, BTN_BLUE, PLAIN_BTN_BLUE, ALL_ZINC, TXT_ZINC } from "@/utils";
 
 import DownArrowIcon from "@/icons/downArrow";
@@ -11,18 +12,15 @@ import CalendarIcon from "@/icons/calendar";
 import PeopleIcon from "@/icons/people";
 import AlarmIcon from "@/icons/alarm";
 import MoneyIcon from "@/icons/money";
-import { Accordion, AccordionSummary, AccordionDetails, TextField, NativeSelect, ToggleButton, Button, ToggleButtonGroup, ButtonGroup , Checkbox } from '@mui/material';
-import { MobileDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { Accordion, AccordionSummary, AccordionDetails, TextField, NativeSelect, ToggleButton, ToggleButtonGroup, Checkbox } from '@mui/material';
+import DatePicker from "@/components/datePicker";
 
 import './bank.css';
 
 export default function BankPage() {
-
   const today = getToday();
   const [calendarView, setCalendarView] = useState("day");
-  const [calendarDate, setCalendarDate] = useState(today);  // only for calendar component display
-  const [startDate, _setStartDate] = useState(today);  // selected date from calendar
+  const [startDate, setStartDate] = useState(today);
   const [catTypeMap, setCatTypeMap] = useState({});
   const [flags, setFlags] = useState([]);
   const [costs, _setCosts] = useState(null);
@@ -32,53 +30,14 @@ export default function BankPage() {
   const [loadingCost, startLoadCost] = useTransition();
   const [newCost, setNewCost] = useState(null);
 
-  // watch param change cost display
+  // watch param change and reload cost display
   useEffect(() => {
     if (dbRef.current) {
       reloadCostAsync(calendarView, startDate);
     }
   }, [startDate]);
 
-  const setStartDate = useCallback((date) => {
-    _setStartDate(date);
-    setCalendarDate(date);
-  }, []);
-
-  const shiftStartDate = (isBackward) => {
-    let newDate;
-    if (calendarView === "month") {
-      if (isBackward || (startDate.getMonth() < today.getMonth())) {
-        newDate = new Date(startDate);
-        newDate.setMonth(newDate.getMonth() + (isBackward ? -1 : 1));
-        setStartDate(newDate);
-      }
-    } else {
-      if (isBackward || (startDate.getDate() < today.getDate())) {
-        newDate = new Date(startDate);
-        newDate.setDate(newDate.getDate() + (isBackward ? -1 : 1));
-        setStartDate(newDate);
-      }
-    }
-  }
-
-  const selectCalendarView = (e, view) => {
-    if (view) { // dont allow unselect view
-      setCalendarView(view);
-      setStartDate(new Date(startDate.getFullYear(), startDate.getMonth(), 1));
-    }
-  }
-
-  const setCosts = (data) => {
-    _setCosts(data);
-    let s = { total: 0 };
-    CAT_LIST.forEach(cat => {
-      s[cat] = data[cat]?.reduce((total, item) => total + item.value, 0) || 0;
-      s.total += s[cat];
-    });
-    setSummary(s); 
-  };
-
-  // init page display
+   // init page display
   useEffect(() => {
     initDB().then(db => {
       dbRef.current = db;
@@ -89,11 +48,27 @@ export default function BankPage() {
     });
     return () => dbRef.current?.close();
   }, []);
+  
+  const selectCalendarView = useCallback((e, view) => {
+    if (view) { // dont allow unselect view
+      setCalendarView(view);
+    }
+  });
+
+  function setCosts(data) {
+    _setCosts(data);
+    let s = { total: 0 };
+    CAT_LIST.forEach(cat => {
+      s[cat] = data[cat]?.reduce((total, item) => total + item.value, 0) || 0;
+      s.total += s[cat];
+    });
+    setSummary(s); 
+  }
 
   async function reloadFlagsAsync() {
     if (dbRef.current){
       let data = await dbRef.current.getFlags();
-      setFlags(data);
+      setFlags(data || []);
       return data;
     }
   }
@@ -106,6 +81,7 @@ export default function BankPage() {
   }
   async function reloadCostAsync(cView, sDate) {
     if (dbRef.current){
+      console.log("reloadCostAsync", cView, sDate);
       let endDate = new Date(sDate);
       if (cView === "month") {
         endDate.setMonth(sDate.getMonth() + 1);
@@ -118,7 +94,7 @@ export default function BankPage() {
         setCosts(data);
         return data;
       } else {
-        setCosts([]);
+        setCosts({});
         return [];
       }
     }
@@ -131,12 +107,16 @@ export default function BankPage() {
   // add or update cost to db
   function handleSaveCost() {
     startLoadCost(async () => {
-      const cat = newCost.cat;
+      const costData = {...newCost};
+      if (costData.INCOME && costData.value > 0) {
+        costData.value = -costData.value;
+      }
       try {
-        const res = await dbRef.current?.saveCost(newCost);
-        if (newCost.id === undefined) {
-          const catData = [...(costs[cat] || []), {id: res, ...newCost}];
-          setCosts({ ...costs, [cat]: catData });
+        const res = await dbRef.current?.saveCost(costData);
+        if (costData.id === undefined) {
+          const catData = [...(costs[costData.cat] || []), {id: res, ...costData}];
+          setCosts({ ...costs, [costData.cat]: catData });
+          setNewCost({...newCost, value: ""});
         } else {
           await reloadCostAsync(calendarView, startDate);  
         }
@@ -185,7 +165,7 @@ export default function BankPage() {
                       <span className="grow-0">{dateFormat(new Date(item.date), "day")}</span>
                       <span className="grow">{item.type}</span>
                       <span className="grow-0 flex gap-1">
-                        {flags?.map(f => item[f.id] ? getFlagIcon(f, "w-4 h-4 text-inherit") : null)}
+                        {flags.map(f => item[f.id] ? getFlagIcon(f, "w-4 h-4 text-inherit") : null)}
                       </span>
                       <span className="grow text-right pe-4">${item.value}</span>
                       <button
@@ -261,38 +241,23 @@ export default function BankPage() {
         </>
       )}
 
-      {costs && (
-        <div className="flex items-center justify-between px-[16px] py-4">
-          <div className="flex gap-4 items-center">
-            <ToggleButtonGroup
-              color="primary"
-              value={calendarView}
-              exclusive
-              onChange={selectCalendarView}
-            >
-              <ToggleButton value="month">Month</ToggleButton>
-              <ToggleButton value="day">Day</ToggleButton>
-            </ToggleButtonGroup>
-            <ButtonGroup>
-              <Button onClick={() => shiftStartDate(true)}>{"<"}</Button>
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <MobileDatePicker
-                  orientation="portrait"
-                  disableFuture={true}
-                  views={calendarView === "month" ? ["year", "month"] : ["year", "month", "day"]}
-                  value={calendarDate}
-                  onAccept={setStartDate}
-                  onChange={setCalendarDate}
-                />
-              </LocalizationProvider>
-              <Button onClick={() => shiftStartDate()}>{">"}</Button>
-            </ButtonGroup>
-          </div>
-          <button className={`rounded-full p-2 ${BTN_BLUE}`} onClick={showAddCostPanel}>
-            <AddIcon sizeClass="w-8 h-8"/>
-          </button>
+      <div className="flex items-center justify-between px-[16px] py-4">
+        <div className="flex gap-4 items-center">
+          <ToggleButtonGroup
+            color="primary"
+            value={calendarView}
+            exclusive
+            onChange={selectCalendarView}
+          >
+            <ToggleButton value="month">Month</ToggleButton>
+            <ToggleButton value="day">Day</ToggleButton>
+          </ToggleButtonGroup>
+          {summary && <DatePicker initialVal={startDate} selectionType={calendarView} onChange={setStartDate}/>}
         </div>
-      )}
+        <button className={`rounded-full p-2 ${BTN_BLUE}`} onClick={showAddCostPanel}>
+          <AddIcon sizeClass="w-8 h-8"/>
+        </button>
+      </div>
 
     </div>
   );
