@@ -1,18 +1,14 @@
 "use client";
 
-import { useEffect, useState, useRef, useCallback, useTransition } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { initDB, CAT_LIST } from "./db";
 import EditCostModal from "./editCostModal";
-import { getToday, dateFormat, BTN_BLUE, PLAIN_BTN_BLUE, ALL_ZINC, TXT_ZINC } from "@/utils";
+import { getToday, dateFormat, getFlagIcon, BTN_BLUE, PLAIN_BTN_BLUE, ALL_ZINC, TXT_ZINC } from "@/utils";
 
 import DownArrowIcon from "@/icons/downArrow";
 import EditIcon from "@/icons/edit";
 import AddIcon from "@/icons/add";
-import CalendarIcon from "@/icons/calendar";
-import PeopleIcon from "@/icons/people";
-import AlarmIcon from "@/icons/alarm";
-import MoneyIcon from "@/icons/money";
-import { Accordion, AccordionSummary, AccordionDetails, TextField, NativeSelect, ToggleButton, ToggleButtonGroup, Checkbox } from '@mui/material';
+import { Accordion, AccordionSummary, AccordionDetails, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import DatePicker from "@/components/datePicker";
 
 import './bank.css';
@@ -21,13 +17,11 @@ export default function BankPage() {
   const today = getToday();
   const [calendarView, setCalendarView] = useState("day");
   const [startDate, setStartDate] = useState(today);
-  const [catTypeMap, setCatTypeMap] = useState({});
-  const [flags, setFlags] = useState([]);
+  const [catTypeMap, setCatTypeMap] = useState(null);
+  const [flags, setFlags] = useState(null);
   const [costs, _setCosts] = useState(null);
   const [summary, setSummary] = useState({});
   const dbRef = useRef(null);
-
-  const [loadingCost, startLoadCost] = useTransition();
   const [newCost, setNewCost] = useState(null);
 
   // watch param change and reload cost display
@@ -42,9 +36,8 @@ export default function BankPage() {
     initDB().then(db => {
       dbRef.current = db;
       reloadCostAsync(calendarView, startDate);
-      Promise.all([reloadFlagsAsync(), reloadCatTypeAsync()]).then((res) => {
-        setNewCost({ date: today.getTime(), value: "", cat: CAT_LIST[0], type: res[1][CAT_LIST[0]]?.[0] });  
-      });
+      reloadFlagsAsync();
+      reloadCatTypeAsync();
     });
     return () => dbRef.current?.close();
   }, []);
@@ -75,7 +68,7 @@ export default function BankPage() {
   async function reloadCatTypeAsync() {
     if (dbRef.current){
       let data = await dbRef.current.getCatTypes();
-      setCatTypeMap(data);
+      setCatTypeMap(data || {});
       return data;
     }
   }
@@ -102,144 +95,71 @@ export default function BankPage() {
 
   function showAddCostPanel(){
     //TODO
+    setNewCost({ date: today.getTime(), value: "", cat: CAT_LIST[0], type: catTypeMap[CAT_LIST[0]]?.[0] });  
   }
 
   // add or update cost to db
-  function handleSaveCost() {
-    startLoadCost(async () => {
-      const costData = {...newCost};
-      if (costData.INCOME && costData.value > 0) {
-        costData.value = -costData.value;
+  async function handleSaveCost(cost) {
+    const costData = {...cost};
+    if (costData.INCOME && costData.value > 0) {
+      costData.value = -costData.value;
+    }
+    try {
+      const res = await dbRef.current?.saveCost(costData);
+      if (costData.id === undefined) {
+        const catData = [...(costs[costData.cat] || []), {id: res, ...costData}];
+        setCosts({ ...costs, [costData.cat]: catData });
+        setNewCost(null);
+      } else {
+        await reloadCostAsync(calendarView, startDate);  
       }
-      try {
-        const res = await dbRef.current?.saveCost(costData);
-        if (costData.id === undefined) {
-          const catData = [...(costs[costData.cat] || []), {id: res, ...costData}];
-          setCosts({ ...costs, [costData.cat]: catData });
-          setNewCost({...newCost, value: ""});
-        } else {
-          await reloadCostAsync(calendarView, startDate);  
-        }
-      } catch (err) {
-        console.log("add cost error", err);
-        await reloadCostAsync(calendarView, startDate);
-      }
-    });
-  }
-  
-  function getFlagIcon(flag, cls){
-    if (flag.id === "REGULAR") {
-      return <CalendarIcon key={flag.id} className={cls}/>;
-    } else if (flag.id === "FOR_OTHER") {
-      return <PeopleIcon key={flag.id} className={cls}/>;
-    } else if (flag.id === "SPECIAL") {
-      return <AlarmIcon key={flag.id} className={cls}/>;
-    } else if (flag.id === "INCOME") {
-      return <MoneyIcon key={flag.id} className={cls}/>;
+    } catch (err) {
+      console.log("add cost error", err);
+      await reloadCostAsync(calendarView, startDate);
     }
   }
 
   return (
     <div className={`flex flex-col min-h-screen max-h-screen ${ALL_ZINC}`}>
 
-        <div className="flex gap-4 items-center justify-between mx-[16px] py-4 mb-2 border-b border-solid border-zinc-400">
-          <div>
-            <div className={`${TXT_ZINC} text-xs`}>Expenses in</div>
-            <div className={`${TXT_ZINC} text-2xl`}>{dateFormat(startDate, calendarView === "month" ? "month" : null)}</div>
-          </div>
-          <div className="text-5xl">${summary.total?.toFixed(1)}</div>
+      <div className="flex gap-4 items-center justify-between mx-[16px] py-4 mb-2 border-b border-solid border-zinc-400">
+        <div>
+          <div className={`${TXT_ZINC} text-xs`}>Expenses in</div>
+          <div className={`${TXT_ZINC} text-2xl`}>{dateFormat(startDate, calendarView === "month" ? "month" : null)}</div>
         </div>
-        <div className="grow-1 basis-0 overflow-auto">
-          {costs && CAT_LIST.map(cat => {
-            return (
-              <Accordion key={cat}>
-                <AccordionSummary expandIcon={<DownArrowIcon colorClass={TXT_ZINC} />}>
-                  <div className="flex justify-between items-center w-full pe-4">
-                    <span>{cat}</span>
-                    <span>${summary[cat]?.toFixed(1)}</span>
+        <div className="text-5xl">${summary.total?.toFixed(1)}</div>
+      </div>
+      <div className="grow-1 basis-0 overflow-auto">
+        {costs && CAT_LIST.map(cat => {
+          return (
+            <Accordion key={cat}>
+              <AccordionSummary expandIcon={<DownArrowIcon colorClass={TXT_ZINC} />}>
+                <div className="flex justify-between items-center w-full pe-4">
+                  <span>{cat}</span>
+                  <span>${summary[cat]?.toFixed(1)}</span>
+                </div>
+              </AccordionSummary>
+              <AccordionDetails>
+                {costs[cat]?.map(item => (
+                  <div key={item.id} className="flex gap-4 items-center">
+                    <span className="grow-0">{dateFormat(new Date(item.date), "day")}</span>
+                    <span className="grow">{item.type}</span>
+                    <span className="grow-0 flex gap-1">
+                      {flags?.map(f => item[f.id] ? getFlagIcon(f, "w-4 h-4 text-inherit") : null)}
+                    </span>
+                    <span className="grow text-right pe-4">${item.value}</span>
+                    <button
+                      className={`rounded-full p-1 ${PLAIN_BTN_BLUE}`}
+                    >
+                      <EditIcon className="w-4 h-4 text-inherit" />
+                    </button>
                   </div>
-                </AccordionSummary>
-                <AccordionDetails>
-                  {costs[cat]?.map(item => (
-                    <div key={item.id} className="flex gap-4 items-center">
-                      <span className="grow-0">{dateFormat(new Date(item.date), "day")}</span>
-                      <span className="grow">{item.type}</span>
-                      <span className="grow-0 flex gap-1">
-                        {flags.map(f => item[f.id] ? getFlagIcon(f, "w-4 h-4 text-inherit") : null)}
-                      </span>
-                      <span className="grow text-right pe-4">${item.value}</span>
-                      <button
-                        className={`rounded-full p-1 ${PLAIN_BTN_BLUE}`}
-                      >
-                        <EditIcon className="w-4 h-4 text-inherit" />
-                      </button>
-                    </div>
-                  ))}
-                </AccordionDetails>
-              </Accordion>
-            )
-          })}
-        </div>
-
-      {newCost && (
-        <>
-          <div className="flex gap-8 items-center px-[16px] py-2">
-            <NativeSelect
-              value={newCost.cat}
-              disabled={loadingCost}
-              className="w-1/2"
-              onChange={(e) => {
-                setNewCost({ ...newCost, cat: e.target.value, type: catTypeMap[e.target.value]?.[0] });
-              }}
-            >
-              {CAT_LIST.map((cat) => <option key={cat} value={cat}>{cat}</option>)}
-            </NativeSelect>
-            <NativeSelect
-              value={newCost.type}
-              disabled={loadingCost}
-              className="w-1/2"
-              onChange={(e) => {
-                setNewCost({ ...newCost, type: e.target.value });
-              }}
-            >
-              {catTypeMap[newCost.cat]?.map(type => <option key={type} value={type}>{type}</option>)}
-            </NativeSelect>
-          </div>
-          <div className={`flex justify-between flex-wrap ps-[4px] pe-[16px] py-2 ${TXT_ZINC}`}>
-            {flags.map(f => (
-              <label key={f.id} className="flex items-center w-1/2">
-                {/* use "|| false" to prevent ctrl/un-ctrl component error */}
-                <Checkbox color="primary" checked={newCost[f.id] || false} onChange={e => {
-                  let c = { ...newCost };
-                  if (e.target.checked) {
-                    c[f.id] = true;
-                  } else {
-                    delete c[f.id];
-                  }
-                  setNewCost(c);
-                }}/>
-                {f.name}{getFlagIcon(f, "ms-1 w-4 h-4 text-inherit")}
-              </label>
-            ))}
-          </div>
-          <div className="flex justify-between px-[16px] py-2">
-            <TextField
-              label="$"
-              type="number"
-              value={isNaN(newCost.value) ? "" : newCost.value}
-              onChange={(e) => setNewCost({ ...newCost, value: parseFloat(e.target.value) })}
-              disabled={loadingCost}
-            />
-            <button
-              className={`rounded-full p-2 ${BTN_BLUE}`}
-              disabled={loadingCost || !newCost.value || !newCost.cat || !newCost.type}
-              onClick={handleSaveCost}
-            >
-              <AddIcon sizeClass="w-8 h-8"/>
-            </button>
-          </div>
-        </>
-      )}
+                ))}
+              </AccordionDetails>
+            </Accordion>
+          )
+        })}
+      </div>
 
       <div className="flex items-center justify-between px-[16px] py-4">
         <div className="flex gap-4 items-center">
@@ -254,9 +174,17 @@ export default function BankPage() {
           </ToggleButtonGroup>
           {summary && <DatePicker initialVal={startDate} selectionType={calendarView} onChange={setStartDate}/>}
         </div>
-        <button className={`rounded-full p-2 ${BTN_BLUE}`} onClick={showAddCostPanel}>
+        <button className={`rounded-full p-2 ${BTN_BLUE}`} disabled={!catTypeMap || !flags} onClick={showAddCostPanel}>
           <AddIcon sizeClass="w-8 h-8"/>
         </button>
+        <EditCostModal
+          isOpen={newCost != null}
+          onSave={handleSaveCost}
+          onCancel={() => setNewCost(null)}
+          catTypeMap={catTypeMap}
+          flags={flags}
+          cost={newCost}
+        />
       </div>
 
     </div>

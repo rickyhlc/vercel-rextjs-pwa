@@ -1,3 +1,8 @@
+import CalendarIcon from "@/icons/calendar";
+import PeopleIcon from "@/icons/people";
+import AlarmIcon from "@/icons/alarm";
+import MoneyIcon from "@/icons/money";
+
 /**
  * 
  * @returns today's ts
@@ -6,6 +11,18 @@ export const getToday = () => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   return today;
+}
+
+export const getFlagIcon = (flag, cls) => {
+  if (flag.id === "REGULAR") {
+    return <CalendarIcon key={flag.id} className={cls}/>;
+  } else if (flag.id === "FOR_OTHER") {
+    return <PeopleIcon key={flag.id} className={cls}/>;
+  } else if (flag.id === "SPECIAL") {
+    return <AlarmIcon key={flag.id} className={cls}/>;
+  } else if (flag.id === "INCOME") {
+    return <MoneyIcon key={flag.id} className={cls}/>;
+  }
 }
 
 export const dateFormat = (date, fmt) => {
