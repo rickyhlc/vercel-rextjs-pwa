@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef, useCallback } from "react";
 import { initDB, CAT_LIST } from "./db";
-import { getToday, dateFormat, getFlagIcon, BTN_BLUE, PLAIN_BTN_BLUE, ALL_ZINC, TXT_ZINC } from "@/utils";
+import { getToday, dateFormat, getFlagIcon, BTN_BLUER, PLAIN_BTN_BLUE, ALL_ZINC, TXT_ZINC } from "@/utils";
 
 import DownArrowIcon from "@/icons/downArrow";
 import EditIcon from "@/icons/edit";
@@ -105,18 +105,11 @@ export default function BankPage() {
       costData.value = -costData.value;
     }
     try {
-      const res = await dbRef.current?.saveCost(costData);
-      if (costData.id === undefined) {
-        const catData = [...(costs[costData.cat] || []), {id: res, ...costData}];
-        setCosts({ ...costs, [costData.cat]: catData });
-        setNewCost(null);
-      } else {
-        await reloadCostAsync(calendarView, startDate);  
-        setNewCost(null);
-      }
+      await dbRef.current?.saveCost(costData);
+      await reloadCostAsync(calendarView, startDate);  
+      setNewCost(null);
     } catch (err) {
       console.log("add cost error", err);
-      await reloadCostAsync(calendarView, startDate);
     }
   }
 
@@ -176,13 +169,10 @@ export default function BankPage() {
           </ToggleButtonGroup>
           {summary && <DatePicker value={startDate} setValue={setStartDate} selectionType={calendarView} hideSelection={true}/>}
         </div>
-        <button className={`rounded-full p-2 ${BTN_BLUE}`} disabled={!catTypeMap || !flags} onClick={showAddCostPanel}>
+        <button className={`rounded-full p-2 ${BTN_BLUER}`} disabled={!catTypeMap || !flags} onClick={showAddCostPanel}>
           <AddIcon sizeClass="w-8 h-8"/>
         </button>
-        <BottomDrawer
-          isOpen={newCost}
-          onCancel={() => setNewCost(null)}
-        >
+        <BottomDrawer isOpen={newCost} onCancel={() => setNewCost(null)}>
           {newCost && (
             <EditCostPanel
               cost={newCost}

@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import { CAT_LIST } from "./db";
 import { TextField, NativeSelect, Checkbox } from '@mui/material';
-import { BTN_BLUE, TXT_ZINC, getFlagIcon } from "@/utils";
+import { BTN_BLUER, TXT_ZINC, getFlagIcon } from "@/utils";
 import AddIcon from "@/icons/add";
 import DatePicker from "@/components/datePicker";
 
@@ -75,7 +75,7 @@ export default function EditCostPanel({ onSave, cost, flags, catTypeMap }) {
           disabled={saving}
         />
         <button
-          className={`rounded-full p-2 ${BTN_BLUE}`}
+          className={`rounded-full p-2 ${BTN_BLUER}`}
           disabled={saving || !data.value || !data.cat || !data.type}
           onClick={handleSave}
         >
