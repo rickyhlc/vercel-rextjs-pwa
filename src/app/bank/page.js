@@ -137,11 +137,11 @@ export default function BankPage() {
                 {costs[cat]?.map(item => (
                   <div key={item.id} className="flex gap-4 items-center">
                     <span className="grow-0">{dateFormat(new Date(item.date), "day")}</span>
-                    <span className="grow">{item.type}</span>
-                    <span className="grow-0 flex gap-1">
+                    <span className="grow basis-0">{item.type}</span>
+                    <span className="grow-0 basis-9 flex gap-1">
                       {flags?.map(f => item[f.id] ? getFlagIcon(f, "w-4 h-4 text-inherit") : null)}
                     </span>
-                    <span className="grow text-right pe-4">${item.value}</span>
+                    <span className="grow basis-0 text-right pe-4">${item.value}</span>
                     <button
                       className={`rounded-full p-1 ${PLAIN_BTN_BLUE}`}
                       onClick={() => setNewCost(item)}

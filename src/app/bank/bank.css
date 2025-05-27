@@ -6,6 +6,15 @@
   &:before {
     display: none;
   }
+  &.Mui-expanded {
+    margin: 0;
+  }
+  .MuiAccordionSummary-root.Mui-expanded {
+    min-height: 0;
+    .MuiAccordionSummary-content {
+      margin: 12px 0;
+    }
+  }
 }
 
 /* toggle button group */
