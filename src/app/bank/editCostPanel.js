@@ -5,20 +5,28 @@ import { CAT_LIST } from "./db";
 import { TextField, NativeSelect, Checkbox } from '@mui/material';
 import { BTN_BLUE, TXT_ZINC, getFlagIcon } from "@/utils";
 import AddIcon from "@/icons/add";
+import DatePicker from "@/components/datePicker";
 
-export default function EditCostModal({ onSave, cost, flags, catTypeMap }) {
+export default function EditCostPanel({ onSave, cost, flags, catTypeMap }) {
 
-  const [data, setData] = useState({...cost});
+  const [data, setData] = useState({...cost, date: new Date(cost.date)}); // convert ts to date
   const [saving, startSaving] = useTransition();
 
   function handleSave() {
     startSaving(async () => {
-      await onSave(data);
+      await onSave({...data, date: data.date.getTime() }); // db store ts instead of date object
     });
+  }
+
+  function setDate(date) {
+    setData({ ...data, date });
   }
 
   return (
     <>
+      <div className="flex gap-8 items-center px-[16px] py-2">
+        <DatePicker value={data.date} setValue={setDate} selectionType={"day"}/>
+      </div>
       <div className="flex gap-8 items-center px-[16px] py-2">
         <NativeSelect
           value={data.cat}

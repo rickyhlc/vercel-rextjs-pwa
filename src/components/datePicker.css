@@ -1,26 +1,49 @@
 
-/* DatePicker button */
-.MuiPickersTextField-root .MuiPickersInputBase-root {
-  padding: 0;
-  .MuiPickersInputBase-sectionsContainer {
-    display: none;
-  }
-  .MuiInputAdornment-root {
-    margin-left: 0;
-    max-height: none;
-    .MuiIconButton-root {
-      margin-right: 0;
-      background-color: var(--color-blue-400);
+.datePicker {
+  /* DatePicker button */
+  .MuiPickersTextField-root {
+    .MuiPickersInputBase-root {
+      padding: 0;
       border-radius: 0;
-      .MuiSvgIcon-root {
-        width: calc(var(--spacing) * 8);
-        height: calc(var(--spacing) * 8);
-        fill: var(--color-zinc-200);
+      .MuiPickersInputBase-sectionsContainer {
+        border: 1px solid var(--color-blue-400);
+        color: var(--color-zinc-200);
+        width: 8rem;
+        padding: 11.5px 0.75rem;
+        border-left-width: 0;
+        opacity: 1;
+      }
+      .MuiInputAdornment-root {
+        margin-left: 0;
+        max-height: none;
+        .MuiIconButton-root {
+          margin-right: 0;
+          background-color: var(--color-blue-400);
+          border-radius: 0;
+          .MuiSvgIcon-root {
+            width: calc(var(--spacing) * 8);
+            height: calc(var(--spacing) * 8);
+            fill: var(--color-zinc-200);
+          }
+        }
+      }
+      &>.MuiPickersOutlinedInput-notchedOutline {
+        display: none;
+      }
+    }
+    &.hideSelection {
+      .MuiPickersInputBase-root {
+        .MuiPickersInputBase-sectionsContainer {
+          display: none;
+        }
       }
     }
   }
-  &>.MuiPickersOutlinedInput-notchedOutline {
-    display: none;
+
+  /* arrow buttons */
+  &.MuiButtonGroup-root .MuiButtonBase-root {
+    border-color: var(--color-blue-400);
+    color: var(--color-blue-400);
   }
 }
 
@@ -45,4 +68,4 @@
   .MuiPickersLayout-actionBar .MuiButtonBase-root {
     border-color: transparent;
   }
- }
+}

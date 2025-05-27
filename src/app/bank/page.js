@@ -2,13 +2,13 @@
 
 import { useEffect, useState, useRef, useCallback } from "react";
 import { initDB, CAT_LIST } from "./db";
-import EditCostModal from "./editCostModal";
 import { getToday, dateFormat, getFlagIcon, BTN_BLUE, PLAIN_BTN_BLUE, ALL_ZINC, TXT_ZINC } from "@/utils";
 
 import DownArrowIcon from "@/icons/downArrow";
 import EditIcon from "@/icons/edit";
 import AddIcon from "@/icons/add";
 import { Accordion, AccordionSummary, AccordionDetails, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import EditCostPanel from "./editCostPanel";
 import DatePicker from "@/components/datePicker";
 import BottomDrawer from "@/components/bottomDrawer";
 
@@ -46,6 +46,7 @@ export default function BankPage() {
   const selectCalendarView = useCallback((e, view) => {
     if (view) { // dont allow unselect view
       setCalendarView(view);
+      setStartDate(new Date(startDate.getFullYear(), startDate.getMonth(), 1));
     }
   });
 
@@ -75,7 +76,6 @@ export default function BankPage() {
   }
   async function reloadCostAsync(cView, sDate) {
     if (dbRef.current){
-      console.log("reloadCostAsync", cView, sDate);
       let endDate = new Date(sDate);
       if (cView === "month") {
         endDate.setMonth(sDate.getMonth() + 1);
@@ -95,8 +95,7 @@ export default function BankPage() {
   }
 
   function showAddCostPanel(){
-    //TODO
-    setNewCost({ date: today.getTime(), value: "", cat: CAT_LIST[0], type: catTypeMap[CAT_LIST[0]][0] });  
+    setNewCost({ date: today.getTime(), value: "", cat: CAT_LIST[0], type: catTypeMap[CAT_LIST[0]][0] });
   }
 
   // add or update cost to db
@@ -113,6 +112,7 @@ export default function BankPage() {
         setNewCost(null);
       } else {
         await reloadCostAsync(calendarView, startDate);  
+        setNewCost(null);
       }
     } catch (err) {
       console.log("add cost error", err);
@@ -151,6 +151,7 @@ export default function BankPage() {
                     <span className="grow text-right pe-4">${item.value}</span>
                     <button
                       className={`rounded-full p-1 ${PLAIN_BTN_BLUE}`}
+                      onClick={() => setNewCost(item)}
                     >
                       <EditIcon className="w-4 h-4 text-inherit" />
                     </button>
@@ -173,17 +174,17 @@ export default function BankPage() {
             <ToggleButton value="month">Month</ToggleButton>
             <ToggleButton value="day">Day</ToggleButton>
           </ToggleButtonGroup>
-          {summary && <DatePicker initialVal={startDate} selectionType={calendarView} onChange={setStartDate}/>}
+          {summary && <DatePicker value={startDate} setValue={setStartDate} selectionType={calendarView} hideSelection={true}/>}
         </div>
         <button className={`rounded-full p-2 ${BTN_BLUE}`} disabled={!catTypeMap || !flags} onClick={showAddCostPanel}>
           <AddIcon sizeClass="w-8 h-8"/>
         </button>
         <BottomDrawer
-          isOpen={newCost != null}
+          isOpen={newCost}
           onCancel={() => setNewCost(null)}
         >
           {newCost && (
-            <EditCostModal
+            <EditCostPanel
               cost={newCost}
               catTypeMap={catTypeMap}
               flags={flags}
