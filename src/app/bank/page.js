@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef, useCallback } from "react";
-import { initDB, CAT_LIST } from "./db";
+import { initDB, CAT_LIST } from "./indexedDB";
 import { getToday, dateFormat, getFlagIcon, BTN_BLUER, PLAIN_BTN_BLUE, ALL_ZINC, TXT_ZINC } from "@/utils";
 
 import DownArrowIcon from "@/icons/downArrow";

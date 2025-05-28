@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { CAT_LIST } from "./db";
+import { CAT_LIST } from "./indexedDB";
 import { TextField, NativeSelect, Checkbox } from '@mui/material';
 import { BTN_BLUER, TXT_ZINC, getFlagIcon } from "@/utils";
 import AddIcon from "@/icons/add";

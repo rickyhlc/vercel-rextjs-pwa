@@ -24,5 +24,19 @@
         "sizes": "512x512"
       }
     ],
+    "shortcuts": [
+      {
+        "name": "Bank",
+        "short_name": "Bank",
+        "url": "/bank",
+        "icons": [
+          {
+            "src": "/icon-192x192.png",
+            "type": "image/png",
+            "sizes": "192x192"
+          }
+        ]
+      }
+    ],
     "splash_pages": null
   }
