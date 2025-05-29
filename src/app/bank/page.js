@@ -47,7 +47,7 @@ export default function BankPage() {
     if (view) { // dont allow unselect view
       setCalendarView(view);
       if (view === "day" && startDate.getMonth() == today.getMonth() && startDate.getFullYear() == today.getFullYear()) {
-        setStartDate(today);
+        setStartDate(new Date(today));
       } else {
         setStartDate(new Date(startDate.getFullYear(), startDate.getMonth(), 1));
       }
