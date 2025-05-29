@@ -46,7 +46,11 @@ export default function BankPage() {
   const selectCalendarView = useCallback((e, view) => {
     if (view) { // dont allow unselect view
       setCalendarView(view);
-      setStartDate(new Date(startDate.getFullYear(), startDate.getMonth(), 1));
+      if (view === "day" && startDate.getMonth() == today.getMonth() && startDate.getFullYear() == today.getFullYear()) {
+        setStartDate(today);
+      } else {
+        setStartDate(new Date(startDate.getFullYear(), startDate.getMonth(), 1));
+      }
     }
   });
 
@@ -81,7 +85,7 @@ export default function BankPage() {
         endDate.setMonth(sDate.getMonth() + 1);
       } else {
         endDate.setDate(sDate.getDate() + 1);
-      };
+      }
       let data = await dbRef.current.getCosts(sDate.getTime(),  endDate.getTime());
       if (data) {
         data = Object.groupBy(data, (item) => item.cat);
@@ -164,8 +168,8 @@ export default function BankPage() {
             exclusive
             onChange={selectCalendarView}
           >
-            <ToggleButton value="month">M</ToggleButton>
-            <ToggleButton value="day">D</ToggleButton>
+            <ToggleButton value="month">Month</ToggleButton>
+            <ToggleButton value="day">Day</ToggleButton>
           </ToggleButtonGroup>
           {summary && <DatePicker value={startDate} setValue={setStartDate} selectionType={calendarView} hideSelection={true}/>}
         </div>
