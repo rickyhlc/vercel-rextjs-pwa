@@ -9,7 +9,7 @@ export default async function middleware(request) {
     console.log("middleware runs for ", pathname);
 
     if (session?.user?.email) {
-        if (process.env.VALID_EMAILS.split(",").includes(session.user.email)) {
+        if (process.env.LIMITED_ACCESS === "false" || process.env.VALID_EMAILS.split(",").includes(session.user.email)) {
             return NextResponse.next();
         }
     }
