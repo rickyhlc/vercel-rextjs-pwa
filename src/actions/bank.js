@@ -1,7 +1,7 @@
 "use server";
 
-import { auth, handlers, signIn, signOut } from "@/lib/authConfig";
-
+import { auth, handlers, signIn, signOut } from "@/lib/mongoDB";
+//TODO
 export const login = async (options) => {
   await signIn("google", options || { redirectTo: "/" });
 }

@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import { CAT_LIST } from "./indexedDB";
 import { TextField, NativeSelect, Checkbox } from '@mui/material';
-import { BTN_BLUER, TXT_ZINC, getFlagIcon } from "@/utils";
+import { BTN_BLUER, TXT_ZINC, getFlagIcon } from "@/lib/utils";
 import AddIcon from "@/icons/add";
 import DatePicker from "@/components/datePicker";
 

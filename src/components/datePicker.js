@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { Button, ButtonGroup } from '@mui/material';
 import { MobileDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { getToday } from "@/utils";
+import { getToday } from "@/lib/utils";
 
 import './datePicker.css';
 

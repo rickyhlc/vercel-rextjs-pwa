@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { auth } from "./authConfig";
+import { auth } from "./lib/authConfig";
 
 export default async function middleware(request) {
     const session = await auth();
@@ -18,5 +18,5 @@ export default async function middleware(request) {
 
 // define paths that require authentication
 export const config = {
-    matcher: ["/", "/home", "/bank", "/api/:path*"],
+    matcher: ["/", "/home", "/bank", "/api/bank/:path*"],
 }
