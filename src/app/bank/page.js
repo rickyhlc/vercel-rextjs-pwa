@@ -164,8 +164,8 @@ export default function BankPage() {
             exclusive
             onChange={selectCalendarView}
           >
-            <ToggleButton value="month">Month</ToggleButton>
-            <ToggleButton value="day">Day</ToggleButton>
+            <ToggleButton value="month">M</ToggleButton>
+            <ToggleButton value="day">D</ToggleButton>
           </ToggleButtonGroup>
           {summary && <DatePicker value={startDate} setValue={setStartDate} selectionType={calendarView} hideSelection={true}/>}
         </div>

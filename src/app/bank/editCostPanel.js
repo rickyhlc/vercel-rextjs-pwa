@@ -11,11 +11,14 @@ export default function EditCostPanel({ onSave, cost, flags, catTypeMap }) {
 
   const [data, setData] = useState({...cost, date: new Date(cost.date)}); // convert ts to date
   const [saving, startSaving] = useTransition();
+  const disableSave = saving || !data.value || !data.cat || !data.type;
 
   function handleSave() {
-    startSaving(async () => {
-      await onSave({...data, date: data.date.getTime() }); // db store ts instead of date object
-    });
+    if (!disableSave) {
+      startSaving(async () => {
+        await onSave({...data, date: data.date.getTime() }); // db store ts instead of date object
+      });
+    }
   }
 
   function setDate(date) {
@@ -72,11 +75,16 @@ export default function EditCostPanel({ onSave, cost, flags, catTypeMap }) {
           type="number"
           value={isNaN(data.value) ? "" : data.value}
           onChange={(e) => setData({ ...data, value: parseFloat(e.target.value) })}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleSave();
+            }
+          }}
           disabled={saving}
         />
         <button
           className={`rounded-full p-2 ${BTN_BLUER}`}
-          disabled={saving || !data.value || !data.cat || !data.type}
+          disabled={disableSave}
           onClick={handleSave}
         >
           <AddIcon sizeClass="w-8 h-8"/>

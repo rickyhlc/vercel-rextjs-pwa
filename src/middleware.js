@@ -16,6 +16,7 @@ export default async function middleware(request) {
     return NextResponse.redirect(new URL("/signIn", request.url)); 
 }
 
+// define paths that require authentication
 export const config = {
-    matcher: ["/", "/home"],
+    matcher: ["/", "/home", "/bank"],
 }
