@@ -18,5 +18,5 @@ export default async function middleware(request) {
 
 // define paths that require authentication
 export const config = {
-    matcher: ["/", "/home", "/bank"],
+    matcher: ["/", "/home", "/bank", "/api/:path*"],
 }
