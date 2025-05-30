@@ -13,13 +13,13 @@ export default function DatePicker({ selectionType, value, setValue, hideSelecti
   const todayRef = useRef(getToday());
 
   function shiftStartDate(isBackward) {
-    if (isBackward || (value.getTime() < todayRef.current.getTime())) {
-      let newDate = new Date(value);
-      if (selectionType === "month") {
-        newDate.setMonth(newDate.getMonth() + (isBackward ? -1 : 1));
-      } else {
-        newDate.setDate(newDate.getDate() + (isBackward ? -1 : 1));
-      }
+    let newDate = new Date(value);
+    if (selectionType === "month") {
+      newDate.setMonth(newDate.getMonth() + (isBackward ? -1 : 1));
+    } else {
+      newDate.setDate(newDate.getDate() + (isBackward ? -1 : 1));
+    }
+    if (isBackward || (newDate.getTime() <= todayRef.current.getTime())) {
       setValue(newDate);
     }
   }

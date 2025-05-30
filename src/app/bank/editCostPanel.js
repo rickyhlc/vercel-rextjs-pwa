@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 import { CAT_LIST } from "./indexedDB";
 import { TextField, NativeSelect, Checkbox } from '@mui/material';
 import { BTN_BLUER, TXT_ZINC, getFlagIcon } from "@/lib/utils";
-import AddIcon from "@/icons/add";
+import TickIcon from "@/icons/tick";
 import DatePicker from "@/components/datePicker";
 
 export default function EditCostPanel({ onSave, cost, flags, catTypeMap }) {
@@ -87,7 +87,7 @@ export default function EditCostPanel({ onSave, cost, flags, catTypeMap }) {
           disabled={disableSave}
           onClick={handleSave}
         >
-          <AddIcon sizeClass="w-8 h-8"/>
+          <TickIcon sizeClass="w-8 h-8"/>
         </button>
       </div>
     </>

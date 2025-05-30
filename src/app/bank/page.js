@@ -12,8 +12,8 @@ import EditCostPanel from "./editCostPanel";
 import DatePicker from "@/components/datePicker";
 import BottomDrawer from "@/components/bottomDrawer";
 
-import { getCosts, saveCosts } from "@/actions/bank";
-
+import { getCosts, saveCosts, checkHasBackup } from "@/actions/bank";
+import { SwipeableDrawer } from '@mui/material';
 import './bank.css';
 
 export default function BankPage() {
@@ -41,10 +41,11 @@ export default function BankPage() {
       reloadCostAsync(calendarView, startDate);
       reloadFlagsAsync();
       reloadCatTypeAsync();
-      // let x = await fetch('api/bank/getCosts');
-      // console.log("~~~~~~~~~~~", await x.json()); TODOricky
-      console.log("~~~", await getCosts());
-      console.log("~~~", await saveCosts());
+      // console.log("~~~", await getCosts());
+      // console.log("~~~", await checkHasBackup());
+      // console.log("~~~", JSON.stringify(await saveCosts([{ a: 64564 }, { a: 5 }])));
+      // console.log("~~~", await getCosts());
+      // console.log("~~~", await checkHasBackup());
     });
     return () => dbRef.current?.close();
   }, []);
@@ -193,7 +194,13 @@ export default function BankPage() {
           )}
         </BottomDrawer>
       </div>
-
+      <SwipeableDrawer
+        anchor={"left"}
+        disableSwipeToOpen={false}
+        swipeAreaWidth={20}
+      >
+        asdfasdf
+      </SwipeableDrawer>
     </div>
   );
 }
