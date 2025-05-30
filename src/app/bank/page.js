@@ -25,7 +25,7 @@ export default function BankPage() {
   const [costs, _setCosts] = useState(null);
   const [summary, setSummary] = useState({});
   const dbRef = useRef(null);
-  const [newCost, setNewCost] = useState(null);
+  const [newCost, setNewCost] = useState(null);const [isopen, setIsOpen] = useState(false);
 
   // watch param change and reload cost display
   useEffect(() => {
@@ -195,9 +195,12 @@ export default function BankPage() {
         </BottomDrawer>
       </div>
       <SwipeableDrawer
-        anchor={"left"}
+        anchor={"bottom"}
         disableSwipeToOpen={false}
-        swipeAreaWidth={20}
+        swipeAreaWidth={50}
+        open={isopen}
+        onOpen={() => setIsOpen(true)}
+        onClose={() => setIsOpen(false)}
       >
         asdfasdf
       </SwipeableDrawer>
