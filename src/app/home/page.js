@@ -16,9 +16,6 @@ export default function HomePage() {
     setExpTime(new Date(exp));
   } 
   getSess();
-  return () => {
-    console.log("Cleanup for count:", count);
-  }
   }, [count]);
 
   return (

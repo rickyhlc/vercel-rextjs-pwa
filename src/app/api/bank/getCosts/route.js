@@ -1,3 +1,5 @@
+// this file is not used, replaced by server function
+
 import clientPromise from '@/lib/mongoDB';
 import { NextResponse } from 'next/server';
 
@@ -8,9 +10,7 @@ export async function GET() {
     const collection = db.collection("cost");
     
     const costs = await collection.find({}).toArray();
-    return new NextResponse(JSON.stringify(costs));
-    // this doesn't work, wait for fix/workaround
-    // return new NextResponse.json(costs);
+    return Response.json(costs); // return new NextResponse.json(costs); <-- doesn't work
   } catch (error) {
     console.error("Error fetching costs:", error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })

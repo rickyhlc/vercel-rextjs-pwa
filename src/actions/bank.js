@@ -1,15 +1,27 @@
 "use server";
 
-import { auth, handlers, signIn, signOut } from "@/lib/mongoDB";
-//TODO
-export const login = async (options) => {
-  await signIn("google", options || { redirectTo: "/" });
+import clientPromise from '@/lib/mongoDB';
+
+export const getCosts = async (options) => {
+  try {
+    const client = await clientPromise;
+    const db = client.db("bank");
+    const collection = db.collection("cost");
+    return await collection.find({}).toArray();
+  } catch (error) {
+    console.error("Error fetching costs:", error);
+    return { error: 'Internal Server Error' };
+  }
 }
 
-export const logout = async (options) => {
-  await signOut(options || { redirectTo: "/signIn" });
-}
-
-export const getSession = async () => {
-  return await auth();
+export const saveCosts = async (options) => {
+  try {
+    const client = await clientPromise;
+    const db = client.db("bank");
+    const collection = db.collection("cost");
+    return await collection.find({}).toArray();
+  } catch (error) {
+    console.error("Error fetching costs:", error);
+    return { error: 'Internal Server Error' };
+  }
 }

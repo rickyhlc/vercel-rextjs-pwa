@@ -12,6 +12,8 @@ import EditCostPanel from "./editCostPanel";
 import DatePicker from "@/components/datePicker";
 import BottomDrawer from "@/components/bottomDrawer";
 
+import { getCosts, saveCosts } from "@/actions/bank";
+
 import './bank.css';
 
 export default function BankPage() {
@@ -34,11 +36,15 @@ export default function BankPage() {
 
    // init page display
   useEffect(() => {
-    initDB().then(db => {
+    initDB().then(async db => {
       dbRef.current = db;
       reloadCostAsync(calendarView, startDate);
       reloadFlagsAsync();
       reloadCatTypeAsync();
+      // let x = await fetch('api/bank/getCosts');
+      // console.log("~~~~~~~~~~~", await x.json()); TODOricky
+      console.log("~~~", await getCosts());
+      console.log("~~~", await saveCosts());
     });
     return () => dbRef.current?.close();
   }, []);

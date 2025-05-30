@@ -1,7 +1,7 @@
 "use client";
 
-// import { useEffect, useCallback } from "react";
 import { SwipeableDrawer } from '@mui/material';
+import BackPrompt from './backPrompt';
 
 import './bottomDrawer.css';
 
@@ -41,6 +41,7 @@ export default function BottomDrawer({ isOpen, onCancel, children }) {
       open={isOpen}
       onClose={onCancel}
     >
+      {isOpen && <BackPrompt />}
       {children}
     </SwipeableDrawer>
   );
