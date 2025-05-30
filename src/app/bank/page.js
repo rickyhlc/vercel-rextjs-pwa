@@ -7,13 +7,13 @@ import { getToday, dateFormat, getFlagIcon, BTN_BLUER, PLAIN_BTN_BLUE, ALL_ZINC,
 import DownArrowIcon from "@/icons/downArrow";
 import EditIcon from "@/icons/edit";
 import AddIcon from "@/icons/add";
+import MenuDotsIcon from "@/icons/menuDots";
 import { Accordion, AccordionSummary, AccordionDetails, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import EditCostPanel from "./editCostPanel";
+import MorePanel from "./morePanel";
 import DatePicker from "@/components/datePicker";
 import BottomDrawer from "@/components/bottomDrawer";
 
-import { getCosts, saveCosts, checkHasBackup } from "@/actions/bank";
-import { SwipeableDrawer } from '@mui/material';
 import './bank.css';
 
 export default function BankPage() {
@@ -25,7 +25,8 @@ export default function BankPage() {
   const [costs, _setCosts] = useState(null);
   const [summary, setSummary] = useState({});
   const dbRef = useRef(null);
-  const [newCost, setNewCost] = useState(null);const [isopen, setIsOpen] = useState(false);
+  const [newCost, setNewCost] = useState(null);
+  const [showMore, setShowMore] = useState(false);
 
   // watch param change and reload cost display
   useEffect(() => {
@@ -41,11 +42,6 @@ export default function BankPage() {
       reloadCostAsync(calendarView, startDate);
       reloadFlagsAsync();
       reloadCatTypeAsync();
-      // console.log("~~~", await getCosts());
-      // console.log("~~~", await checkHasBackup());
-      // console.log("~~~", JSON.stringify(await saveCosts([{ a: 64564 }, { a: 5 }])));
-      // console.log("~~~", await getCosts());
-      // console.log("~~~", await checkHasBackup());
     });
     return () => dbRef.current?.close();
   }, []);
@@ -167,7 +163,7 @@ export default function BankPage() {
         })}
       </div>
 
-      <div className="flex items-center justify-between px-[16px] py-4">
+      <div className="flex items-center ps-[16px] py-4">
         <div className="flex gap-4 items-center">
           <ToggleButtonGroup
             color="primary"
@@ -180,8 +176,11 @@ export default function BankPage() {
           </ToggleButtonGroup>
           {summary && <DatePicker value={startDate} setValue={setStartDate} selectionType={calendarView} hideSelection={true}/>}
         </div>
-        <button className={`rounded-full p-2 ${BTN_BLUER}`} disabled={!catTypeMap || !flags} onClick={showAddCostPanel}>
+        <button className={`ms-auto rounded-full p-2 ${BTN_BLUER}`} disabled={!catTypeMap || !flags} onClick={showAddCostPanel}>
           <AddIcon sizeClass="w-8 h-8"/>
+        </button>
+        <button className={`p-1`} disabled={!catTypeMap || !flags} onClick={() => setShowMore(true)}>
+          <MenuDotsIcon sizeClass="w-8 h-8"/>
         </button>
         <BottomDrawer isOpen={newCost} onCancel={() => setNewCost(null)}>
           {newCost && (
@@ -193,17 +192,10 @@ export default function BankPage() {
             />
           )}
         </BottomDrawer>
+        <BottomDrawer isOpen={showMore} onCancel={() => setShowMore(false)}>
+          {showMore && <MorePanel onSetFilter={"TODO"}/>}
+        </BottomDrawer>
       </div>
-      <SwipeableDrawer
-        anchor={"bottom"}
-        disableSwipeToOpen={false}
-        swipeAreaWidth={50}
-        open={isopen}
-        onOpen={() => setIsOpen(true)}
-        onClose={() => setIsOpen(false)}
-      >
-        asdfasdf
-      </SwipeableDrawer>
     </div>
   );
 }

@@ -5,7 +5,7 @@ import BackPrompt from './backPrompt';
 
 import './bottomDrawer.css';
 
-export default function BottomDrawer({ isOpen, onCancel, children }) {
+export default function BottomDrawer({ isOpen, onOpen, onCancel, children }) {
 
   // useEffect(() => {
   //   if (isOpen) {
@@ -39,6 +39,7 @@ export default function BottomDrawer({ isOpen, onCancel, children }) {
     <SwipeableDrawer
       anchor={"bottom"}
       open={isOpen}
+      onOpen={onOpen}
       onClose={onCancel}
     >
       {isOpen && <BackPrompt />}
