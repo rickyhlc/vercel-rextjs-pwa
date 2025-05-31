@@ -193,7 +193,7 @@ export default function BankPage() {
           )}
         </BottomDrawer>
         <BottomDrawer isOpen={showMore} onCancel={() => setShowMore(false)}>
-          {showMore && <MorePanel onSetFilter={"TODO"}/>}
+          {showMore && <MorePanel onSetFilter={"TODO"} localDB={dbRef.current}/>}
         </BottomDrawer>
       </div>
     </div>

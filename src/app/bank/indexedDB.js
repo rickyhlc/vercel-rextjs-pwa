@@ -107,7 +107,17 @@ class BankDB {
   getCosts(startDate, endDate) {
     return this.#openObjectStore("cost", false, (objectStore, resolve, reject) => {
       const index = objectStore.index("byDate");
-      const request = index.getAll(IDBKeyRange.bound(startDate, endDate, false, true));
+      let query;
+      if (startDate) {
+        if (endDate) {
+          query = IDBKeyRange.bound(startDate, endDate, false, true);
+        } else {
+          query = IDBKeyRange.lowerBound(startDate);
+        }
+      } else if (endDate) {
+        query = IDBKeyRange.upperBound(endDate, true);
+      }
+      const request = index.getAll(query);
       request.onsuccess = () => resolve(request.result);
       request.onerror = (event) => reject(event);
     });

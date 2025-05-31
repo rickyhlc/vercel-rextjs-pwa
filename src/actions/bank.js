@@ -49,16 +49,19 @@ export const saveCosts = async (costs) => {
     if (error) {
       return { error };
     } else {
-      return await collection.updateOne(
+      const backupDate = new Date().getTime();
+      const res = await collection.updateOne(
         { email },
         { $set: 
           {
-            date: new Date().getTime(),
+            date: backupDate,
             data: costs
           }
         },
         { upsert: true }
       );
+      console.log("~~~~~~~~~~~~~~~~~~~", res);
+      return res.acknowledged ? { success: true, date: backupDate } : { error: 'Failed to save costs' };
     }
   } catch (error) {
     console.error("Error saving costs:", error);
