@@ -35,7 +35,8 @@ export const getCosts = async (options) => {
     if (error) {
       return { error };
     } else {
-      return await collection.findOne({ email }, { projection: { _id: 0, data: 1 } });
+      const res = await collection.findOne({ email }, { projection: { _id: 0, data: 1 } });
+      return res.data;
     }
   } catch (error) {
     console.error("Error fetching costs:", error);
@@ -60,7 +61,6 @@ export const saveCosts = async (costs) => {
         },
         { upsert: true }
       );
-      console.log("~~~~~~~~~~~~~~~~~~~", res);
       return res.acknowledged ? { success: true, date: backupDate } : { error: 'Failed to save costs' };
     }
   } catch (error) {

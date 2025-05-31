@@ -83,10 +83,10 @@
 }
 
 /* divider */
-.MuiDivider-root {
+.MuiDivider-root.MuiDivider-root {
   &:before,
   &:after {
-    border-color: rgba(255, 255, 255, 0.40);
+    border-top-color: rgba(255, 255, 255, 0.40);
   }
   .MuiDivider-wrapper {
     color: rgba(255, 255, 255, 0.40);

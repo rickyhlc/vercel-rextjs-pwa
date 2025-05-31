@@ -4,14 +4,14 @@ import { useState, useEffect } from "react";
 import { CAT_LIST } from "./indexedDB";
 import UploadIcon from "@/icons/upload";
 import DownloadIcon from "@/icons/download";
-import TickIcon from "@/icons/tick";
+import ResetIcon from "@/icons/reset";
 import { getCosts, saveCosts, checkHasBackup } from "@/actions/bank";
 import { dateFormat, timeFormat, getFlagIcon, PLAIN_BTN_BLUE, BTN_BLUER } from "@/lib/utils";
-import { Divider, Checkbox } from '@mui/material';
+import { Divider, CircularProgress, Checkbox } from '@mui/material';
 
 export default function MorePanel({ filter, setFilter, localDB, flags }) {
 
-  const [backupDate, setBackupDate] = useState(null);
+  const [backupDate, setBackupDate] = useState(null); // null = loading, false = no backup date
   useEffect(() => {
     checkHasBackup().then(res => {
       if (res?.error) {
@@ -21,6 +21,7 @@ export default function MorePanel({ filter, setFilter, localDB, flags }) {
       }
     });
   }, []);
+
       // console.log("~~~", await getCosts());
       // console.log("~~~", await checkHasBackup());
       // console.log("~~~", JSON.stringify(await saveCosts([{ a: 64564 }, { a: 5 }])));
@@ -29,6 +30,7 @@ export default function MorePanel({ filter, setFilter, localDB, flags }) {
     
     async function backupHandler() {
       if (!backupDate || confirm("Are you sure you want to restore the backup? This will overwrite your current data.")) {
+        setBackupDate(null);
         const data = await localDB.getCosts();
         const res = await saveCosts(data);
         if (res.success) {
@@ -39,14 +41,28 @@ export default function MorePanel({ filter, setFilter, localDB, flags }) {
     async function restoreHandler() {
       if (confirm("Are you sure you want to restore the backup? This will overwrite your current data.")) {
         const data = await getCosts();
-        console.log("Restoring data:", data);
+        await localDB.clearAllCosts();
+        await localDB.saveCosts(data);
+        console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~TODOricky refresh screen");
       }
+    }
+
+    let dateElm;
+    if (backupDate) {
+      dateElm = <span>{`${dateFormat(backupDate)} ${timeFormat(backupDate, "second")}`}</span>;
+    } else if (backupDate === null) {
+      dateElm = <CircularProgress size={16} />;
+    } else {
+      dateElm = <span>-</span>;
     }
 
    return (
     <>
+      <Divider variant="middle">
+        <span className="text-xs">Backup</span>
+      </Divider>
       <div className="flex items-center px-[16px] py-2">
-        <span>Last backup: {backupDate ? `${dateFormat(backupDate)} ${timeFormat(backupDate, "second")}` : "-"}</span>
+        <span className="me-2">Last backup:</span>{dateElm}
         <button className={`ms-auto rounded-full p-2 ${PLAIN_BTN_BLUE}`} disabled={!localDB || backupDate === null} onClick={backupHandler}>
           <UploadIcon className="w-6 h-6 text-inherit"/>
         </button>
@@ -76,9 +92,9 @@ export default function MorePanel({ filter, setFilter, localDB, flags }) {
         <button
           className={`ms-auto rounded-full p-2 ${BTN_BLUER}`}
           disabled={!flags}
-          // onClick={handleSave}
+          onClick={() => setFilter({})}
         >
-          <TickIcon sizeClass="w-8 h-8"/>
+          <ResetIcon sizeClass="w-8 h-8"/>
         </button>
       </div>
     </>

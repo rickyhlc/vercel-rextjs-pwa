@@ -77,7 +77,7 @@ class BankDB {
     return new Promise((resolve, reject) => {
       const transaction = this.#db.transaction(storeName, readWrite ? "readwrite" : "readonly");
       const store = transaction.objectStore(storeName);
-      callback(store, resolve, reject);
+      callback(store, resolve, reject, transaction);
       if (readWrite) {
         transaction.commit();
       }
@@ -95,6 +95,21 @@ class BankDB {
       const request = objectStore.put(data);
       request.onsuccess = () => resolve(request.result);
       request.onerror = (event) => reject(event);
+    });
+  }
+  /**
+   * 
+   * @param datas [(id[update], date, cat, type, value, desc)]
+   * @returns promise the new key
+   * @description add or update cost type to the DB
+   */
+  saveCosts(datas) {
+    return this.#openObjectStore("cost", true, (objectStore, resolve, reject, transaction) => {
+      transaction.oncomplete = (e) => {
+        resolve(e);
+      }
+      transaction.onerror = (event) => reject(event);
+      datas.forEach(d => objectStore.put(d));
     });
   }
   /**
@@ -131,6 +146,18 @@ class BankDB {
   deleteCost(id) {
     return this.#openObjectStore("cost", true, (objectStore, resolve, reject) => {
       const request = objectStore.delete(id);
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = (event) => reject(event);
+    });
+  }
+  /**
+   * 
+   * @returns promise
+   * @description delete all costs from the DB
+   */
+  clearAllCosts() {
+    return this.#openObjectStore("cost", true, (objectStore, resolve, reject) => {
+      const request = objectStore.clear();
       request.onsuccess = () => resolve(request.result);
       request.onerror = (event) => reject(event);
     });
