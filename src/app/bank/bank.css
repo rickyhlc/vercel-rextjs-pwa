@@ -81,3 +81,14 @@
     border-color: var(--color-blue-400);
   }
 }
+
+/* divider */
+.MuiDivider-root {
+  &:before,
+  &:after {
+    border-color: rgba(255, 255, 255, 0.40);
+  }
+  .MuiDivider-wrapper {
+    color: rgba(255, 255, 255, 0.40);
+  }
+}

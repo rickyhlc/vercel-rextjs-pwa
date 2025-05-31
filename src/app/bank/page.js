@@ -20,6 +20,7 @@ export default function BankPage() {
   const today = getToday();
   const [calendarView, setCalendarView] = useState("day");
   const [startDate, setStartDate] = useState(today);
+  const [filter, setFilter] = useState({});
   const [catTypeMap, setCatTypeMap] = useState(null);
   const [flags, setFlags] = useState(null);
   const [costs, _setCosts] = useState(null);
@@ -27,7 +28,7 @@ export default function BankPage() {
   const dbRef = useRef(null);
   const [newCost, setNewCost] = useState(null);
   const [showMore, setShowMore] = useState(false);
-
+  
   // watch param change and reload cost display
   useEffect(() => {
     if (dbRef.current) {
@@ -193,7 +194,7 @@ export default function BankPage() {
           )}
         </BottomDrawer>
         <BottomDrawer isOpen={showMore} onCancel={() => setShowMore(false)}>
-          {showMore && <MorePanel onSetFilter={"TODO"} localDB={dbRef.current}/>}
+          {showMore && <MorePanel filter={filter} setFilter={setFilter} localDB={dbRef.current} flags={flags}/>}
         </BottomDrawer>
       </div>
     </div>

@@ -41,6 +41,19 @@ export const dateFormat = (date, fmt) => {
   return date.toLocaleDateString("en-GB", options);
 }
 
+export const timeFormat = (date, fmt) => {
+  let options = {
+    hour: "2-digit"
+  }
+  if (fmt === "minute") {
+    options.minute = "2-digit";
+  } else if (fmt === "second") {
+    options.minute = "2-digit";
+    options.second = "2-digit";
+  }
+  return date.toLocaleTimeString("en-GB", options);
+}
+
 export const TXT_ZINC = "text-zinc-800 dark:text-zinc-200";
 export const BG_ZINC = "bg-zinc-200 dark:bg-zinc-800";
 export const TXT_DISABLED = "disabled:text-zinc-400 dark:disabled:text-zinc-600";
