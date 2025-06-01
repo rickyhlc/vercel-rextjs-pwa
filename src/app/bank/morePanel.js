@@ -105,7 +105,8 @@ export default function MorePanel({ filter, onSetFilter, onRefresh, onClose, loc
         {flags.map(f => (
           <label key={f.id} className="flex items-center w-1/2">
             <Checkbox color="primary" checked={filter?.[f.id] === "e" || false} onChange={e => {
-              let _filter = filter ? {...filter, [f.id]: e.target.checked ? "e" : null} : {};
+              let _filter = filter ? {...filter} : {};
+              _filter[f.id] = e.target.checked ? "e" : null;
               setFilter(_filter);
             }}/>{f.name}{getFlagIcon(f, "ms-1 w-4 h-4 text-inherit")}
           </label>
