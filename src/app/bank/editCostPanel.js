@@ -69,7 +69,7 @@ export default function EditCostPanel({ onSave, cost, flags, catTypeMap }) {
           </label>
         ))}
       </div>
-      <div className="flex justify-between px-[16px] py-2">
+      <div className="flex justify-between px-[16px] pt-2 pb-4">
         <TextField
           label="$"
           type="number"

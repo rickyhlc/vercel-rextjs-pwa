@@ -112,7 +112,7 @@ export default function MorePanel({ filter, onSetFilter, onRefresh, onClose, loc
           </label>
         ))}
       </div>
-      <div className="flex items-center px-[16px] py-2">
+      <div className="flex items-center px-[16px] pb-4">
         <button
           className={`ms-auto rounded-full p-2 ${BTN_BLUER}`}
           disabled={!flags}
