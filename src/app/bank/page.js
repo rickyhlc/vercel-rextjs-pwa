@@ -8,6 +8,7 @@ import DownArrowIcon from "@/icons/downArrow";
 import EditIcon from "@/icons/edit";
 import AddIcon from "@/icons/add";
 import MenuDotsIcon from "@/icons/menuDots";
+import FilterIcon from "@/icons/filter";
 import { Accordion, AccordionSummary, AccordionDetails, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import EditCostPanel from "./editCostPanel";
 import MorePanel from "./morePanel";
@@ -20,7 +21,7 @@ export default function BankPage() {
   const today = getToday();
   const [calendarView, setCalendarView] = useState("day");
   const [startDate, setStartDate] = useState(today);
-  const [filter, setFilter] = useState({});
+  const [filter, setFilter] = useState(null);
   const [catTypeMap, setCatTypeMap] = useState(null);
   const [flags, setFlags] = useState(null);
   const [costs, _setCosts] = useState(null);
@@ -31,16 +32,14 @@ export default function BankPage() {
   
   // watch param change and reload cost display
   useEffect(() => {
-    if (dbRef.current) {
-      reloadCostAsync(calendarView, startDate);
-    }
-  }, [startDate]);
+    reloadCostAsync();
+  }, [startDate, filter]);
 
    // init page display
   useEffect(() => {
     initDB().then(async db => {
       dbRef.current = db;
-      reloadCostAsync(calendarView, startDate);
+      reloadCostAsync();
       reloadFlagsAsync();
       reloadCatTypeAsync();
     });
@@ -82,15 +81,15 @@ export default function BankPage() {
       return data;
     }
   }
-  async function reloadCostAsync(cView, sDate) {
+  async function reloadCostAsync() {
     if (dbRef.current){
-      let endDate = new Date(sDate);
-      if (cView === "month") {
-        endDate.setMonth(sDate.getMonth() + 1);
+      let endDate = new Date(startDate);
+      if (calendarView === "month") {
+        endDate.setMonth(startDate.getMonth() + 1);
       } else {
-        endDate.setDate(sDate.getDate() + 1);
+        endDate.setDate(startDate.getDate() + 1);
       }
-      let data = await dbRef.current.getCosts(sDate.getTime(),  endDate.getTime());
+      let data = await dbRef.current.getCosts(startDate.getTime(), endDate.getTime(), filter);
       if (data) {
         data = Object.groupBy(data, (item) => item.cat);
         setCosts(data);
@@ -114,7 +113,7 @@ export default function BankPage() {
     }
     try {
       await dbRef.current?.saveCost(costData);
-      await reloadCostAsync(calendarView, startDate);  
+      await reloadCostAsync();  
       setNewCost(null);
     } catch (err) {
       console.log("add cost error", err);
@@ -129,13 +128,13 @@ export default function BankPage() {
           <div className={`${TXT_ZINC} text-xs`}>Expenses in</div>
           <div className={`${TXT_ZINC} text-2xl`}>{dateFormat(startDate, calendarView === "month" ? "month" : null)}</div>
         </div>
-        <div className="text-5xl">${summary.total?.toFixed(1)}</div>
+        <div className="text-4xl">${summary.total?.toFixed(1)}</div>
       </div>
       <div className="grow-1 basis-0 overflow-auto">
         {costs && CAT_LIST.map(cat => {
           return (
             <Accordion key={cat}>
-              <AccordionSummary expandIcon={<DownArrowIcon colorClass={TXT_ZINC} />}>
+              <AccordionSummary expandIcon={<DownArrowIcon colorClass="text-inherit" />}>
                 <div className="flex justify-between items-center w-full pe-4">
                   <span>{cat}</span>
                   <span>${summary[cat]?.toFixed(1)}</span>
@@ -178,10 +177,14 @@ export default function BankPage() {
           {summary && <DatePicker value={startDate} setValue={setStartDate} selectionType={calendarView} hideSelection={true}/>}
         </div>
         <button className={`ms-auto rounded-full p-2 ${BTN_BLUER}`} disabled={!catTypeMap || !flags} onClick={showAddCostPanel}>
-          <AddIcon sizeClass="w-8 h-8"/>
+          <AddIcon className="w-8 h-8 text-inherit"/>
         </button>
-        <button className={`p-1`} disabled={!catTypeMap || !flags} onClick={() => setShowMore(true)}>
-          <MenuDotsIcon sizeClass="w-8 h-8"/>
+        <button className={`rounded-full p-2 ${PLAIN_BTN_BLUE}`} disabled={!catTypeMap || !flags} onClick={() => setShowMore(true)}>
+          {filter ? (
+            <FilterIcon className={!catTypeMap || !flags ? "w-8 h-8 text-blue-200/70" : "w-8 h-8 text-blue-200"}/>
+          ) : (
+            <MenuDotsIcon className="w-8 h-8 text-inherit"/>
+          )}
         </button>
         <BottomDrawer isOpen={newCost} onCancel={() => setNewCost(null)}>
           {newCost && (
@@ -194,7 +197,16 @@ export default function BankPage() {
           )}
         </BottomDrawer>
         <BottomDrawer isOpen={showMore} onCancel={() => setShowMore(false)}>
-          {showMore && <MorePanel filter={filter} setFilter={setFilter} localDB={dbRef.current} flags={flags}/>}
+          {showMore && (
+            <MorePanel
+              filter={filter}
+              onSetFilter={setFilter}
+              onRefresh={reloadCostAsync}
+              onClose={() => setShowMore(false)}
+              localDB={dbRef.current}
+              flags={flags}
+            />
+          )}
         </BottomDrawer>
       </div>
     </div>

@@ -87,7 +87,7 @@ export default function EditCostPanel({ onSave, cost, flags, catTypeMap }) {
           disabled={disableSave}
           onClick={handleSave}
         >
-          <TickIcon sizeClass="w-8 h-8"/>
+          <TickIcon sizeClass="w-8 h-8 text-inherit"/>
         </button>
       </div>
     </>

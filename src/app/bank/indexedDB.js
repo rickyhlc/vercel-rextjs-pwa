@@ -99,7 +99,7 @@ class BankDB {
   }
   /**
    * 
-   * @param datas [(id[update], date, cat, type, value, desc)]
+   * @param datas object[(id[update], date, cat, type, value, desc)]
    * @returns promise the new key
    * @description add or update cost type to the DB
    */
@@ -114,12 +114,13 @@ class BankDB {
   }
   /**
    * 
-   * @param startDate timestamp
-   * @param endDate timestamp
+   * @param startDate timestamp, optional
+   * @param endDate timestamp, optional
+   * @param flagFilters object[FLAG_NAME: "e|i"], optional
    * @returns promise
    * @description get all costs in the given date range
    */
-  getCosts(startDate, endDate) {
+  getCosts(startDate, endDate, flagFilters) {
     return this.#openObjectStore("cost", false, (objectStore, resolve, reject) => {
       const index = objectStore.index("byDate");
       let query;
@@ -132,9 +133,48 @@ class BankDB {
       } else if (endDate) {
         query = IDBKeyRange.upperBound(endDate, true);
       }
-      const request = index.getAll(query);
-      request.onsuccess = () => resolve(request.result);
-      request.onerror = (event) => reject(event);
+      let includeOnly = null;
+      let excludes = [];
+      Object.entries(flagFilters || {}).forEach(f => {
+        if (f[1] === "e") {
+          excludes.push(f[0]);
+        } else if (f[1] === "oi") {
+          includeOnly = f[0];
+        }
+      });
+      if (includeOnly || excludes.length) {
+        const isExcluded = (cur) => {
+          for (let i=0; i<excludes.length; i++){
+            if (cur.value[excludes[i]]) {
+              return true;
+            }
+          }
+        }
+        const request = index.openCursor(query);
+        let results = [];
+        request.onsuccess = (event) => {
+          const cursor = event.target.result;
+          if (cursor) {
+            if (!isExcluded(cursor)) {
+              if (includeOnly) {
+                if (cursor.value[includeOnly]) {
+                  results.push(cursor.value);
+                }
+              } else {
+                results.push(cursor.value);
+              }
+            }
+            cursor.continue();
+          } else {
+            resolve(results);
+          }
+        }
+        request.onerror = (event) => reject(event);
+      } else {
+        const request = index.getAll(query);
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = (event) => reject(event);
+      }
     });
   }
   /**
