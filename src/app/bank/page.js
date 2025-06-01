@@ -164,7 +164,7 @@ export default function BankPage() {
       </div>
 
       <div className="flex items-center ps-[16px] py-4">
-        <div className="flex gap-4 items-center">
+        <div className="flex gap-2 items-center">
           <ToggleButtonGroup
             color="primary"
             value={calendarView}
