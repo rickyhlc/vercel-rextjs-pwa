@@ -22,7 +22,7 @@ export default function HomePage() {
   useEffect(() => {
     const handleBeforeInstallPrompt = async (e) => {
       // e.preventDefault();
-      const { outcome } = await deferredPrompt.userChoice;
+      const { outcome } = await e.userChoice;
       console.log(outcome, "~~~~~~~~~~");
       if (outcome === "dismissed") {
         setDeferredPrompt(e);
