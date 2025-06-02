@@ -44,9 +44,10 @@
         "url": "/camera",
         "icons": [
           {
-            "src": "/icon-192x192.png",
+            "src": "/camera-192x192.png",
             "type": "image/png",
-            "sizes": "192x192"
+            "sizes": "192x192",
+            "purpose": "maskable"
           }
         ]
       }
