@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { getSession, logout } from "@/actions/auth";
+import { timeFormat, dateFormat } from "@/lib/utils";
 
 export default function HomePage() {
   const router = useRouter();
@@ -34,7 +35,7 @@ export default function HomePage() {
       deferredPrompt.prompt();
       const { outcome } = await deferredPrompt.userChoice;
       setDeferredPrompt(null);
-      console.log(`~~~User 2nd response to the install prompt: ${outcome === 'dismissed'}`);
+      console.log(`~~~User response to the install prompt: ${outcome}`);
     }
   }
 
@@ -42,10 +43,10 @@ export default function HomePage() {
   <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
     <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
     <div className="flex gap-8 items-center">
-      <button className="bg-blue-300 text-white px-30 py-2 rounded hover:bg-blue-400 active:bg-blue-500" onClick={() => setCount(count + 1)}>Add 1</button>
-      {deferredPrompt != null  && <button className="bg-blue-300 text-white px-30 py-2 rounded hover:bg-blue-400 active:bg-blue-500" onClick={handleInstall}>Install me</button>}
+      <button className="bg-blue-700 text-white w-25 py-2 rounded hover:bg-blue-800 active:bg-blue-900" onClick={() => setCount(count + 1)}>Add 1</button>
+      {deferredPrompt != null  && <button className="bg-blue-700 text-white w-25 py-2 rounded hover:bg-blue-800 active:bg-blue-900" onClick={handleInstall}>Install me</button>}
     </div>
-    <div className="">{expTime?.toString()}({count})</div>
+    <div className="">{expTime ? dateFormat(expTime) + " " + timeFormat(expTime, "second") : "-"} ({count})</div>
     <div className="flex gap-8 items-center">
       <button className="bg-blue-700 text-white w-20 py-2 rounded hover:bg-blue-800 active:bg-blue-900" onClick={() => router.push("/signIn")}>Login</button>
       <button className="bg-blue-300 text-white w-20 py-2 rounded hover:bg-blue-400 active:bg-blue-500" onClick={() => logout()}>Logout</button>
