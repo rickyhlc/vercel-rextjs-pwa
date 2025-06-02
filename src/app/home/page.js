@@ -18,11 +18,34 @@ export default function HomePage() {
   getSess();
   }, [count]);
 
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [isInstallable, setIsInstallable] = useState(false);
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e) => {;console.log(e, "~~~~~~~~~~~~~");
+      // e.preventDefault();
+      setDeferredPrompt(e);
+      setIsInstallable(true);
+    }
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+  }, []);
+
+  async function handleInstall(){
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      setDeferredPrompt(null);
+      setIsInstallable(false);
+      console.log(`User response to the install prompt: ${outcome === 'dismissed'}`);
+    }
+  }
+
   return (
   <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
     <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
     <div className="flex gap-8 items-center">
       <button className="bg-blue-300 text-white px-30 py-2 rounded hover:bg-blue-400 active:bg-blue-500" onClick={() => setCount(count + 1)}>Add 1</button>
+      {isInstallable  && <button className="bg-blue-300 text-white px-30 py-2 rounded hover:bg-blue-400 active:bg-blue-500" onClick={handleInstall}>Install me</button>}
     </div>
     <div className="">{expTime?.toString()}({count})</div>
     <div className="flex gap-8 items-center">
