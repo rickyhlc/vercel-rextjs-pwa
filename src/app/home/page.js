@@ -19,12 +19,14 @@ export default function HomePage() {
   }, [count]);
 
   const [deferredPrompt, setDeferredPrompt] = useState(null);
-  const [isInstallable, setIsInstallable] = useState(false);
   useEffect(() => {
-    const handleBeforeInstallPrompt = (e) => {;console.log(e, "~~~~~~~~~~~~~");
+    const handleBeforeInstallPrompt = async (e) => {
       // e.preventDefault();
-      setDeferredPrompt(e);
-      setIsInstallable(true);
+      const { outcome } = await deferredPrompt.userChoice;
+      console.log(outcome, "~~~~~~~~~~");
+      if (outcome === "dismissed") {
+        setDeferredPrompt(e);
+      }
     }
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
     return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
@@ -35,8 +37,7 @@ export default function HomePage() {
       deferredPrompt.prompt();
       const { outcome } = await deferredPrompt.userChoice;
       setDeferredPrompt(null);
-      setIsInstallable(false);
-      console.log(`User response to the install prompt: ${outcome === 'dismissed'}`);
+      console.log(`~~~User 2nd response to the install prompt: ${outcome === 'dismissed'}`);
     }
   }
 
@@ -45,7 +46,7 @@ export default function HomePage() {
     <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
     <div className="flex gap-8 items-center">
       <button className="bg-blue-300 text-white px-30 py-2 rounded hover:bg-blue-400 active:bg-blue-500" onClick={() => setCount(count + 1)}>Add 1</button>
-      {isInstallable  && <button className="bg-blue-300 text-white px-30 py-2 rounded hover:bg-blue-400 active:bg-blue-500" onClick={handleInstall}>Install me</button>}
+      {deferredPrompt != null  && <button className="bg-blue-300 text-white px-30 py-2 rounded hover:bg-blue-400 active:bg-blue-500" onClick={handleInstall}>Install me</button>}
     </div>
     <div className="">{expTime?.toString()}({count})</div>
     <div className="flex gap-8 items-center">
