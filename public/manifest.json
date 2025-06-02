@@ -33,7 +33,8 @@
           {
             "src": "/bank-192x192.png",
             "type": "image/png",
-            "sizes": "192x192"
+            "sizes": "192x192",
+            "purpopse": "maskable"
           }
         ]
       },
