@@ -21,12 +21,9 @@ export default function HomePage() {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   useEffect(() => {
     const handleBeforeInstallPrompt = async (e) => {
-      // e.preventDefault();
-      console.log("#################################");
-      const { outcome } = await e.userChoice;
-      if (outcome === "dismissed") {
-        setDeferredPrompt(e);
-      }
+      console.log("install triggered");
+      e.preventDefault();
+      setDeferredPrompt(e);
     }
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
     return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
