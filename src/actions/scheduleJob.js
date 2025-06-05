@@ -12,7 +12,7 @@ export const test = async (options) => {
     const res = await fetch("https://rickyzero-api.vercel.app/home", {
       method: "GET",
       headers: {
-        'X-Customer-Key': email,
+        'X-Custom-Key': email,
         'Content-Type': 'application/json',
       },
     });
