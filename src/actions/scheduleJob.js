@@ -1,3 +1,5 @@
+"use server";
+
 export const test = async (options) => {
   try {
     return await fetch("https://rickyzero-api.vercel.app/home");
