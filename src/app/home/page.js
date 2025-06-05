@@ -15,7 +15,7 @@ export default function HomePage() {
   useEffect(() => {
   const getSess = async () => {
     const exp = (await getSession())?.expires;
-    setExpTime(new Date(exp));console.log(await test());
+    setExpTime(new Date(exp));console.log(await test());//TODOricky
   } 
   getSess();
   }, [count]);
