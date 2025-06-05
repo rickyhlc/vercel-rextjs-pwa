@@ -54,6 +54,36 @@ export const timeFormat = (date, fmt) => {
   return date.toLocaleTimeString("en-GB", options);
 }
 
+export const urlBase64ToUint8Array = (base64String) => {
+  const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+  const base64 = (base64String + padding).replace(/\\-/g, '+').replace(/_/g, '/');
+ 
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+ 
+  for (let i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+}
+
+export const subscribePushNotification = async () => {
+  const registration = await navigator.serviceWorker.ready;
+  // this will return the existing subscription if already created
+  const sub = await registration.pushManager.subscribe({
+    userVisibleOnly: true,
+    applicationServerKey: urlBase64ToUint8Array(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY),
+  });
+  await subscribeUser(sub);//TODOricky
+  return sub;
+}
+export const unsubscribePushNotification = async () => {
+  const registration = await navigator.serviceWorker.ready;
+  const subscription = await registration.pushManager.getSubscription()
+  await subscription?.unsubscribe();
+  await unsubscribeUser();//TODOricky
+}
+
 export const TXT_ZINC = "text-zinc-800 dark:text-zinc-200";
 export const BG_ZINC = "bg-zinc-200 dark:bg-zinc-800";
 export const TXT_DISABLED = "disabled:text-zinc-400 dark:disabled:text-zinc-600";

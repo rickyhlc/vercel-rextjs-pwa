@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { getSession, logout } from "@/actions/auth";
+import { test } from "@/actions/scheduleJob";
 import { timeFormat, dateFormat } from "@/lib/utils";
 
 export default function HomePage() {
@@ -14,11 +15,12 @@ export default function HomePage() {
   useEffect(() => {
   const getSess = async () => {
     const exp = (await getSession())?.expires;
-    setExpTime(new Date(exp));
+    setExpTime(new Date(exp));console.log(await test());
   } 
   getSess();
   }, [count]);
 
+  // install pwa button
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   useEffect(() => {
     const handleBeforeInstallPrompt = async (e) => {
@@ -29,14 +31,28 @@ export default function HomePage() {
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
     return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
   }, []);
-
-  async function handleInstall(){
+  async function handleInstall() {
     if (deferredPrompt) {
       deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
+      await deferredPrompt.userChoice;
       setDeferredPrompt(null);
-      console.log(`~~~User response to the install prompt: ${outcome}`);
     }
+  }
+
+  // push notification
+  function showNotification() {
+    Notification.requestPermission((status) => {
+      if (status === "granted") {
+        // send notification
+        new Notification("标题", {
+          tag: 1, // notification id, won't show if same tag already shown and renotify=false
+          dir: "auto",
+          body: "testing",
+          renotify: true,
+          icon: "https://uxwing.com/wp-content/themes/uxwing/download/sport-and-awards/dollar-medal-cash-prize-icon.png",
+        });
+      }
+    });
   }
 
   return (
@@ -45,6 +61,9 @@ export default function HomePage() {
     <div className="flex gap-8 items-center">
       <button className="bg-blue-700 text-white w-25 py-2 rounded hover:bg-blue-800 active:bg-blue-900" onClick={() => setCount(count + 1)}>Add 1</button>
       {deferredPrompt != null  && <button className="bg-blue-700 text-white w-25 py-2 rounded hover:bg-blue-800 active:bg-blue-900" onClick={handleInstall}>Install me</button>}
+    </div>
+    <div className="flex gap-8 items-center">
+      <button className="bg-blue-700 text-white w-25 py-2 rounded hover:bg-blue-800 active:bg-blue-900" onClick={showNotification}>Notification</button>
     </div>
     <div className="">{expTime ? dateFormat(expTime) + " " + timeFormat(expTime, "second") : "-"} ({count})</div>
     <div className="flex gap-8 items-center">
