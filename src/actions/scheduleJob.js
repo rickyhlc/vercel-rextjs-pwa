@@ -2,7 +2,8 @@
 
 export const test = async (options) => {
   try {
-    return await fetch("https://rickyzero-api.vercel.app/home");
+    const res = await fetch("https://rickyzero-api.vercel.app/home");
+    return res.json();
   } catch (error) {
     console.error("Error fetching costs:", error);
     return { error: 'Internal Server Error' };
