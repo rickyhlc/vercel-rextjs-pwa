@@ -25,7 +25,5 @@ self.addEventListener("push", (event) => {
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
   const data = event.data.json();
-  self.registration.showNotification(data.title, {
-    body: data.text + "__" + event.action,
-  });
+  event.waitUntil(self.clients.openWindow('https://web.dev'));
 });
