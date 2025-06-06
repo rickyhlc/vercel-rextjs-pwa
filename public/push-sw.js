@@ -3,9 +3,22 @@
 self.addEventListener("push", (event) => {
   const data = event.data.json();
   event.waitUntil(self.registration.showNotification(data.title, {
-    body: data.text,
+    body: data.text + "!@@!",
     icon: "/icon-192x192.png",
-    actions: ["ook", "go"]
+    actions: [
+      {
+        action: 'coffee-action',
+        title: 'Coffee',
+        type: 'button',
+        icon: '/icon-192x192.png',
+      },
+      {
+        action: 'doughnut-action',
+        type: 'text',
+        title: 'Doughnut',
+        placeholder: "placeholder"
+      }
+    ]
   }));
 });
 
