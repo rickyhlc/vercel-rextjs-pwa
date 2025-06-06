@@ -45,11 +45,12 @@ export default function HomePage() {
       if (status === "granted") {
         // send notification
         new Notification("标题", {
-          tag: 1, // notification id, won't show if same tag already shown and renotify=false
+          tag: new Date().getTime(), // notification id, won't show if same tag already shown and renotify=false
           dir: "auto",
-          body: "testing",
+          body: "testing " + new Date().getTime(),
+          requireInteraction: true,
           renotify: true,
-          icon: "https://uxwing.com/wp-content/themes/uxwing/download/sport-and-awards/dollar-medal-cash-prize-icon.png",
+          icon: "/icon-192x192.png",
         });
       }
     });

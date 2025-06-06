@@ -1,14 +1,14 @@
 "use server";
 
 import { auth } from "@/lib/authConfig";
-
+//TODOricky
 export const test = async (options) => {
   try {
     const session = await auth();
     const email = session?.user?.email;
     if (!email) {
       return { error: 'Unauthorized' };
-    };console.log("TODOricky", email);
+    }
     const res = await fetch("https://rickyzero-api.vercel.app/home", {
       method: "GET",
       headers: {
