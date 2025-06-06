@@ -61,7 +61,7 @@ export default function HomePage() {
   async function pushNotification() {
     const sub = await subscribePushNotification();
     if (sub) {
-      console.log(await test(sub));
+      console.log(await test(sub, "TESTING DATA!!!!!!!"));
     }
   }
 
