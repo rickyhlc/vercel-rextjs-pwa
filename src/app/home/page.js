@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { getSession, logout } from "@/actions/auth";
-import { test } from "@/actions/scheduleJob";
+import { test } from "@/actions/scheduleJob";//TODOricky
 import { timeFormat, dateFormat } from "@/lib/utils";
 
 export default function HomePage() {
@@ -15,7 +15,7 @@ export default function HomePage() {
   useEffect(() => {
   const getSess = async () => {
     const exp = (await getSession())?.expires;
-    setExpTime(new Date(exp));console.log(await test());//TODOricky
+    setExpTime(new Date(exp));
   } 
   getSess();
   }, [count]);
@@ -40,22 +40,22 @@ export default function HomePage() {
   }
 
   // push notification
-  function showNotification() {
-    Notification.requestPermission((status) => {
-      if (status === "granted") {
-        // send notification
-        setTimeout(() => {
-          new Notification("标题", {
-            tag: new Date().getTime(), // notification id, won't show if same tag already shown and renotify=false
-            dir: "auto",
-            body: "testing " + new Date().getTime(),
-            requireInteraction: true,
-            renotify: true,
-            icon: "/icon-192x192.png",
-          });
-        }, 4000);
-      }
-    });
+  async function showNotification() {
+    const status = await Notification.requestPermission();
+    if (status === "granted") {
+      // send notification
+      const noti = new Notification("标题", {
+        tag: new Date().getTime(), // notification id, won't show if same tag already shown and renotify=false
+        dir: "auto",
+        body: "testing " + new Date().getTime(),
+        requireInteraction: true,
+        renotify: true,
+        icon: "/icon-192x192.png",
+      });
+      noti.onclick = () => alert("OK~~");
+      noti.onerror = (e) => console.log("~~~", e);
+      noti.onclose = null;
+    }
   }
 
   return (
