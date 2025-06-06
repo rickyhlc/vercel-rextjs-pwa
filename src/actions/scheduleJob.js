@@ -12,6 +12,7 @@ export const test = async (subcription, data) => {
     const res = await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_DOMAIN}/subscribePush`, {
       method: "POST",
       headers: {
+        'Content-Type': 'application/json',
         'X-Custom-Key': email,
       },
       body: JSON.stringify({ subcription, data })
