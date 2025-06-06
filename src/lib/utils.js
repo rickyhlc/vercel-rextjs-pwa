@@ -56,25 +56,20 @@ export const timeFormat = (date, fmt) => {
 }
 
 export const urlBase64ToUint8Array = (base64String) => {
-  const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
-  const base64 = (base64String + padding).replace(/\\-/g, '+').replace(/_/g, '/');
- 
-  const rawData = window.atob(base64);
-  const outputArray = new Uint8Array(rawData.length);
- 
-  for (let i = 0; i < rawData.length; ++i) {
-    outputArray[i] = rawData.charCodeAt(i);
-  }
-  return outputArray;
+  const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+  const base64 = (base64String + padding)
+    .replace(/\\-/g, "+")
+    .replace(/_/g, "/");
+  return Buffer.from(base64, "base64");
 }
 
-export const subscribePushNotification = async () => {
+export const subscribePushNotification = async () => {;console.log("lib subcribe");
   const registration = await navigator.serviceWorker.ready;
   // this will return the existing subscription if already created
   const sub = await registration.pushManager.subscribe({
     userVisibleOnly: true,
     applicationServerKey: urlBase64ToUint8Array(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY),
-  });
+  });console.log(sub);
   return sub;
   await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_DOMAIN}/subscribe`, { data: JSON.stringify(sub) });
 }
