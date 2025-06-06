@@ -15,7 +15,7 @@ export const test = async (subcription) => {
         'X-Custom-Key': email,
         'Content-Type': 'application/json',
       },
-      data: JSON.stringify(subcription)
+      body: JSON.stringify(subcription)
     });
     return res.json();
   } catch (error) {
