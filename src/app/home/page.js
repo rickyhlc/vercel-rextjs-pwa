@@ -44,14 +44,16 @@ export default function HomePage() {
     Notification.requestPermission((status) => {
       if (status === "granted") {
         // send notification
-        new Notification("标题", {
-          tag: new Date().getTime(), // notification id, won't show if same tag already shown and renotify=false
-          dir: "auto",
-          body: "testing " + new Date().getTime(),
-          requireInteraction: true,
-          renotify: true,
-          icon: "/icon-192x192.png",
-        });
+        setTimeout(() => {
+          new Notification("标题", {
+            tag: new Date().getTime(), // notification id, won't show if same tag already shown and renotify=false
+            dir: "auto",
+            body: "testing " + new Date().getTime(),
+            requireInteraction: true,
+            renotify: true,
+            icon: "/icon-192x192.png",
+          });
+        }, 4000);
       }
     });
   }

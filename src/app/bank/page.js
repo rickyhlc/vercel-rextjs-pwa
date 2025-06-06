@@ -186,7 +186,7 @@ export default function BankPage() {
             <MenuDotsIcon className="w-8 h-8 text-inherit"/>
           )}
         </button>
-        <BottomDrawer isOpen={newCost} onCancel={() => setNewCost(null)} variant="persistent" >
+        <BottomDrawer isOpen={newCost} onCancel={() => setNewCost(null)}>
           {newCost && (
             <EditCostPanel
               cost={newCost}

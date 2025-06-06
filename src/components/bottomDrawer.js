@@ -5,7 +5,7 @@ import BackPrompt from './backPrompt';
 
 import './bottomDrawer.css';
 
-export default function BottomDrawer({ isOpen, onOpen, onCancel, children }) {
+export default function BottomDrawer({ isOpen, onOpen, onCancel, variant, children }) {
 
   // useEffect(() => {
   //   if (isOpen) {
@@ -40,6 +40,7 @@ export default function BottomDrawer({ isOpen, onOpen, onCancel, children }) {
       anchor={"bottom"}
       open={isOpen}
       onOpen={onOpen}
+      variant={variant}
       onClose={onCancel}
     >
       {isOpen && <BackPrompt />}
