@@ -2,7 +2,7 @@ import CalendarIcon from "@/icons/calendar";
 import PeopleIcon from "@/icons/people";
 import AlarmIcon from "@/icons/alarm";
 import MoneyIcon from "@/icons/money";
-import { test } from "@/actions/scheduleJob";
+import convertVapidKey from "convert-vapid-public-key";
 
 /**
  * 
@@ -80,7 +80,7 @@ export const subscribePushNotification = async () => {
       // this will return the existing subscription if already created
       const sub = await registration.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY),
+        applicationServerKey: convertVapidKey(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY),
       });
       return sub.toJSON();
     }
