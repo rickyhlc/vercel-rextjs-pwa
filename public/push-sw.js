@@ -8,14 +8,14 @@ self.addEventListener("push", (event) => {
     actions: [
       {
         action: 'coffee-action',
-        title: 'Coffee',
+        title: 'B',
         type: 'button',
         icon: '/icon-192x192.png',
       },
       {
         action: 'doughnut-action',
         type: 'text',
-        title: 'Doughnut',
+        title: 'T',
         placeholder: "placeholder"
       }
     ]
@@ -24,6 +24,13 @@ self.addEventListener("push", (event) => {
 
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
-  const data = event.data.json();
-  event.waitUntil(self.clients.openWindow('https://web.dev'));
+  event.waitUntil(clients.matchAll({
+    type: "window"
+  })
+  .then((clientList) => {
+    for (const client of clientList) {;console.log(client.url, client);
+      if (client.url === "/" && "focus" in client) return client.focus();
+    }
+    if (clients.openWindow) return clients.openWindow("/");
+  }));
 });
