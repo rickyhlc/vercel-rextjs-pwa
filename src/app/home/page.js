@@ -41,21 +41,21 @@ export default function HomePage() {
 
   // push notification
   async function showNotification() {
-    const status = await Notification.requestPermission();
-    if (status === "granted") {
-      // send notification
-      const noti = new Notification("标题", {
-        tag: new Date().getTime(), // notification id, won't show if same tag already shown and renotify=false
-        dir: "auto",
-        body: "testing " + new Date().getTime(),
-        requireInteraction: true,
-        renotify: true,
-        icon: "/icon-192x192.png",
-      });
-      noti.onclick = () => alert("OK~~");
-      noti.onerror = (e) => console.log("~~~", e);
-      noti.onclose = null;
-    }
+    // const status = await Notification.requestPermission();
+    // if (status === "granted") {
+    //   // send notification
+    //   const noti = new Notification("标题", {
+    //     tag: new Date().getTime(), // notification id, won't show if same tag already shown and renotify=false
+    //     dir: "auto",
+    //     body: "testing " + new Date().getTime(),
+    //     requireInteraction: true,
+    //     renotify: true,
+    //     icon: "/icon-192x192.png",
+    //   });
+    //   noti.onclick = () => alert("OK~~");
+    //   noti.onerror = (e) => console.log("~~~", e);
+    //   noti.onclose = null;
+    // }
   }
 
   async function pushNotification() {
