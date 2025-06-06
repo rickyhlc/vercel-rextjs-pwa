@@ -73,7 +73,7 @@ export const subscribePushNotification = async () => {
       // this will return the existing subscription if already created
       const sub = await registration.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: new Uint8Array([process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY]),
+        applicationServerKey: new Uint8Array(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY),
       });
       return sub.toJSON();
     }
