@@ -9,12 +9,13 @@ export const test = async (subcription, data) => {
     if (!email) {
       return { error: 'Unauthorized' };
     }
+
+    const reqHeaders = new Headers();
+    reqHeaders.set("Content-Type", "application/json");
+    reqHeaders.set("X-Custom-Key", email);
     const res = await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_DOMAIN}/subscribePush`, {
       method: "POST",
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Custom-Key': email,
-      },
+      headers: reqHeaders,
       body: JSON.stringify({ subcription, data })
     });
     return res.json();
