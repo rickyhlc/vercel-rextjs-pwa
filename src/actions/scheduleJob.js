@@ -2,7 +2,7 @@
 
 import { auth } from "@/lib/authConfig";
 //TODOricky
-export const test = async (subscription) => {
+export const test = async (subcription) => {
   try {
     const session = await auth();
     const email = session?.user?.email;
@@ -15,7 +15,7 @@ export const test = async (subscription) => {
         'X-Custom-Key': email,
         'Content-Type': 'application/json',
       },
-      data: JSON.stringify(subscription)
+      data: JSON.stringify(subcription)
     });
     return res.json();
   } catch (error) {

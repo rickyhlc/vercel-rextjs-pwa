@@ -60,7 +60,9 @@ export default function HomePage() {
 
   async function pushNotification() {
     const sub = await subscribePushNotification();
-    console.log(await test(sub));
+    if (sub) {
+      console.log(await test(sub));
+    }
   }
 
   return (

@@ -63,15 +63,24 @@ export const urlBase64ToUint8Array = (base64String) => {
   return Buffer.from(base64, "base64");
 }
 
-export const subscribePushNotification = async () => {;console.log("lib subcribe");
-  const registration = await navigator.serviceWorker.ready;
-  // this will return the existing subscription if already created
-  const sub = await registration.pushManager.subscribe({
-    userVisibleOnly: true,
-    applicationServerKey: urlBase64ToUint8Array(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY),
-  });console.log(sub);
-  return sub;
-  await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_DOMAIN}/subscribe`, { data: JSON.stringify(sub) });
+export const subscribePushNotification = async () => {
+  try {
+    // ask for notification permission
+    const permission = await Notification.requestPermission();
+    if (permission === "granted"){
+      // this will return the same registration if already registered
+      const registration = await navigator.serviceWorker.register("/push-sw.js");
+      // this will return the existing subscription if already created
+      const sub = await registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY),
+      });
+      return sub.toJSON();
+    }
+  } catch (e) {
+    console.log(e);
+    return { error: "unable to subscribe!" };
+  }
 }
 export const unsubscribePushNotification = async () => {
   const registration = await navigator.serviceWorker.ready;
