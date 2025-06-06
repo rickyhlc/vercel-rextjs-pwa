@@ -2,6 +2,7 @@ import CalendarIcon from "@/icons/calendar";
 import PeopleIcon from "@/icons/people";
 import AlarmIcon from "@/icons/alarm";
 import MoneyIcon from "@/icons/money";
+import { test } from "@/actions/scheduleJob";
 
 /**
  * 
@@ -74,12 +75,12 @@ export const subscribePushNotification = async () => {
     userVisibleOnly: true,
     applicationServerKey: urlBase64ToUint8Array(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY),
   });
-  await subscribeUser(sub);//TODOricky
   return sub;
+  await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_DOMAIN}/subscribe`, { data: JSON.stringify(sub) });
 }
 export const unsubscribePushNotification = async () => {
   const registration = await navigator.serviceWorker.ready;
-  const subscription = await registration.pushManager.getSubscription()
+  const subscription = await registration.pushManager.getSubscription();
   await subscription?.unsubscribe();
   await unsubscribeUser();//TODOricky
 }
