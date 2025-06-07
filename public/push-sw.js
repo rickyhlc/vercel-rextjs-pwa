@@ -3,8 +3,11 @@
 self.addEventListener("push", (event) => {
   const data = event.data.json();
   event.waitUntil(self.registration.showNotification(data.title, {
-    body: data.text + "!@@!",
+    body: data.text,
     icon: "/icon-192x192.png",
+    data: {
+      url: data.url
+    },
     actions: [
       {
         action: 'coffee-action',
@@ -24,13 +27,14 @@ self.addEventListener("push", (event) => {
 
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
-  event.waitUntil(clients.matchAll({
-    type: "window"
-  })
-  .then((clientList) => {
-    for (const client of clientList) {;console.log(client.url, client);
-      if (client.url === "/" && "focus" in client) return client.focus();
-    }
-    if (clients.openWindow) return clients.openWindow("/");
-  }));
+    event.waitUntil(clients.openWindow(event.notification.data.url));
+  // event.waitUntil(clients.matchAll({
+  //   type: "window"
+  // })
+  // .then((clientList) => {
+  //   for (const client of clientList) {;console.log(client.url, client);
+  //     if (client.url === "/" && "focus" in client) return client.focus();
+  //   }
+  //   if (clients.openWindow) return clients.openWindow("/");
+  // }));
 });

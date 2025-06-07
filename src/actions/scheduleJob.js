@@ -20,7 +20,7 @@ export const test = async (subscription, data) => {
     });
     return res.json();
   } catch (error) {
-    console.error("Error fetching costs:", error);
+    console.error("Error:", error);
     return { error: 'Internal Server Error' };
   }
 }
