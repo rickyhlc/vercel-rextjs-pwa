@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef, useCallback } from "react";
 import { initDB, CAT_LIST } from "./indexedDB";
-import { getToday, dateFormat, getFlagIcon, BTN_BLUER, PLAIN_BTN_BLUE, ALL_ZINC, TXT_ZINC } from "@/lib/utils";
+import { getToday, dateFormat, getFlagIcon, getServiceWorkerRegistration, BTN_BLUER, PLAIN_BTN_BLUE, ALL_ZINC, TXT_ZINC } from "@/lib/utils";
 
 import DownArrowIcon from "@/icons/downArrow";
 import EditIcon from "@/icons/edit";
@@ -35,8 +35,12 @@ export default function BankPage() {
     reloadCostAsync();
   }, [startDate, filter]);
 
-   // init page display
+  
   useEffect(() => {
+    // install sw if not yet installed
+    getServiceWorkerRegistration();
+
+    // init page display
     initDB().then(async db => {
       dbRef.current = db;
       reloadCostAsync();

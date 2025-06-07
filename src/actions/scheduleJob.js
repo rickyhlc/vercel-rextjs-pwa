@@ -2,7 +2,7 @@
 
 import { auth } from "@/lib/authConfig";
 //TODOricky
-export const test = async (subscription, data) => {
+export const subscribeServerPush = async (subscription, data) => {
   try {
     const session = await auth();
     const email = session?.user?.email;
@@ -23,4 +23,8 @@ export const test = async (subscription, data) => {
     console.error("Error:", error);
     return { error: 'Internal Server Error' };
   }
+}
+
+export const unsubscribeServerPush = async (subscription) => {
+  //TODOricky
 }

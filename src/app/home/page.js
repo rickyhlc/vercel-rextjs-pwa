@@ -4,8 +4,8 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { getSession, logout } from "@/actions/auth";
-import { test } from "@/actions/scheduleJob";
-import { timeFormat, dateFormat, subscribePushNotification } from "@/lib/utils";
+import { subscribeServerPush } from "@/actions/scheduleJob";
+import { timeFormat, dateFormat, getPushSubscription } from "@/lib/utils";
 
 export default function HomePage() {
   const router = useRouter();
@@ -59,11 +59,11 @@ export default function HomePage() {
   }
 
   async function pushNotification() {
-    (await navigator.serviceWorker.register("/push-sw.js")).update();
     //TODOricky first time sw is not ready?
-    const sub = await subscribePushNotification();
+    const sub = await getPushSubscription(true);
     if (sub) {
-      console.log(await test(sub, "TESTING DATA!!!!!!!"));
+      console.log(await subscribeServerPush(sub, { name: "Lunch", cat: "FOOD", type: "OTHERS", value: 123, flags: ["INCOME", "SPECIAL"]}));
+      console.log(await subscribeServerPush(sub, { name: "Game", cat: "ENTERTAINMENT", type: "GAME", flags: []}));
     }
   }
 

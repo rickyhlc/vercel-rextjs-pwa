@@ -1,25 +1,34 @@
 // add listener for webpush
 
-self.addEventListener("push", (event) => {;console.log(event);
+self.addEventListener("install", (event) => {
+  // The promise that skipWaiting() returns can be safely ignored.
+  self.skipWaiting();
+
+  // Perform any other actions required for your
+  // service worker to install, potentially inside
+  // of event.waitUntil();
+});
+
+self.addEventListener("push", (event) => {
   const data = event.data.json();
-  event.waitUntil(self.registration.showNotification(data.title, {
-    body: data.text,
+  event.waitUntil(self.registration.showNotification("Add this record?", {
+    body: data.value ? `${data.name}: $${data.value}` : data.name,
     icon: "/icon-192x192.png",
     data: data,
-    actions: [
+    actions: data.value ? [
       {
-        action: "defaultValue",
+        action: "default",
         title: "Yes",
         type: "button", // type can be text
         // placeholder: "placeholder"
         // icon: '/icon-192x192.png',
       },
       {
-        action: "customValue",
+        action: "custom",
         type: "button",
         title: "New Value",
       }
-    ]
+    ] : []
   }));
 });
 
@@ -27,19 +36,11 @@ self.addEventListener("notificationclick", (event) => {
   event.notification.close();
   const data = event.notification.data;
   let url = data.url;
-  if (event.action === "defaultValue") {
+  if (event.action === "default") {
     url = `${url}?cat=${data.cat}&type=${data.type}&value=${data.value}`
-  } else if (event.action === "customValue") {
+  } else if (!data.value || event.action === "custom") {
     url = `${url}?cat=${data.cat}&type=${data.type}`
   }
+  // this open a new window in desktop and open pwa in android
   event.waitUntil(clients.openWindow(url));
-  // event.waitUntil(clients.matchAll({
-  //   type: "window"
-  // })
-  // .then((clientList) => {
-  //   for (const client of clientList) {;console.log(client.url, client);
-  //     if (client.url === "/" && "focus" in client) return client.focus();
-  //   }
-  //   if (clients.openWindow) return clients.openWindow("/");
-  // }));
 });

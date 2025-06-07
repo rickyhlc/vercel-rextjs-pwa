@@ -55,28 +55,40 @@ export const timeFormat = (date, fmt) => {
   return date.toLocaleTimeString("en-GB", options);
 }
 
-export const subscribePushNotification = async () => {
+export const getServiceWorkerRegistration = async () => {
+  // register the service worker
+  // will return the same registration if already registered
+  return await navigator.serviceWorker.register("/push-sw.js");
+}
+
+// get the subscription object from sw
+export const getPushSubscription = async (autoCreate) => {
   try {
-    // ask for notification permission
-    const permission = await Notification.requestPermission();
-    if (permission === "granted"){
-      // this will return the same registration if already registered
-      const registration = await navigator.serviceWorker.register("/push-sw.js");
-      // this will return the existing subscription if already created
-      const sub = await registration.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: convertVapidKey(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY),
-      });
-      return sub.toJSON();
+    // get subscription
+    const registration = await getServiceWorkerRegistration();
+    let sub = await registration.pushManager.getSubscription();
+    if (!sub && autoCreate) {
+      // ask for notification permission
+      const permission = await Notification.requestPermission();
+      if (permission === "granted") {
+        // create new subscription
+        sub = await registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: convertVapidKey(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY),
+        });
+      } else {
+        console.log("no notification permission");
+        return null;
+      }
     }
+    return sub?.toJSON();
   } catch (e) {
     console.log(e);
     return { error: "unable to subscribe!" };
   }
 }
-export const unsubscribePushNotification = async () => {
-  const registration = await navigator.serviceWorker.ready;
-  const subscription = await registration.pushManager.getSubscription();
+export const unsubscribePush = async () => {
+  const subscription = await getPushSubscription();
   await subscription?.unsubscribe();
   await unsubscribeUser();//TODOricky
 }
