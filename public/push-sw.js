@@ -1,25 +1,23 @@
 // add listener for webpush
 
-self.addEventListener("push", (event) => {
+self.addEventListener("push", (event) => {;console.log(event);
   const data = event.data.json();
   event.waitUntil(self.registration.showNotification(data.title, {
     body: data.text,
     icon: "/icon-192x192.png",
-    data: {
-      url: data.url
-    },
+    data: data,
     actions: [
       {
-        action: 'coffee-action',
-        title: 'B',
-        type: 'button',
-        icon: '/icon-192x192.png',
+        action: "defaultValue",
+        title: "Yes",
+        type: "button", // type can be text
+        // placeholder: "placeholder"
+        // icon: '/icon-192x192.png',
       },
       {
-        action: 'doughnut-action',
-        type: 'text',
-        title: 'T',
-        placeholder: "placeholder"
+        action: "customValue",
+        type: "button",
+        title: "New Value",
       }
     ]
   }));
@@ -27,7 +25,14 @@ self.addEventListener("push", (event) => {
 
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
-    event.waitUntil(clients.openWindow(event.notification.data.url));
+  const data = event.notification.data;
+  let url = data.url;
+  if (event.action === "defaultValue") {
+    url = `${url}?cat=${data.cat}&type=${data.type}&value=${data.value}`
+  } else if (event.action === "customValue") {
+    url = `${url}?cat=${data.cat}&type=${data.type}`
+  }
+  event.waitUntil(clients.openWindow(url));
   // event.waitUntil(clients.matchAll({
   //   type: "window"
   // })

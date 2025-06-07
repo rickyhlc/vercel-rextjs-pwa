@@ -119,7 +119,7 @@ export default function BankPage() {
       console.log("add cost error", err);
     }
   }
-
+//TODOricky groupBy type
   return (
     <div className={`flex flex-col min-h-screen max-h-screen ${ALL_ZINC}`}>
 
