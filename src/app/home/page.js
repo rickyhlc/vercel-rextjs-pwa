@@ -59,6 +59,8 @@ export default function HomePage() {
   }
 
   async function pushNotification() {
+    (await navigator.serviceWorker.register("/push-sw.js")).update();
+    //TODOricky first time sw is not ready?
     const sub = await subscribePushNotification();
     if (sub) {
       console.log(await test(sub, "TESTING DATA!!!!!!!"));
