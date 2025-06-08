@@ -33,10 +33,10 @@ self.addEventListener("push", (event) => {
     }));
   } else {
     event.waitUntil(self.registration.showNotification("test?", {
-      body: "sdfdf",
+      body: "~~~~~~",
       icon: "/icon-192x192.png",
       data: data,
-      actions: data.value ? [
+      actions: [
         {
           action: "default",
           title: "Yes",
@@ -49,7 +49,7 @@ self.addEventListener("push", (event) => {
           type: "button",
           title: "New Value",
         }
-      ] : []
+      ]
     }));
   }
 });
