@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState, useRef, useCallback } from "react";
-import { initDB, CAT_LIST } from "./indexedDB";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { initDB, CAT_LIST, CAT_TYPE_LIST, FLAG_LIST } from "./indexedDB";
 import { getToday, dateFormat, getFlagIcon, getServiceWorkerRegistration, BTN_BLUER, PLAIN_BTN_BLUE, ALL_ZINC, TXT_ZINC } from "@/lib/utils";
-
 import DownArrowIcon from "@/icons/downArrow";
 import EditIcon from "@/icons/edit";
 import AddIcon from "@/icons/add";
@@ -22,13 +22,37 @@ export default function BankPage() {
   const [calendarView, setCalendarView] = useState("day");
   const [startDate, setStartDate] = useState(today);
   const [filter, setFilter] = useState(null);
-  const [catTypeMap, setCatTypeMap] = useState(null);
-  const [flags, setFlags] = useState(null);
   const [costs, _setCosts] = useState(null);
   const [summary, setSummary] = useState({});
   const dbRef = useRef(null);
   const [newCost, setNewCost] = useState(null);
   const [showMore, setShowMore] = useState(false);
+
+  //handler click notification
+  const router = useRouter();
+  const pathname = usePathname();
+  const queryParams = useSearchParams();
+  useEffect(() => {
+    const cat = queryParams.get("cat");
+    const type = queryParams.get("type");
+    if (CAT_LIST.includes(cat) && CAT_TYPE_LIST[cat].includes(type)) {
+      const value = queryParams.get("value");
+      const flags = queryParams.get("flags")?.split(",");
+      let data = {
+        date: today.getTime(),
+        value: value ? parseFloat(value) : "",
+        cat,
+        type,
+      }
+      flags?.forEach(f => {
+        if (FLAG_LIST.includes(f)) {
+          data[f] = true;
+        }
+      });
+      setNewCost(data);
+      router.replace(pathname);
+    }
+  }, []);
   
   // watch param change and reload cost display
   useEffect(() => {
@@ -44,8 +68,6 @@ export default function BankPage() {
     initDB().then(async db => {
       dbRef.current = db;
       reloadCostAsync();
-      reloadFlagsAsync();
-      reloadCatTypeAsync();
     });
     return () => dbRef.current?.close();
   }, []);
@@ -71,20 +93,6 @@ export default function BankPage() {
     setSummary(s); 
   }
 
-  async function reloadFlagsAsync() {
-    if (dbRef.current){
-      let data = await dbRef.current.getFlags();
-      setFlags(data || []);
-      return data;
-    }
-  }
-  async function reloadCatTypeAsync() {
-    if (dbRef.current){
-      let data = await dbRef.current.getCatTypes();
-      setCatTypeMap(data || {});
-      return data;
-    }
-  }
   async function reloadCostAsync() {
     if (dbRef.current){
       let endDate = new Date(startDate);
@@ -106,7 +114,7 @@ export default function BankPage() {
   }
 
   function showAddCostPanel(){
-    setNewCost({ date: today.getTime(), value: "", cat: CAT_LIST[0], type: catTypeMap[CAT_LIST[0]][0] });
+    setNewCost({ date: today.getTime(), value: "", cat: CAT_LIST[0], type: CAT_TYPE_LIST[CAT_LIST[0]][0] });
   }
 
   // add or update cost to db
@@ -150,7 +158,7 @@ export default function BankPage() {
                     <span className="grow-0">{dateFormat(new Date(item.date), "day")}</span>
                     <span className="grow basis-0">{item.type}</span>
                     <span className="grow-0 basis-9 flex gap-1">
-                      {flags?.map(f => item[f.id] ? getFlagIcon(f, "w-4 h-4 text-inherit") : null)}
+                      {FLAG_LIST.map(f => item[f.id] ? getFlagIcon(f, "w-4 h-4 text-inherit") : null)}
                     </span>
                     <span className="grow basis-0 text-right pe-4">${item.value}</span>
                     <button
@@ -180,12 +188,12 @@ export default function BankPage() {
           </ToggleButtonGroup>
           {summary && <DatePicker value={startDate} setValue={setStartDate} selectionType={calendarView} hideSelection={true}/>}
         </div>
-        <button className={`ms-auto rounded-full p-2 ${BTN_BLUER}`} disabled={!catTypeMap || !flags} onClick={showAddCostPanel}>
+        <button className={`ms-auto rounded-full p-2 ${BTN_BLUER}`} onClick={showAddCostPanel}>
           <AddIcon className="w-8 h-8 text-inherit"/>
         </button>
-        <button className={`rounded-full p-2 ${PLAIN_BTN_BLUE}`} disabled={!catTypeMap || !flags} onClick={() => setShowMore(true)}>
+        <button className={`rounded-full p-2 ${PLAIN_BTN_BLUE}`} onClick={() => setShowMore(true)}>
           {filter ? (
-            <FilterIcon className={!catTypeMap || !flags ? "w-8 h-8 text-blue-200/70" : "w-8 h-8 text-blue-200"}/>
+            <FilterIcon className="w-8 h-8 text-blue-200"/> // disabled class "w-8 h-8 text-blue-200/70"
           ) : (
             <MenuDotsIcon className="w-8 h-8 text-inherit"/>
           )}
@@ -194,8 +202,6 @@ export default function BankPage() {
           {newCost && (
             <EditCostPanel
               cost={newCost}
-              catTypeMap={catTypeMap}
-              flags={flags}
               onSave={handleSaveCost}
             />
           )}
@@ -208,7 +214,6 @@ export default function BankPage() {
               onRefresh={reloadCostAsync}
               onClose={() => setShowMore(false)}
               localDB={dbRef.current}
-              flags={flags}
             />
           )}
         </BottomDrawer>

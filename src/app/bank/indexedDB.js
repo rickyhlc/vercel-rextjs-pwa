@@ -1,6 +1,6 @@
 export const CAT_LIST = ["TRAFFIC", "FOOD", "ENTERTAINMENT", "HEALTH", "HOUSING", "OTHERS"];
 
-const DEFAULT_CAT_TYPE = {
+export const CAT_TYPE_LIST = {
     FOOD: ["FOOD", "SNACK", "OTHERS"],
     ENTERTAINMENT: ["SPORT", "GAME", "TRAVEL", "OTHERS"],
     TRAFFIC: ["TRAFFIC"],
@@ -9,7 +9,7 @@ const DEFAULT_CAT_TYPE = {
     OTHERS: ["INSURANCE", "CLOTHES", "OTHERS"]
 };
 
-const DEFAULT_FLAG_LIST = [
+export const FLAG_LIST = [
   { id: "REGULAR", name: "Regular" },
   { id: "SPECIAL", name: "Special" },
   { id: "INCOME", name: "Income" },
@@ -23,7 +23,7 @@ const DEFAULT_FLAG_LIST = [
  */
 export const initDB = (a, data) => {
   return new Promise((resolve, reject) => {
-    const request = window.indexedDB.open("BankDB", 4);
+    const request = window.indexedDB.open("BankDB", 5);
     request.onupgradeneeded = function(event) {
       const db = event.target.result;
       switch (event.oldVersion) {
@@ -31,18 +31,25 @@ export const initDB = (a, data) => {
           const costStore = db.createObjectStore("cost", { keyPath: 'id', autoIncrement: true });
           costStore.createIndex("byDate", "date");
         case 1:
-          const typeStore = db.createObjectStore("catType");
-          typeStore.put(DEFAULT_CAT_TYPE, "catTypeMap");
+          // const typeStore = db.createObjectStore("catType");
+          // typeStore.put(CAT_TYPE_LIST, "catTypeMap");
         case 2:
         case 3:
+          // if (db.objectStoreNames.contains("catType")) {
+          //   db.deleteObjectStore("catType");
+          // } else if (db.objectStoreNames.contains("config")) {
+          //   db.deleteObjectStore("config");
+          // }
+          // const configStore = db.createObjectStore("config");
+          // configStore.put(CAT_TYPE_LIST, "catTypeMap");
+          // configStore.put(FLAG_LIST, "flagList");
+        case 4:
           if (db.objectStoreNames.contains("catType")) {
             db.deleteObjectStore("catType");
-          } else if (db.objectStoreNames.contains("config")) {
+          }
+          if (db.objectStoreNames.contains("config")) {
             db.deleteObjectStore("config");
           }
-          const configStore = db.createObjectStore("config");
-          configStore.put(DEFAULT_CAT_TYPE, "catTypeMap");
-          configStore.put(DEFAULT_FLAG_LIST, "flagList");
         default:
           console.log("DB version changed");
       }
@@ -202,6 +209,12 @@ class BankDB {
       request.onerror = (event) => reject(event);
     });
   }
+  
+  close() {
+    this.#db.close();
+  }
+
+  //TODOricky remove all below function, update db data
 
   /**
    * 
@@ -255,7 +268,4 @@ class BankDB {
     });
   }
 
-  close() {
-    this.#db.close();
-  }
 }

@@ -12,24 +12,10 @@ self.addEventListener("install", (event) => {
 self.addEventListener("push", (event) => {
   const data = event.data.json();
   if (data.notificationType === "bank") {
-    event.waitUntil(self.registration.showNotification("Add this record?", {
+    event.waitUntil(self.registration.showNotification("Record this scheduled expense?", {
       body: data.value ? `${data.name}: $${data.value}` : data.name,
       icon: "/icon-192x192.png",
-      data: data,
-      actions: data.value ? [
-        {
-          action: "default",
-          title: "Yes",
-          type: "button", // type can be text
-          // placeholder: "placeholder"
-          // icon: '/icon-192x192.png',
-        },
-        {
-          action: "custom",
-          type: "button",
-          title: "New Value",
-        }
-      ] : []
+      data: data
     }));
   } else {
     event.waitUntil(self.registration.showNotification("test?", {
@@ -57,16 +43,17 @@ self.addEventListener("push", (event) => {
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
   const data = event.notification.data;
-  let url;
+  let url = data.url;
   if (data.notificationType === "bank") {
-    url = `${data.url}/bank`;
-    if (event.action === "default") {
-      url = `${url}?cat=${data.cat}&type=${data.type}&value=${data.value}`
-    } else if (!data.value || event.action === "custom") {
-      url = `${url}?cat=${data.cat}&type=${data.type}`
+    url = `${url}/bank?cat=${data.cat}&type=${data.type}`;
+    if (data.value) {
+      url += `&value=${data.value}`;
+    }
+    if (data.flags?.length) {
+      url += `&flags=${data.flags.join()}`;
     }
   } else {
-    url = `${data.url}/camera?test=true`;
+    url = `${url}/camera?test=true`;
   }
   // this open a new window in desktop and open pwa in android
   event.waitUntil(clients.openWindow(url));

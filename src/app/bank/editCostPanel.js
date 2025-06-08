@@ -1,13 +1,13 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { CAT_LIST } from "./indexedDB";
+import { CAT_LIST, CAT_TYPE_LIST, FLAG_LIST } from "./indexedDB";
 import { TextField, NativeSelect, Checkbox } from '@mui/material';
 import { BTN_BLUER, TXT_ZINC, getFlagIcon } from "@/lib/utils";
 import TickIcon from "@/icons/tick";
 import DatePicker from "@/components/datePicker";
 
-export default function EditCostPanel({ onSave, cost, flags, catTypeMap }) {
+export default function EditCostPanel({ onSave, cost }) {
 
   const [data, setData] = useState({...cost, date: new Date(cost.date)}); // convert ts to date
   const [saving, startSaving] = useTransition();
@@ -36,7 +36,7 @@ export default function EditCostPanel({ onSave, cost, flags, catTypeMap }) {
           disabled={saving}
           className="w-1/2"
           onChange={(e) => {
-            setData({ ...data, cat: e.target.value, type: catTypeMap[e.target.value][0] });
+            setData({ ...data, cat: e.target.value, type: CAT_TYPE_LIST[e.target.value][0] });
           }}
         >
           {CAT_LIST.map((cat) => <option key={cat} value={cat}>{cat}</option>)}
@@ -49,11 +49,11 @@ export default function EditCostPanel({ onSave, cost, flags, catTypeMap }) {
             setData({ ...data, type: e.target.value });
           }}
         >
-          {catTypeMap[data.cat].map(type => <option key={type} value={type}>{type}</option>)}
+          {CAT_TYPE_LIST[data.cat].map(type => <option key={type} value={type}>{type}</option>)}
         </NativeSelect>
       </div>
       <div className={`flex justify-between flex-wrap ps-[4px] pe-[16px] py-2 ${TXT_ZINC}`}>
-        {flags.map(f => (
+        {FLAG_LIST.map(f => (
           <label key={f.id} className="flex items-center w-1/2">
             {/* use "|| false" to prevent ctrl/un-ctrl component error */}
             <Checkbox color="primary" checked={data[f.id] || false} onChange={e => {

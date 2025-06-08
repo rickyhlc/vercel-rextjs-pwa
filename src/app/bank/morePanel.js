@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { CAT_LIST } from "./indexedDB";
+import { FLAG_LIST } from "./indexedDB";
 import UploadIcon from "@/icons/upload";
 import DownloadIcon from "@/icons/download";
 import ResetIcon from "@/icons/reset";
@@ -9,7 +9,7 @@ import { getCosts, saveCosts, checkHasBackup } from "@/actions/bank";
 import { dateFormat, timeFormat, getFlagIcon, PLAIN_BTN_BLUE, BTN_BLUER } from "@/lib/utils";
 import { Divider, CircularProgress, Checkbox } from '@mui/material';
 
-export default function MorePanel({ filter, onSetFilter, onRefresh, onClose, localDB, flags }) {
+export default function MorePanel({ filter, onSetFilter, onRefresh, onClose, localDB }) {
 
   const [backupDate, setBackupDate] = useState(null); // null = loading, false = no backup date
   useEffect(() => {
@@ -81,12 +81,12 @@ export default function MorePanel({ filter, onSetFilter, onRefresh, onClose, loc
       </Divider>
       <div className="ps-[16px] pt-4">Only include this item:</div>
       <div className="flex items-center flex-wrap ps-[4px] pe-[16px] py-2">
-        {flags.map(f => (
+        {FLAG_LIST.map(f => (
           <label key={f.id} className="flex items-center w-1/2">
             <Checkbox color="primary" checked={filter?.[f.id] === "oi" || false} onChange={e => {
               let _filter = filter ? {...filter} : {};
               if (e.target.checked) {
-                flags.map(v => {
+                FLAG_LIST.map(v => {
                   if (_filter[v.id] === "oi") {
                     _filter[v.id] = null;
                   }
@@ -102,7 +102,7 @@ export default function MorePanel({ filter, onSetFilter, onRefresh, onClose, loc
       </div>
       <div className="ps-[16px] pt-4">And exclude these items:</div>
       <div className="flex items-center flex-wrap ps-[4px] pe-[16px] py-2">
-        {flags.map(f => (
+        {FLAG_LIST.map(f => (
           <label key={f.id} className="flex items-center w-1/2">
             <Checkbox color="primary" checked={filter?.[f.id] === "e" || false} onChange={e => {
               let _filter = filter ? {...filter} : {};
@@ -115,7 +115,6 @@ export default function MorePanel({ filter, onSetFilter, onRefresh, onClose, loc
       <div className="flex items-center px-[16px] pb-4">
         <button
           className={`ms-auto rounded-full p-2 ${BTN_BLUER}`}
-          disabled={!flags}
           onClick={() => {
             setFilter({});
             onClose();
