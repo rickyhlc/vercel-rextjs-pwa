@@ -56,16 +56,17 @@ self.addEventListener("push", (event) => {
 
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
-  const data = event.notification.data;
+  const data = event.notification.data;console.log(data);
+  let url;
   if (data.notificationType === "bank") {
-    let url = `${data.url}/bank`;
+    url = `${data.url}/bank`;
     if (event.action === "default") {
       url = `${url}?cat=${data.cat}&type=${data.type}&value=${data.value}`
     } else if (!data.value || event.action === "custom") {
       url = `${url}?cat=${data.cat}&type=${data.type}`
     }
   } else {
-    let url = `${data.url}/camera`;
+    url = `${data.url}/camera`;
   }
   // this open a new window in desktop and open pwa in android
   event.waitUntil(clients.openWindow(url));
