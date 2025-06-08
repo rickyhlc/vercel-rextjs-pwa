@@ -56,7 +56,7 @@ self.addEventListener("push", (event) => {
 
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
-  const data = event.notification.data;console.log(data);
+  const data = event.notification.data;
   let url;
   if (data.notificationType === "bank") {
     url = `${data.url}/bank`;
@@ -66,7 +66,7 @@ self.addEventListener("notificationclick", (event) => {
       url = `${url}?cat=${data.cat}&type=${data.type}`
     }
   } else {
-    url = `${data.url}/camera`;
+    url = `${data.url}/camera?test=true`;
   }
   // this open a new window in desktop and open pwa in android
   event.waitUntil(clients.openWindow(url));
