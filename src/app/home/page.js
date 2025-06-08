@@ -62,8 +62,8 @@ export default function HomePage() {
     //TODOricky first time sw is not ready?
     const sub = await getPushSubscription(true);
     if (sub) {
-      console.log(await subscribeServerPush(sub, { name: "Lunch", cat: "FOOD", type: "OTHERS", value: 123, flags: ["INCOME", "SPECIAL"]}));
-      console.log(await subscribeServerPush(sub, { name: "Game", cat: "ENTERTAINMENT", type: "GAME", flags: []}));
+      console.log(await subscribeServerPush(sub, { notificationType: "bank", name: "Lunch", cat: "FOOD", type: "OTHERS", value: 123, flags: ["INCOME", "SPECIAL"]}));
+      console.log(await subscribeServerPush(sub, { notificationType: "camera", name: "Game", cat: "ENTERTAINMENT", type: "GAME", flags: []}));
     }
   }
 
