@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef, Suspense, useCallback } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { initDB, CAT_LIST, CAT_TYPE_LIST, FLAG_LIST } from "./indexedDB";
 import { getToday, dateFormat, getFlagIcon, getServiceWorkerRegistration, BTN_BLUER, PLAIN_BTN_BLUE, ALL_ZINC, TXT_ZINC } from "@/lib/utils";
@@ -18,6 +18,10 @@ import BottomDrawer from "@/components/bottomDrawer";
 import './bank.css';
 
 export default function BankPage() {
+  return <Suspense><BankPageMain/></Suspense>;
+}
+
+function BankPageMain() {
   const today = getToday();
   const [calendarView, setCalendarView] = useState("day");
   const [startDate, setStartDate] = useState(today);
