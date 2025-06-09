@@ -12,14 +12,14 @@ self.addEventListener("install", (event) => {
 self.addEventListener("push", (event) => {
   const data = event.data.json();
   if (data.notificationType === "bank") {
-    event.waitUntil(self.registration.showNotification("Record this scheduled expense?", {
+    event.waitUntil(self.registration.showNotification("Create this new record?", {
       body: data.value ? `${data.name}: $${data.value}` : data.name,
       icon: "/icon-192x192.png",
       data: data
     }));
   } else {
     event.waitUntil(self.registration.showNotification("test?", {
-      body: "~~~~~~",
+      body: "go to /camera/[[...params]]",
       icon: "/icon-192x192.png",
       data: data,
       actions: [
@@ -53,7 +53,7 @@ self.addEventListener("notificationclick", (event) => {
       url += `&flags=${data.flags.join()}`;
     }
   } else {
-    url = `${url}/camera?test=true`;
+    url = `${url}/camera/p1/p2/123`;
   }
   // this open a new window in desktop and open pwa in android
   event.waitUntil(clients.openWindow(url));

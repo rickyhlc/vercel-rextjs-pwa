@@ -1,16 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, use } from "react";
 
 import CameraIcon from "@/icons/camera";
 import VideoIcon from "@/icons/video";
 import MediaIcon from "@/icons/media";
 
-export default function CameraPage() {
+export default function CameraPage({ params }) {
 
   useEffect(() => {
-    console.log(navigator.mediaDevices.getSupportedConstraints());
+    const test = async () => {
+      console.log(await params, navigator.mediaDevices.getSupportedConstraints());
+    }
+    test();
   }, []);
+
+  const x = use(params);
+  console.log("X~~~~~", x);
 
   const [source, setSource] = useState(null);
 
