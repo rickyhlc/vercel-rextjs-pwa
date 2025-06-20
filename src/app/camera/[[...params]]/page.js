@@ -15,7 +15,7 @@ export default function CameraPage({ params }) {
     test();
   }, []);
 
-  const x = use(params);
+  const x = use(params); // better use <Suspense> to wrap this component
   console.log("X~~~~~", x);
 
   const [source, setSource] = useState(null);

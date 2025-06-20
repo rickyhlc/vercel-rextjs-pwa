@@ -2,7 +2,7 @@
 
 import { auth } from "@/lib/authConfig";
 //TODOricky
-export const subscribeServerPush = async (subscription, data) => {
+export const subscribeServerPush = async (subscription, data, schedule) => {
   try {
     const session = await auth();
     const email = session?.user?.email;
@@ -13,10 +13,10 @@ export const subscribeServerPush = async (subscription, data) => {
     const reqHeaders = new Headers();
     reqHeaders.set("Content-Type", "application/json");
     reqHeaders.set("X-Custom-Key", email);
-    const res = await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_DOMAIN}/subscribePush`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_DOMAIN}/createSchedulePush`, {
       method: "POST",
       headers: reqHeaders,
-      body: JSON.stringify({ subscription, data })
+      body: JSON.stringify({ subscription, data, schedule })
     });
     return res.json();
   } catch (error) {

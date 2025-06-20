@@ -87,10 +87,9 @@ export const getPushSubscription = async (autoCreate) => {
     return { error: "unable to subscribe!" };
   }
 }
-export const unsubscribePush = async () => {
+export const unsubscribeSWPush = async () => {
   const subscription = await getPushSubscription();
   await subscription?.unsubscribe();
-  await unsubscribeUser();//TODOricky
 }
 
 export const TXT_ZINC = "text-zinc-800 dark:text-zinc-200";

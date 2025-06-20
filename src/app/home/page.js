@@ -58,11 +58,17 @@ export default function HomePage() {
     // }
   }
 
-  async function pushNotification() {
+  async function createPushNotification() {
     //TODOricky first time sw is not ready?
     const sub = await getPushSubscription(true);
     if (sub) {
-      console.log(await subscribeServerPush(sub, { notificationType: "bank", name: "Lunch", cat: "FOOD", type: "OTHERS", value: 123, flags: ["INCOME", "SPECIAL"]}));
+      const data = {
+        notificationType: "bank",
+        name: "Lunch", cat: "FOOD", type: "OTHERS", value: 123, flags: ["INCOME", "SPECIAL"]
+      }
+      const schedule = {};
+      const res = await subscribeServerPush(sub, data, schedule);
+      console.log("TODOricky", res.id, res.error);
       console.log(await subscribeServerPush(sub, { notificationType: "camera", name: "Game", cat: "ENTERTAINMENT", type: "GAME", flags: []}));
     }
   }
@@ -76,7 +82,7 @@ export default function HomePage() {
       </div>
       <div className="flex gap-8 items-center">
         <button className="bg-blue-700 text-white w-25 py-2 rounded hover:bg-blue-800 active:bg-blue-900" onClick={showNotification}>Notification</button>
-        <button className="bg-blue-700 text-white w-25 py-2 rounded hover:bg-blue-800 active:bg-blue-900" onClick={pushNotification}>Web Push</button>
+        <button className="bg-blue-700 text-white w-25 py-2 rounded hover:bg-blue-800 active:bg-blue-900" onClick={createPushNotification}>Web Push</button>
       </div>
       <div className="">{expTime ? dateFormat(expTime) + " " + timeFormat(expTime, "second") : "-"} ({count})</div>
       <div className="flex gap-8 items-center">

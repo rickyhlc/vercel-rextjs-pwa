@@ -16,6 +16,7 @@ import DatePicker from "@/components/datePicker";
 import BottomDrawer from "@/components/bottomDrawer";
 
 import './bank.css';
+import { ca } from "date-fns/locale";
 
 export default function BankPage() {
   return <Suspense><BankPageMain/></Suspense>;
@@ -91,7 +92,12 @@ function BankPageMain() {
     _setCosts(data);
     let s = { total: 0 };
     CAT_LIST.forEach(cat => {
-      s[cat] = data[cat]?.reduce((total, item) => total + item.value, 0) || 0;
+      s[cat] = 0;
+      CAT_TYPE_LIST[cat].forEach(type => {
+        const typeKey = `${cat}-${type}`;
+        s[typeKey] = data[cat]?.[type]?.reduce((total, item) => total + item.value, 0) || 0;
+        s[cat] += s[typeKey];
+      });
       s.total += s[cat];
     });
     setSummary(s); 
@@ -108,6 +114,7 @@ function BankPageMain() {
       let data = await dbRef.current.getCosts(startDate.getTime(), endDate.getTime(), filter);
       if (data) {
         data = Object.groupBy(data, (item) => item.cat);
+        Object.keys(data).forEach(cat => data[cat] = Object.groupBy(data[cat], (item) => item.type));
         setCosts(data);
         return data;
       } else {
@@ -157,21 +164,34 @@ function BankPageMain() {
                 </div>
               </AccordionSummary>
               <AccordionDetails>
-                {costs[cat]?.map(item => (
-                  <div key={item.id} className="flex gap-4 items-center">
-                    <span className="grow-0">{dateFormat(new Date(item.date), "day")}</span>
-                    <span className="grow basis-0">{item.type}</span>
-                    <span className="grow-0 basis-9 flex gap-1">
-                      {FLAG_LIST.map(f => item[f.id] ? getFlagIcon(f, "w-4 h-4 text-inherit") : null)}
-                    </span>
-                    <span className="grow basis-0 text-right pe-4">${item.value}</span>
-                    <button
-                      className={`rounded-full p-1 ${PLAIN_BTN_BLUE}`}
-                      onClick={() => setNewCost(item)}
-                    >
-                      <EditIcon className="w-4 h-4 text-inherit" />
-                    </button>
-                  </div>
+                {CAT_TYPE_LIST[cat].map(type => (
+                  <Accordion key={`${cat}-${type}`}>
+                    {CAT_TYPE_LIST[cat].length > 1 &&
+                      <AccordionSummary expandIcon={<DownArrowIcon colorClass="text-inherit" />}>
+                        <div className="flex justify-between items-center w-full pe-4">
+                          <span>{`${cat} - ${type}`}</span>
+                          <span>${summary[`${cat}-${type}`]?.toFixed(1)}</span>
+                        </div>
+                      </AccordionSummary>
+                    }
+                    <AccordionDetails>
+                      {costs[cat]?.[type]?.map(item => (
+                        <div key={item.id} className="flex gap-4 items-center">
+                          <span className="grow-0">{dateFormat(new Date(item.date), "day")}</span>
+                          <span className="ps-5 grow-0 basis-20 flex gap-1">
+                            {FLAG_LIST.map(f => item[f.id] ? getFlagIcon(f, "w-4 h-4 text-inherit") : null)}
+                          </span>
+                          <span className="grow basis-0 text-right">${item.value}</span>
+                          <button
+                            className={`rounded-full p-1 ${PLAIN_BTN_BLUE}`}
+                            onClick={() => setNewCost(item)}
+                          >
+                            <EditIcon className="w-4 h-4 text-inherit" />
+                          </button>
+                        </div>
+                      ))}
+                    </AccordionDetails>
+                  </Accordion>
                 ))}
               </AccordionDetails>
             </Accordion>
