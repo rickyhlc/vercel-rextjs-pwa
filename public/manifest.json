@@ -28,7 +28,7 @@
       {
         "name": "Bank",
         "short_name": "Bank",
-        "url": "/bank",
+        "url": "/bank?cat=TRAFFIC&type=TRAFFIC",
         "icons": [
           {
             "src": "/bank-192x192.png",
