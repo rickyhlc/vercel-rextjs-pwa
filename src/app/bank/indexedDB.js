@@ -6,7 +6,7 @@ export const CAT_TYPE_LIST = {
     TRAFFIC: ["TRAFFIC"],
     HEALTH: ["CLINIC", "OTHERS"],
     HOUSING: ["HOUSING", "OTHERS"],
-    OTHERS: ["INSURANCE", "CLOTHES", "OTHERS"]
+    OTHERS: ["INSURANCE", "CLOTHES", "INVESTMENT", "OTHERS"]
 };
 
 export const FLAG_LIST = [
@@ -23,7 +23,7 @@ export const FLAG_LIST = [
  */
 export const initDB = (a, data) => {
   return new Promise((resolve, reject) => {
-    const request = window.indexedDB.open("BankDB", 5);
+    const request = window.indexedDB.open("BankDB", 6);
     request.onupgradeneeded = function(event) {
       const db = event.target.result;
       switch (event.oldVersion) {
@@ -50,6 +50,8 @@ export const initDB = (a, data) => {
           if (db.objectStoreNames.contains("config")) {
             db.deleteObjectStore("config");
           }
+        case 5:
+          event.currentTarget.transaction.objectStore("cost").createIndex("byCat", "cat");
         default:
           console.log("DB version changed");
       }
@@ -127,9 +129,9 @@ class BankDB {
    * @returns promise
    * @description get all costs in the given date range
    */
-  getCosts(startDate, endDate, flagFilters) {
+  getCosts(startDate, endDate, cat, flagFilters) {
     return this.#openObjectStore("cost", false, (objectStore, resolve, reject) => {
-      const index = objectStore.index("byDate");
+      let index = objectStore.index("byDate");
       let query;
       if (startDate) {
         if (endDate) {
@@ -140,6 +142,7 @@ class BankDB {
       } else if (endDate) {
         query = IDBKeyRange.upperBound(endDate, true);
       }
+
       let includeOnly = null;
       let excludes = [];
       Object.entries(flagFilters || {}).forEach(f => {
@@ -149,27 +152,34 @@ class BankDB {
           includeOnly = f[0];
         }
       });
-      if (includeOnly || excludes.length) {
-        const isExcluded = (cur) => {
-          for (let i=0; i<excludes.length; i++){
-            if (cur.value[excludes[i]]) {
+
+      if (includeOnly || excludes.length || cat) {
+        const _filterByFlags = (cur) => {
+          if (!excludes.some(f => cur.value[f])) {
+            if (includeOnly) {
+              if (cur.value[includeOnly]) {
+                return true;
+              }
+            } else {
               return true;
             }
           }
         }
+        const _filterByCat = (cur) => {
+          if (cat) {
+            return cur.value.cat === cat;
+          } else {
+            return true;
+          }
+        }
+        const filter = !cat ? _filterByFlags : !(includeOnly || excludes.length) ? _filterByCat : (cur) => _filterByCat(cur) && _filterByFlags(cur);
         const request = index.openCursor(query);
         let results = [];
         request.onsuccess = (event) => {
           const cursor = event.target.result;
           if (cursor) {
-            if (!isExcluded(cursor)) {
-              if (includeOnly) {
-                if (cursor.value[includeOnly]) {
-                  results.push(cursor.value);
-                }
-              } else {
-                results.push(cursor.value);
-              }
+            if (filter(cursor)) {
+              results.push(cursor.value);
             }
             cursor.continue();
           } else {

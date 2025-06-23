@@ -8,7 +8,7 @@ import { getToday } from "@/lib/utils";
 
 import './datePicker.css';
 
-export default function DatePicker({ selectionType, value, setValue, hideSelection }) {
+export default function DatePicker({ selectionType, value, setValue, hideSelection, disabled }) {
 
   const todayRef = useRef(getToday());
 
@@ -26,7 +26,7 @@ export default function DatePicker({ selectionType, value, setValue, hideSelecti
 
   return (
     <ButtonGroup className="datePicker">
-      <Button onClick={() => shiftStartDate(true)}>{"<"}</Button>
+      <Button onClick={() => shiftStartDate(true)} disabled={disabled}>{"<"}</Button>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <MobileDatePicker
           orientation="portrait"
@@ -36,9 +36,10 @@ export default function DatePicker({ selectionType, value, setValue, hideSelecti
           value={value}
           onChange={setValue}
           className={hideSelection ? "hideSelection" : ""}
+           disabled={disabled}
         />
       </LocalizationProvider>
-      <Button onClick={() => shiftStartDate()}>{">"}</Button>
+      <Button onClick={() => shiftStartDate()} disabled={disabled}>{">"}</Button>
     </ButtonGroup>
   );
 }

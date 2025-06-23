@@ -26,7 +26,9 @@ function BankPageMain() {
   const today = getToday();
   const [calendarView, setCalendarView] = useState("day");
   const [startDate, setStartDate] = useState(today);
-  const [filter, setFilter] = useState(null);
+  const [flagFilter, setFlagFilter] = useState(null);
+  const [catFilter, setCatFilter] = useState(null);
+  const [anyTimeFilter, setAnyTimeFilter] = useState(false);
   const [costs, _setCosts] = useState(null);
   const [summary, setSummary] = useState({});
   const dbRef = useRef(null);
@@ -62,7 +64,7 @@ function BankPageMain() {
   // watch param change and reload cost display
   useEffect(() => {
     reloadCostAsync();
-  }, [startDate, filter]);
+  }, [startDate, flagFilter, catFilter, anyTimeFilter]);
 
   
   useEffect(() => {
@@ -105,13 +107,19 @@ function BankPageMain() {
 
   async function reloadCostAsync() {
     if (dbRef.current){
-      let endDate = new Date(startDate);
-      if (calendarView === "month") {
-        endDate.setMonth(startDate.getMonth() + 1);
+      let data;
+      if (anyTimeFilter) {
+        data = await dbRef.current.getCosts(null, null, catFilter, flagFilter);
       } else {
-        endDate.setDate(startDate.getDate() + 1);
+        let endDate = new Date(startDate);
+        if (calendarView === "month") {
+          endDate.setMonth(startDate.getMonth() + 1);
+        } else {
+          endDate.setDate(startDate.getDate() + 1);
+        }
+        data = await dbRef.current.getCosts(startDate.getTime(), endDate.getTime(), catFilter, flagFilter);
       }
-      let data = await dbRef.current.getCosts(startDate.getTime(), endDate.getTime(), filter);
+
       if (data) {
         data = Object.groupBy(data, (item) => item.cat);
         Object.keys(data).forEach(cat => data[cat] = Object.groupBy(data[cat], (item) => item.type));
@@ -149,7 +157,7 @@ function BankPageMain() {
       <div className="flex gap-4 items-center justify-between mx-[16px] py-4 mb-2 border-b border-solid border-zinc-400">
         <div>
           <div className={`${TXT_ZINC} text-xs`}>Expenses in</div>
-          <div className={`${TXT_ZINC} text-2xl`}>{dateFormat(startDate, calendarView === "month" ? "month" : null)}</div>
+          <div className={`${TXT_ZINC} text-2xl`}>{anyTimeFilter ? "All date" : dateFormat(startDate, calendarView === "month" ? "month" : null)}</div>
         </div>
         <div className="text-4xl">${summary.total?.toFixed(1)}</div>
       </div>
@@ -206,17 +214,18 @@ function BankPageMain() {
             value={calendarView}
             exclusive
             onChange={selectCalendarView}
+            disabled={anyTimeFilter}
           >
             <ToggleButton value="month">Month</ToggleButton>
             <ToggleButton value="day">Day</ToggleButton>
           </ToggleButtonGroup>
-          {summary && <DatePicker value={startDate} setValue={setStartDate} selectionType={calendarView} hideSelection={true}/>}
+          {summary && <DatePicker value={startDate} setValue={setStartDate} selectionType={calendarView} hideSelection={true} disabled={anyTimeFilter}/>}
         </div>
         <button className={`ms-auto rounded-full p-2 ${BTN_BLUER}`} onClick={showAddCostPanel}>
           <AddIcon className="w-8 h-8 text-inherit"/>
         </button>
         <button className={`rounded-full p-2 ${PLAIN_BTN_BLUE}`} onClick={() => setShowMore(true)}>
-          {filter ? (
+          {flagFilter || catFilter || anyTimeFilter ? (
             <FilterIcon className="w-8 h-8 text-blue-200"/> // disabled class "w-8 h-8 text-blue-200/70"
           ) : (
             <MenuDotsIcon className="w-8 h-8 text-inherit"/>
@@ -233,8 +242,12 @@ function BankPageMain() {
         <BottomDrawer isOpen={showMore} onCancel={() => setShowMore(false)}>
           {showMore && (
             <MorePanel
-              filter={filter}
-              onSetFilter={setFilter}
+              flagFilter={flagFilter}
+              onSetFlagFilter={setFlagFilter}
+              catFilter={catFilter}
+              onSetCatFilter={setCatFilter}
+              anyTimeFilter={anyTimeFilter}
+              onSetAnyTimeFilter={setAnyTimeFilter}
               onRefresh={reloadCostAsync}
               onClose={() => setShowMore(false)}
               localDB={dbRef.current}
