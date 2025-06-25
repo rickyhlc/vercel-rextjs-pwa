@@ -1,7 +1,4 @@
-"use client";
-
 import { SwipeableDrawer } from '@mui/material';
-import BackPrompt from './backPrompt';
 
 import './bottomDrawer.css';
 
@@ -43,7 +40,6 @@ export default function BottomDrawer({ isOpen, onOpen, onCancel, variant, childr
       variant={variant}
       onClose={onCancel}
     >
-      {isOpen && <BackPrompt />}
       {children}
     </SwipeableDrawer>
   );

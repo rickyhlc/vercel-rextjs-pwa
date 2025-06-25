@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 
+// testing only, can be removed now
 // testing only, the prompt may not show on back
 
 export default function BackPrompt() {

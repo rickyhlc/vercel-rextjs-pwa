@@ -161,12 +161,13 @@ function BankPageMain() {
         </div>
         <div className="text-4xl">${summary.total?.toFixed(1)}</div>
       </div>
+
       <div className="grow-1 basis-0 overflow-auto">
         {costs && (catFilter ? [catFilter] : CAT_LIST).map(cat => {
           return (
             <Accordion key={cat}>
               <AccordionSummary expandIcon={<DownArrowIcon colorClass="text-inherit" />}>
-                <div className="flex justify-between items-center w-full pe-4">
+                <div className="flex justify-between items-center w-full pe-4 text-lg font-bold">
                   <span>{cat}</span>
                   <span>${summary[cat]?.toFixed(1)}</span>
                 </div>
