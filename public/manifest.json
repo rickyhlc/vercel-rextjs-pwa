@@ -26,12 +26,38 @@
     ],
     "shortcuts": [
       {
-        "name": "Bank",
-        "short_name": "Bank",
+        "name": "Traffic",
+        "short_name": "Traffic",
         "url": "/bank?cat=TRAFFIC&type=TRAFFIC",
         "icons": [
           {
-            "src": "/bank-192x192.png",
+            "src": "/traffic-192x192.png",
+            "type": "image/png",
+            "sizes": "192x192",
+            "purpose": "maskable"
+          }
+        ]
+      },
+      {
+        "name": "Food",
+        "short_name": "Food",
+        "url": "/bank?cat=FOOD&type=FOOD",
+        "icons": [
+          {
+            "src": "/food-192x192.png",
+            "type": "image/png",
+            "sizes": "192x192",
+            "purpose": "maskable"
+          }
+        ]
+      },
+      {
+        "name": "Sport",
+        "short_name": "Sport",
+        "url": "/bank?cat=ENTERTAINMENT&type=SPORT",
+        "icons": [
+          {
+            "src": "/sport-192x192.png",
             "type": "image/png",
             "sizes": "192x192",
             "purpose": "maskable"
