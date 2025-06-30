@@ -55,9 +55,9 @@
       background-color: var(--color-blue-400);
       color: var(--color-zinc-200);
     }
-    &.Mui-disabled {
-      background-color: var(--color-zinc-400);
-    }
+  }
+  &.Mui-disabled {
+    background-color: var(--color-zinc-400);
   }
 }
 

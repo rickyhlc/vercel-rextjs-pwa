@@ -24,7 +24,7 @@ export default function BankPage() {
 
 function BankPageMain() {
   const today = getToday();
-  const [calendarView, setCalendarView] = useState("day");
+  const [calendarView, setCalendarView] = useState("D");
   const [startDate, setStartDate] = useState(today);
   const [flagFilter, setFlagFilter] = useState(null);
   const [catFilter, setCatFilter] = useState(null);
@@ -82,10 +82,12 @@ function BankPageMain() {
   const selectCalendarView = useCallback((e, view) => {
     if (view) { // dont allow unselect view
       setCalendarView(view);
-      if (view === "day" && startDate.getMonth() == today.getMonth() && startDate.getFullYear() == today.getFullYear()) {
+      if (view === "D" && startDate.getMonth() == today.getMonth() && startDate.getFullYear() == today.getFullYear()) {
         setStartDate(new Date(today));
-      } else {
+      } else if (view === "M") {
         setStartDate(new Date(startDate.getFullYear(), startDate.getMonth(), 1));
+      } else if (view === "Y") {
+        setStartDate(new Date(startDate.getFullYear(), 0, 1));
       }
     }
   });
@@ -112,7 +114,9 @@ function BankPageMain() {
         data = await dbRef.current.getCosts(null, null, catFilter, flagFilter);
       } else {
         let endDate = new Date(startDate);
-        if (calendarView === "month") {
+        if (calendarView === "Y") {
+          endDate.setFullYear(startDate.getFullYear() + 1);
+        } else if (calendarView === "M") {
           endDate.setMonth(startDate.getMonth() + 1);
         } else {
           endDate.setDate(startDate.getDate() + 1);
@@ -157,7 +161,7 @@ function BankPageMain() {
       <div className="flex gap-4 items-center justify-between mx-[16px] py-4 mb-2 border-b border-solid border-zinc-400">
         <div>
           <div className={`${TXT_ZINC} text-xs`}>Expenses in</div>
-          <div className={`${TXT_ZINC} text-2xl`}>{anyTimeFilter ? "All date" : dateFormat(startDate, calendarView === "month" ? "month" : null)}</div>
+          <div className={`${TXT_ZINC} text-2xl`}>{anyTimeFilter ? "All date" : calendarView === "Y" ? startDate.getFullYear() : dateFormat(startDate, calendarView === "M" ? "month" : null)}</div>
         </div>
         <div className="text-4xl">${summary.total?.toFixed(1)}</div>
       </div>
@@ -165,7 +169,7 @@ function BankPageMain() {
       <div className="grow-1 basis-0 overflow-auto">
         {costs && (catFilter ? [catFilter] : CAT_LIST).map(cat => {
           return (
-            <Accordion key={cat}>
+            <Accordion key={cat} square={true}>
               <AccordionSummary expandIcon={<DownArrowIcon colorClass="text-inherit" />}>
                 <div className="flex justify-between items-center w-full pe-4 text-lg font-bold">
                   <span>{cat}</span>
@@ -174,7 +178,7 @@ function BankPageMain() {
               </AccordionSummary>
               <AccordionDetails>
                 {CAT_TYPE_LIST[cat].map(type => (
-                  <Accordion key={`${cat}-${type}`}>
+                  <Accordion key={`${cat}-${type}`} square={true} defaultExpanded={true}>
                     {CAT_TYPE_LIST[cat].length > 1 &&
                       <AccordionSummary expandIcon={<DownArrowIcon colorClass="text-inherit" />}>
                         <div className="flex justify-between items-center w-full pe-4">
@@ -186,8 +190,8 @@ function BankPageMain() {
                     <AccordionDetails>
                       {costs[cat]?.[type]?.map(item => (
                         <div key={item.id} className="flex gap-4 items-center">
-                          <span className="grow-0">{dateFormat(new Date(item.date), "day")}</span>
-                          <span className="ps-5 grow-0 basis-20 flex gap-1">
+                          <span className="grow-0 basis-18">{dateFormat(new Date(item.date), "day")}</span>
+                          <span className="grow-0 basis-18 flex gap-1">
                             {FLAG_LIST.map(f => item[f.id] ? getFlagIcon(f, "w-4 h-4 text-inherit") : null)}
                           </span>
                           <span className="grow basis-0 text-right">${item.value}</span>
@@ -217,8 +221,9 @@ function BankPageMain() {
             onChange={selectCalendarView}
             disabled={anyTimeFilter}
           >
-            <ToggleButton value="month">Month</ToggleButton>
-            <ToggleButton value="day">Day</ToggleButton>
+            <ToggleButton value="Y">Y</ToggleButton>
+            <ToggleButton value="M">M</ToggleButton>
+            <ToggleButton value="D">D</ToggleButton>
           </ToggleButtonGroup>
           {summary && <DatePicker value={startDate} setValue={setStartDate} selectionType={calendarView} hideSelection={true} disabled={anyTimeFilter}/>}
         </div>

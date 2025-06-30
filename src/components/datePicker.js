@@ -14,7 +14,9 @@ export default function DatePicker({ selectionType, value, setValue, hideSelecti
 
   function shiftStartDate(isBackward) {
     let newDate = new Date(value);
-    if (selectionType === "month") {
+    if (selectionType === "Y") {
+      newDate.setFullYear(newDate.getFullYear() + (isBackward ? -1 : 1));
+    } else if (selectionType === "M") {
       newDate.setMonth(newDate.getMonth() + (isBackward ? -1 : 1));
     } else {
       newDate.setDate(newDate.getDate() + (isBackward ? -1 : 1));
@@ -32,7 +34,7 @@ export default function DatePicker({ selectionType, value, setValue, hideSelecti
           orientation="portrait"
           closeOnSelect={true}
           disableFuture={true}
-          views={selectionType === "month" ? ["year", "month"] : ["year", "month", "day"]}
+          views={selectionType === "Y" ? ["year"] : selectionType === "M" ? ["year", "month"] : ["year", "month", "day"]}
           value={value}
           onChange={setValue}
           className={hideSelection ? "hideSelection" : ""}
