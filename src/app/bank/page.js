@@ -35,7 +35,7 @@ function BankPageMain() {
   const [newCost, setNewCost] = useState(null);
   const [showMore, setShowMore] = useState(false);
 
-  //handler click notification
+  //handle click notification
   const router = useRouter();
   const pathname = usePathname();
   const queryParams = useSearchParams();
@@ -82,13 +82,13 @@ function BankPageMain() {
   const selectCalendarView = useCallback((e, view) => {
     if (view) { // dont allow unselect view
       setCalendarView(view);
-      if (view === "D" && startDate.getMonth() == today.getMonth() && startDate.getFullYear() == today.getFullYear()) {
-        setStartDate(new Date(today));
-      } else if (view === "M") {
+      if (view === "M" || view === "D") {
         setStartDate(new Date(startDate.getFullYear(), startDate.getMonth(), 1));
       } else if (view === "Y") {
         setStartDate(new Date(startDate.getFullYear(), 0, 1));
       }
+    } else if (calendarView === "D") { // click "D" for the second time, go to today
+      setStartDate(new Date(today));
     }
   });
 
@@ -217,9 +217,9 @@ function BankPageMain() {
           <ToggleButtonGroup
             color="primary"
             value={calendarView}
-            exclusive
             onChange={selectCalendarView}
             disabled={anyTimeFilter}
+            exclusive
           >
             <ToggleButton value="Y">Y</ToggleButton>
             <ToggleButton value="M">M</ToggleButton>
