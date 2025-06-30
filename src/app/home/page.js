@@ -67,9 +67,9 @@ export default function HomePage() {
         name: "Lunch", cat: "FOOD", type: "OTHERS", value: 123, flags: ["INCOME", "SPECIAL"]
       }
       const schedule = {};
-      const res = await subscribeServerPush(sub, [{ schedule: "0 * * * * *", data}]);
-      console.log("TODOricky", res.id, res.error);
-      console.log(await subscribeServerPush(sub, [{ schedule: "0 * * * * *", data: { notificationType: "camera", name: "Game", cat: "ENTERTAINMENT", type: "GAME", flags: []}}]));
+      // const res = await subscribeServerPush(sub, [{ schedule: "0 * * * * *", data}]);
+      // console.log("TODOricky", res.id, res.error);
+      console.log(await subscribeServerPush(sub, [{ schedule: "0 * * * * *", data}]));
     }
   }
 
