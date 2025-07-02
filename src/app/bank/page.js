@@ -16,7 +16,7 @@ import DatePicker from "@/components/datePicker";
 import BottomDrawer from "@/components/bottomDrawer";
 
 import './bank.css';
-import { ca } from "date-fns/locale";
+//import { ca } from "date-fns/locale";
 
 export default function BankPage() {
   return <Suspense><BankPageMain/></Suspense>;

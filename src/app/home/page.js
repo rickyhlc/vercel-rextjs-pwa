@@ -69,7 +69,7 @@ export default function HomePage() {
       const schedule = {};
       // const res = await subscribeServerPush(sub, [{ schedule: "0 * * * * *", data}]);
       // console.log("TODOricky", res.id, res.error);
-      console.log(await subscribeServerPush(sub, [{ schedule: "0 * * * * *", data}]));
+      console.log(await subscribeServerPush(sub, [{ schedule: {dayOfWeeks: null, dates: [[2], [21,2]], data}}]));
     }
   }
 
