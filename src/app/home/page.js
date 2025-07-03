@@ -64,12 +64,21 @@ export default function HomePage() {
     if (sub) {
       const data = {
         notificationType: "bank",
-        name: "Lunch", cat: "FOOD", type: "OTHERS", value: 123, flags: ["INCOME", "SPECIAL"]
+        name: "BOC", cat: "OTHERS", type: "INSURANCE", value: 2002.6, flags: ["REGULAR"],
       }
-      const schedule = {};
-      // const res = await subscribeServerPush(sub, [{ schedule: "0 * * * * *", data}]);
-      // console.log("TODOricky", res.id, res.error);
-      console.log(await subscribeServerPush(sub, [{ schedule: {dayOfWeeks: null, dates: [[2], [21,2]], data}}]));
+      console.log(await subscribeServerPush(sub, { schedules: ["2"], data}));
+      console.log(await subscribeServerPush(sub, { schedules: ["25"], data:{
+        notificationType: "bank",
+        name: "Mother", cat: "HOUSING", type: "OTHERS", value: 3000, flags: ["REGULAR"],
+      }}));
+      console.log(await subscribeServerPush(sub, { schedules: ["28"], data:{
+        notificationType: "bank",
+        name: "3HK", cat: "OTHERS", type: "OTHERS", value: 118, flags: ["REGULAR"],
+      }}));
+      console.log(await subscribeServerPush(sub, { schedules: ["19"], data:{
+        notificationType: "bank",
+        name: "HKBN", cat: "HOUSING", type: "HOUSING", value: 108, flags: ["REGULAR"],
+      }}));
     }
   }
 

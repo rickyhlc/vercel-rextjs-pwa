@@ -2,7 +2,7 @@
 
 import { auth } from "@/lib/authConfig";
 //TODOricky
-export const subscribeServerPush = async (subscription, notifications) => {
+export const subscribeServerPush = async (subscription, notification) => {
   try {
     const session = await auth();
     const email = session?.user?.email;
@@ -16,7 +16,7 @@ export const subscribeServerPush = async (subscription, notifications) => {
     const res = await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_DOMAIN}/updateSchedulePush`, {
       method: "POST",
       headers: reqHeaders,
-      body: JSON.stringify({ subscription, notifications })
+      body: JSON.stringify({ subscription, notification })
     });
     return res.json();
   } catch (error) {
