@@ -62,22 +62,26 @@ export default function HomePage() {
     //TODOricky first time sw is not ready?
     const sub = await getPushSubscription(true);
     if (sub) {
-      const data = {
+      // const data = {
+      //   notificationType: "bank",
+      //   name: "BOC", cat: "OTHERS", type: "INSURANCE", value: 2002.6, flags: ["REGULAR"],
+      // }
+      // console.log(await subscribeServerPush(sub, { schedules: ["2"], data}));
+      // console.log(await subscribeServerPush(sub, { schedules: ["25"], data:{
+      //   notificationType: "bank",
+      //   name: "Mother", cat: "HOUSING", type: "OTHERS", value: 3000, flags: ["REGULAR"],
+      // }}));
+      // console.log(await subscribeServerPush(sub, { schedules: ["28"], data:{
+      //   notificationType: "bank",
+      //   name: "3HK", cat: "OTHERS", type: "OTHERS", value: 118, flags: ["REGULAR"],
+      // }}));
+      // console.log(await subscribeServerPush(sub, { schedules: ["19"], data:{
+      //   notificationType: "bank",
+      //   name: "HKBN", cat: "HOUSING", type: "HOUSING", value: 108, flags: ["REGULAR"],
+      // }}));
+      console.log(await subscribeServerPush(sub, { schedules: ["DAY0","DAY1","DAY2","DAY3","DAY4","DAY5","DAY6"], data:{
         notificationType: "bank",
-        name: "BOC", cat: "OTHERS", type: "INSURANCE", value: 2002.6, flags: ["REGULAR"],
-      }
-      console.log(await subscribeServerPush(sub, { schedules: ["2"], data}));
-      console.log(await subscribeServerPush(sub, { schedules: ["25"], data:{
-        notificationType: "bank",
-        name: "Mother", cat: "HOUSING", type: "OTHERS", value: 3000, flags: ["REGULAR"],
-      }}));
-      console.log(await subscribeServerPush(sub, { schedules: ["28"], data:{
-        notificationType: "bank",
-        name: "3HK", cat: "OTHERS", type: "OTHERS", value: 118, flags: ["REGULAR"],
-      }}));
-      console.log(await subscribeServerPush(sub, { schedules: ["19"], data:{
-        notificationType: "bank",
-        name: "HKBN", cat: "HOUSING", type: "HOUSING", value: 108, flags: ["REGULAR"],
+        name: "Test", cat: "HOUSING", type: "HOUSING", value: 1234567, flags: ["SPECIAL"],
       }}));
     }
   }
