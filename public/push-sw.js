@@ -17,26 +17,6 @@ self.addEventListener("push", (event) => {
       icon: "/icon-192x192.png",
       data: data
     }));
-  } else {
-    event.waitUntil(self.registration.showNotification("test?", {
-      body: "go to /camera/[[...params]]",
-      icon: "/icon-192x192.png",
-      data: data,
-      actions: [
-        {
-          action: "default",
-          title: "Yes",
-          type: "button", // type can be text
-          // placeholder: "placeholder"
-          // icon: '/icon-192x192.png',
-        },
-        {
-          action: "custom",
-          type: "button",
-          title: "New Value",
-        }
-      ]
-    }));
   }
 });
 

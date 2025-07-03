@@ -79,10 +79,11 @@ export default function HomePage() {
       //   notificationType: "bank",
       //   name: "HKBN", cat: "HOUSING", type: "HOUSING", value: 108, flags: ["REGULAR"],
       // }}));
-      console.log(await subscribeServerPush(sub, { schedules: ["DAY0","DAY1","DAY2","DAY3","DAY4","DAY5","DAY6"], data:{
-        notificationType: "bank",
-        name: "Test", cat: "HOUSING", type: "HOUSING", value: 1234567, flags: ["SPECIAL"],
-      }}));
+      //TODOricky for test
+      // console.log(await subscribeServerPush(sub, { schedules: ["DAY0","DAY1","DAY2","DAY3","DAY4","DAY5","DAY6"], data:{
+      //   notificationType: "bank",
+      //   name: "Test", cat: "HOUSING", type: "HOUSING", value: 1234567, flags: ["SPECIAL"],
+      // }}));
     }
   }
 

@@ -52,7 +52,7 @@ function BankPageMain() {
         type,
       }
       flags?.forEach(f => {
-        if (FLAG_LIST.includes(f)) {
+        if (FLAG_LIST.some(i => i.id === f)) {
           data[f] = true;
         }
       });
@@ -60,7 +60,7 @@ function BankPageMain() {
       router.replace(pathname);
     }
   }, []);
-  
+
   // watch param change and reload cost display
   useEffect(() => {
     reloadCostAsync();
