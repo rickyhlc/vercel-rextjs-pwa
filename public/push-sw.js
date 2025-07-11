@@ -21,6 +21,7 @@ self.addEventListener("push", (event) => {
     event.waitUntil(self.registration.showNotification("Test Notification", {
       body: data.msg,
       icon: "/icon-192x192.png",
+      data: data
     }));
   }
 });
