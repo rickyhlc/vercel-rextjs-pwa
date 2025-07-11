@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { getSession, logout } from "@/actions/auth";
-import { subscribeServerPush } from "@/actions/scheduleJob";
+import { sendTestNotification } from "@/actions/scheduleJob";
 import { timeFormat, dateFormat, getPushSubscription } from "@/lib/utils";
 
 export default function HomePage() {
@@ -41,49 +41,14 @@ export default function HomePage() {
 
   // push notification
   async function showNotification() {
-    // const status = await Notification.requestPermission();
-    // if (status === "granted") {
-    //   // send notification
-    //   const noti = new Notification("标题", {
-    //     tag: new Date().getTime(), // notification id, won't show if same tag already shown and renotify=false
-    //     dir: "auto",
-    //     body: "testing " + new Date().getTime(),
-    //     requireInteraction: true,
-    //     renotify: true,
-    //     icon: "/icon-192x192.png",
-    //   });
-    //   noti.onclick = () => alert("OK~~");
-    //   noti.onerror = (e) => console.log("~~~", e);
-    //   noti.onclose = null;
-    // }
+
   }
 
-  async function createPushNotification() {
+  async function testPushNotification() {
     //TODOricky first time sw is not ready?
     const sub = await getPushSubscription(true);
     if (sub) {
-      // const data = {
-      //   notificationType: "bank",
-      //   name: "BOC", cat: "OTHERS", type: "INSURANCE", value: 2002.6, flags: ["REGULAR"],
-      // }
-      // console.log(await subscribeServerPush(sub, { schedules: ["2"], data}));
-      // console.log(await subscribeServerPush(sub, { schedules: ["25"], data:{
-      //   notificationType: "bank",
-      //   name: "Mother", cat: "HOUSING", type: "OTHERS", value: 3000, flags: ["REGULAR"],
-      // }}));
-      // console.log(await subscribeServerPush(sub, { schedules: ["28"], data:{
-      //   notificationType: "bank",
-      //   name: "3HK", cat: "OTHERS", type: "OTHERS", value: 118, flags: ["REGULAR"],
-      // }}));
-      // console.log(await subscribeServerPush(sub, { schedules: ["19"], data:{
-      //   notificationType: "bank",
-      //   name: "HKBN", cat: "HOUSING", type: "HOUSING", value: 108, flags: ["REGULAR"],
-      // }}));
-      //TODOricky for test
-      // console.log(await subscribeServerPush(sub, { schedules: ["DAY0","DAY1","DAY2","DAY3","DAY4","DAY5","DAY6"], data:{
-      //   notificationType: "bank",
-      //   name: "Test", cat: "HOUSING", type: "HOUSING", value: 1234567, flags: ["SPECIAL"],
-      // }}));
+      sendTestNotification(sub, {msg: "The push notification is working!"});
     }
   }
 
@@ -95,8 +60,8 @@ export default function HomePage() {
         {deferredPrompt != null  && <button className="bg-blue-700 text-white w-25 py-2 rounded hover:bg-blue-800 active:bg-blue-900" onClick={handleInstall}>Install me</button>}
       </div>
       <div className="flex gap-8 items-center">
-        <button className="bg-blue-700 text-white w-25 py-2 rounded hover:bg-blue-800 active:bg-blue-900" onClick={showNotification}>Notification</button>
-        <button className="bg-blue-700 text-white w-25 py-2 rounded hover:bg-blue-800 active:bg-blue-900" onClick={createPushNotification}>Web Push</button>
+        <button className="bg-blue-700 text-white w-25 py-2 rounded hover:bg-blue-800 active:bg-blue-900" onClick={showNotification}>--</button>
+        <button className="bg-blue-700 text-white w-25 py-2 rounded hover:bg-blue-800 active:bg-blue-900" onClick={testPushNotification}>Web Push</button>
       </div>
       <div className="">{expTime ? dateFormat(expTime) + " " + timeFormat(expTime, "second") : "-"} ({count})</div>
       <div className="flex gap-8 items-center">

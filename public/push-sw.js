@@ -17,6 +17,11 @@ self.addEventListener("push", (event) => {
       icon: "/icon-192x192.png",
       data: data
     }));
+  } else {
+    event.waitUntil(self.registration.showNotification("Test Notification", {
+      body: data.msg,
+      icon: "/icon-192x192.png",
+    }));
   }
 });
 

@@ -94,12 +94,12 @@ export default function MorePanel({ flagFilter, onSetFlagFilter, catFilter, onSe
           className="w-1/2"
           onChange={(e) => setCatFilter(e.target.value)}
         >
-          <option key="no_filter" value={""}>NO CATEGORY FILTER</option>
+          <option key="no_filter" value={""}>SHOW ALL</option>
           {CAT_LIST.map((cat) => <option key={cat} value={cat}>{cat}</option>)}
         </NativeSelect>
         <label className="flex items-center w-1/2">
           <Checkbox color="primary" checked={anyTimeFilter} onChange={e => onSetAnyTimeFilter(e.target.checked)}/>
-          <span>Show records in all time</span>
+          <span>All time</span>
         </label>
       </div>
       <div className="ps-[16px] pt-4">Only include this item:</div>
