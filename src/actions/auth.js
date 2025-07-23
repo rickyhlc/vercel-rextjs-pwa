@@ -3,7 +3,7 @@
 import { auth, handlers, signIn, signOut } from "@/lib/authConfig";
 
 export const login = async (options) => {
-  await signIn("google", options || { redirectTo: "/" });
+  await signIn("google", options || { redirectTo: "/home" });
 }
 
 export const logout = async (options) => {

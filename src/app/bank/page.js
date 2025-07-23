@@ -12,6 +12,7 @@ import FilterIcon from "@/icons/filter";
 import { Accordion, AccordionSummary, AccordionDetails, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import EditCostPanel from "./editCostPanel";
 import MorePanel from "./morePanel";
+import FilterPanel from "./filterPanel";
 import DatePicker from "@/components/datePicker";
 import BottomDrawer from "@/components/bottomDrawer";
 
@@ -34,6 +35,7 @@ function BankPageMain() {
   const dbRef = useRef(null);
   const [newCost, setNewCost] = useState(null);
   const [showMore, setShowMore] = useState(false);
+  const [showFilter, setShowFilter] = useState(false);
 
   //handle click notification
   const router = useRouter();
@@ -212,8 +214,8 @@ function BankPageMain() {
         })}
       </div>
 
-      <div className="flex items-center ps-[16px] py-4">
-        <div className="flex gap-2 items-center">
+      <div className="flex items-center px-[16px] py-4">
+        <div className="flex gap-2 grow-1 items-center">
           <ToggleButtonGroup
             color="primary"
             value={calendarView}
@@ -226,41 +228,60 @@ function BankPageMain() {
             <ToggleButton value="D">D</ToggleButton>
           </ToggleButtonGroup>
           {summary && <DatePicker value={startDate} setValue={setStartDate} selectionType={calendarView} hideSelection={true} disabled={anyTimeFilter}/>}
+          <button className={`rounded-full p-2 ${PLAIN_BTN_BLUE}`} onClick={() => setShowFilter(true)}>
+            <FilterIcon className={`w-8 h-8 ${flagFilter || catFilter || anyTimeFilter ? "text-blue-200" : "text-inherit"}`}/>
+          </button>
+        </div>
+        <button className={`rounded-full p-2 ${PLAIN_BTN_BLUE}`} onClick={() => setShowMore(true)}>
+          <MenuDotsIcon className="w-8 h-8 text-inherit"/>
+        </button>
+      </div>
+
+      <div className="flex items-center px-[16px] pb-4">
+        <div className="flex gap-2 items-center">
+
         </div>
         <button className={`ms-auto rounded-full p-2 ${BTN_BLUER}`} onClick={showAddCostPanel}>
           <AddIcon className="w-8 h-8 text-inherit"/>
         </button>
-        <button className={`rounded-full p-2 ${PLAIN_BTN_BLUE}`} onClick={() => setShowMore(true)}>
-          {flagFilter || catFilter || anyTimeFilter ? (
-            <FilterIcon className="w-8 h-8 text-blue-200"/> // disabled class "w-8 h-8 text-blue-200/70"
-          ) : (
-            <MenuDotsIcon className="w-8 h-8 text-inherit"/>
-          )}
-        </button>
-        <BottomDrawer isOpen={newCost} onCancel={() => setNewCost(null)}>
-          {newCost && (
-            <EditCostPanel
-              cost={newCost}
-              onSave={handleSaveCost}
-            />
-          )}
-        </BottomDrawer>
-        <BottomDrawer isOpen={showMore} onCancel={() => setShowMore(false)}>
-          {showMore && (
-            <MorePanel
-              flagFilter={flagFilter}
-              onSetFlagFilter={setFlagFilter}
-              catFilter={catFilter}
-              onSetCatFilter={setCatFilter}
-              anyTimeFilter={anyTimeFilter}
-              onSetAnyTimeFilter={setAnyTimeFilter}
-              onRefresh={reloadCostAsync}
-              onClose={() => setShowMore(false)}
-              localDB={dbRef.current}
-            />
-          )}
-        </BottomDrawer>
       </div>
+
+      <BottomDrawer isOpen={newCost} onCancel={() => setNewCost(null)}>
+        {newCost && (
+          <EditCostPanel
+            cost={newCost}
+            onSave={handleSaveCost}
+          />
+        )}
+      </BottomDrawer>
+      <BottomDrawer isOpen={showFilter} onCancel={() => setShowFilter(false)}>
+        {showFilter && (
+          <FilterPanel
+            flagFilter={flagFilter}
+            onSetFlagFilter={setFlagFilter}
+            catFilter={catFilter}
+            onSetCatFilter={setCatFilter}
+            anyTimeFilter={anyTimeFilter}
+            onSetAnyTimeFilter={setAnyTimeFilter}
+            onClose={() => setShowFilter(false)}
+          />
+        )}
+      </BottomDrawer>
+      <BottomDrawer isOpen={showMore} onCancel={() => setShowMore(false)}>
+        {showMore && (
+          <MorePanel
+            flagFilter={flagFilter}
+            onSetFlagFilter={setFlagFilter}
+            catFilter={catFilter}
+            onSetCatFilter={setCatFilter}
+            anyTimeFilter={anyTimeFilter}
+            onSetAnyTimeFilter={setAnyTimeFilter}
+            onRefresh={reloadCostAsync}
+            onClose={() => setShowMore(false)}
+            localDB={dbRef.current}
+          />
+        )}
+      </BottomDrawer>
     </div>
   );
 }
