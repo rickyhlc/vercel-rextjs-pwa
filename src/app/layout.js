@@ -31,6 +31,7 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+  console.log("~~~RootLayout, always dynamic render");
   return (
     <html lang="en">
       <body

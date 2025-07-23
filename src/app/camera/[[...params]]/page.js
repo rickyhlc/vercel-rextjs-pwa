@@ -1,22 +1,21 @@
 "use client";
 
-import { useEffect, useState, use } from "react";
-
+import { useState, use } from "react";
+import { useRouter } from "next/navigation";
 import CameraIcon from "@/icons/camera";
 import VideoIcon from "@/icons/video";
 import MediaIcon from "@/icons/media";
 
-export default function CameraPage({ params }) {
+// export default function CameraPage({ params }) {
+export default function CameraPage({ }) {
 
-  useEffect(() => {
-    const test = async () => {
-      console.log(await params, navigator.mediaDevices.getSupportedConstraints());
-    }
-    test();
-  }, []);
+  console.log("~~~CameraPage client component");
 
-  const x = use(params); // better use <Suspense> to wrap this component
-  console.log("X~~~~~", x);
+  const router = useRouter();
+
+
+
+  // const x = use(params); // better use <Suspense> to wrap this component
 
   const [source, setSource] = useState(null);
 
