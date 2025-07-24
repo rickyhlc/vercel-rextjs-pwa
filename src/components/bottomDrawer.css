@@ -19,3 +19,6 @@
     border-color: transparent;
   }
  }
+ .MuiDrawer-paperAnchorBottom {
+  padding-bottom: 16px
+ }

@@ -84,10 +84,11 @@
 .MuiTextField-root {
   .MuiInputLabel-root {
     color: var(--color-zinc-400);
-    &.Mui-focused {
+    &.Mui-focused,
+    &.MuiFormLabel-filled {
       color: var(--color-blue-400);
     }
-    &:not(.Mui-focused) {
+    &:not(.Mui-focused):not(.MuiFormLabel-filled) {
       transform: translate(14px, 14px) scale(1);
     }
   }

@@ -27,7 +27,7 @@ export const getServerPushSubscriptions = async () => {
 /**
  * 
  * @param {*} subscription 
- * @param {*} notification - Object { _id schedules data }
+ * @param {*} notification - { _id schedules["DAY[0-6]", "[1-31]", "[1-31]/[0-11]"] data{name notificationType cat type flags value} }
  * @returns 
  */
 export const subscribeServerPush = async (subscription, notification) => {

@@ -44,9 +44,9 @@ export default function FilterPanel({ flagFilter, onSetFlagFilter, catFilter, on
         </label>
       </div>
       <div className="ps-[16px] pt-4">Only include this item:</div>
-      <div className="flex items-center flex-wrap ps-[4px] pe-[16px] py-2">
-        {FLAG_LIST.map(f => (
-          <label key={f.id} className="flex items-center w-1/2">
+      <div className="flex items-center flex-wrap px-[16px] py-2">
+        {FLAG_LIST.map((f, ind) => (
+          <label key={f.id} className={`flex items-center w-1/2${ind & 1 ? " ms-[12px]" : " ms-[-12px]"}`}>
             <Checkbox color="primary" checked={flagFilter?.[f.id] === "oi" || false} onChange={e => {
               let _flagFilter = flagFilter ? {...flagFilter} : {};
               if (e.target.checked) {
@@ -65,9 +65,9 @@ export default function FilterPanel({ flagFilter, onSetFlagFilter, catFilter, on
         ))}
       </div>
       <div className="ps-[16px] pt-4">And exclude these items:</div>
-      <div className="flex items-center flex-wrap ps-[4px] pe-[16px] py-2">
-        {FLAG_LIST.map(f => (
-          <label key={f.id} className="flex items-center w-1/2">
+      <div className="flex items-center flex-wrap px-[16px] py-2">
+        {FLAG_LIST.map((f, ind) => (
+          <label key={f.id} className={`flex items-center w-1/2${ind & 1 ? " ms-[12px]" : " ms-[-12px]"}`}>
             <Checkbox color="primary" checked={flagFilter?.[f.id] === "e" || false} onChange={e => {
               let _flagFilter = flagFilter ? {...flagFilter} : {};
               _flagFilter[f.id] = e.target.checked ? "e" : null;
@@ -76,7 +76,7 @@ export default function FilterPanel({ flagFilter, onSetFlagFilter, catFilter, on
           </label>
         ))}
       </div>
-      <div className="flex items-center px-[16px] pb-4">
+      <div className="flex items-center px-[16px]">
         <button
           className={`ms-auto rounded-full p-2 ${BTN_BLUER}`}
           onClick={() => {
