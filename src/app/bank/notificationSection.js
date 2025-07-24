@@ -2,8 +2,10 @@
 
 import { useState, useEffect, useTransition } from "react";
 import EditIcon from "@/icons/edit";
+import AddIcon from "@/icons/add";
+import BinIcon from "@/icons/bin";
 import CostEditor from "./costEditor";
-import { getServerPushSubscriptions, subscribeServerPush } from "@/actions/scheduleJob";
+import { getServerPushSubscriptions, subscribeServerPush, unsubscribeServerPush } from "@/actions/scheduleJob";
 import { CAT_LIST, CAT_TYPE_LIST, FLAG_LIST } from "./indexedDB";
 import { getPushSubscription, PLAIN_BTN_BLUE } from "@/lib/utils";
 import { Divider, TextField, CircularProgress } from '@mui/material';
@@ -16,6 +18,7 @@ export default function NotificationSection({ onClose }) {
   const [selectedNotification, _setSelectedNotification] = useState(null);
   const [notificationName, setNotificationName] = useState("");
   const [notificationSchedules, setNotificationSchedules] = useState("");
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
   useEffect(() => {
     getServerPushSubscriptions().then(res => {
       if (res?.error) {
@@ -24,7 +27,7 @@ export default function NotificationSection({ onClose }) {
         setNotifications(res)
       }
     });
-  }, []);
+  }, [refreshTrigger]);
 
   function setSelectedNotification(notif) {
     if (notif === true) {
@@ -32,7 +35,7 @@ export default function NotificationSection({ onClose }) {
         notificationType: "bank",
         flags: [],
         cat: CAT_LIST[0],
-        type: CAT_TYPE_LIST[CAT_LIST[0]],
+        type: CAT_TYPE_LIST[CAT_LIST[0]][0],
         value: null
       });
       setNotificationName("");
@@ -79,6 +82,16 @@ export default function NotificationSection({ onClose }) {
     });
   }
 
+  async function deleteNotification(notif) {
+      const res = await unsubscribeServerPush(notif._id);
+      if (res.error) {
+        alert(res.error);
+      } else {
+        setRefreshTrigger(refreshTrigger + 1);
+      }
+      return res;
+  }
+
   let notificationElm;
   if (selectedNotification) {
     notificationElm = <>
@@ -112,18 +125,38 @@ export default function NotificationSection({ onClose }) {
     notificationElm = <div className="mx-auto py-1"><CircularProgress size={16}/></div>;
   } else if (notifications.length) {
     notificationElm = notifications.map(notif => (
-      <div key={notif._id} className="flex items-center px-[16px] py-1">
-        <span className="me-2">{notif.data?.name}</span>
-        <button
-          className={`ms-auto rounded-full p-1 ${PLAIN_BTN_BLUE}`}
-          onClick={() => setSelectedNotification(notif)}
-        >
-          <EditIcon className="w-4 h-4 text-inherit" />
-        </button>
-      </div>
-    ));
+        <div key={notif._id} className="flex items-center px-[16px] py-1">
+          <span className="me-2">{notif.data?.name}</span>
+          <button
+            className={`ms-auto rounded-full p-1 ${PLAIN_BTN_BLUE}`}
+            onClick={() => setSelectedNotification(notif)}
+          >
+            <EditIcon className="w-4 h-4 text-inherit" />
+          </button>
+          <button
+            className={`ms-2 rounded-full p-1 ${PLAIN_BTN_BLUE}`}
+            onClick={() => deleteNotification(notif)}
+          >
+            <BinIcon className="w-4 h-4 text-inherit" />
+          </button>
+        </div>
+      ));
   } else {
     notificationElm = <div className="mx-auto py-1">No data</div>;
+  }
+  if (!selectedNotification && notifications) {
+    notificationElm = <>
+      {notificationElm}
+      <div className="flex items-center px-[16px] py-1">
+        <span className="me-2 font-bold">Set new reminder</span>
+        <button
+            className={`ms-auto rounded-full p-1 ${PLAIN_BTN_BLUE}`}
+            onClick={() => setSelectedNotification(true)}
+          >
+            <AddIcon className="w-4 h-4 text-inherit" />
+          </button>
+      </div>
+    </>;
   }
 
   return (

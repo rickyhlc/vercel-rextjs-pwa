@@ -53,8 +53,32 @@ export const subscribeServerPush = async (subscription, notification) => {
   }
 }
 
-export const unsubscribeServerPush = async (subscription) => {
-  //TODOricky
+/**
+ * 
+ * @param {*} notificationId 
+ * @returns 
+ */
+export const unsubscribeServerPush = async (notificationId) => {
+  try {
+    const session = await auth();
+    const email = session?.user?.email;
+    if (!email) {
+      return { error: 'Unauthorized' };
+    }
+
+    const reqHeaders = new Headers();
+    reqHeaders.set("Content-Type", "application/json");
+    reqHeaders.set("X-Custom-Key", email);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_DOMAIN}/deleteSchedulePush`, {
+      method: "POST",
+      headers: reqHeaders,
+      body: JSON.stringify({ notificationId })
+    });
+    return await res.json();
+  } catch (error) {
+    console.error("Error:", error);
+    return { error: 'Internal Server Error' };
+  }
 }
 
 export const sendTestNotification = async (subscription, notification) => {
