@@ -21,7 +21,7 @@ export default function CostEditor({ onSaveAsync, onCancel, cost, valueRequired 
 
   return (
     <>
-      <div className="flex gap-8 items-center px-[16px] py-2">
+      <div className="flex gap-4 items-center px-[16px] py-2">
         <NativeSelect
           value={data.cat}
           disabled={saving}
@@ -43,21 +43,23 @@ export default function CostEditor({ onSaveAsync, onCancel, cost, valueRequired 
           {CAT_TYPE_LIST[data.cat].map(type => <option key={type} value={type}>{type}</option>)}
         </NativeSelect>
       </div>
-      <div className={`flex justify-between flex-wrap ps-[4px] pe-[16px] py-2 ${TXT_ZINC}`}>
-        {FLAG_LIST.map(f => (
-          <label key={f.id} className="flex items-center w-1/2">
-            {/* use "|| false" to prevent ctrl/un-ctrl component error */}
-            <Checkbox color="primary" disabled={saving} checked={data[f.id] || false} onChange={e => {
-              let c = { ...data };
-              if (e.target.checked) {
-                c[f.id] = true;
-              } else {
-                delete c[f.id];
-              }
-              setData(c);
-            }}/>
-            {f.name}{getFlagIcon(f, "ms-1 w-4 h-4 text-inherit")}
-          </label>
+      <div className={`flex justify-between flex-wrap px-[16px] pb-1 ${TXT_ZINC}`}>
+        {FLAG_LIST.map((f, i) => (
+          <div key={f.id} className="flex items-center w-1/2">
+            <label className={`flex items-center ${i&1 ? "ms-[-4px]" : "ms-[-12px]"}`}>
+              {/* use "|| false" to prevent ctrl/un-ctrl component error */}
+              <Checkbox color="primary" disabled={saving} checked={data[f.id] || false} onChange={e => {
+                let c = { ...data };
+                if (e.target.checked) {
+                  c[f.id] = true;
+                } else {
+                  delete c[f.id];
+                }
+                setData(c);
+              }}/>
+              {f.name}{getFlagIcon(f, "ms-1 w-4 h-4 text-inherit")}
+            </label>
+          </div>
         ))}
       </div>
       <div className="flex justify-between px-[16px] pt-2">
@@ -65,7 +67,7 @@ export default function CostEditor({ onSaveAsync, onCancel, cost, valueRequired 
           label="$"
           type="number"
           className="grow-1"
-          value={isNaN(data.value) ? "" : data.value}
+          value={!data.value || isNaN(data.value) ? "" : data.value}
           onChange={(e) => setData({ ...data, value: parseFloat(e.target.value) })}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
