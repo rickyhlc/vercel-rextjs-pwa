@@ -2,9 +2,11 @@
 // import { Suspense } from "react";
 import Camera from "../camera";
 
+export const dynamicParams = false;
+
 export async function generateStaticParams() {
   console.log("~~~generateStaticParams");
-  return [{ params: ['1','2']},{ params: ['a','b']}];
+  return [{ params: ['1','2']},{ params: ['a']}];
 }
 
 // export default function CameraPage({ params }) {

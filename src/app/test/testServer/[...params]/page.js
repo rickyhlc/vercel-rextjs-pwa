@@ -12,7 +12,7 @@ export default function ParamsPage({  }) {
   console.log("~~~ParamsPage server component");
 
   return (<div>
-    dynamicParams = false
-    generateStaticParams2 [1,2] or [a]
+    <div>dynamicParams = false</div>
+    <div>generateStaticParams2 [1,2] or [a]</div>
   </div>);
 }
