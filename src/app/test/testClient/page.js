@@ -29,7 +29,7 @@ export default function TestClientPage() {
   }
 
   async function handleApiCall(){
-    let res = await fetch("https://query2.finance.yahoo.com/v8/finance/chart/3416.HK?period1=1755079200&period2=1755165600&interval=1m&lang=zh-Hant-HK&region=HK&source=cosaic");
+    let res = await fetch("https://data.etabus.gov.hk/v1/transport/kmb/route/");
     let data = await res.json();
     console.log(data);
   }
