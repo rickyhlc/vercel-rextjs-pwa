@@ -28,11 +28,18 @@ export default function TestClientPage() {
     console.log(ref.current.lbl);
   }
 
+  async function handleApiCall(){
+    let res = await fetch("https://query2.finance.yahoo.com/v8/finance/chart/3416.HK?period1=1755079200&period2=1755165600&interval=1m&lang=zh-Hant-HK&region=HK&source=cosaic");
+    let data = await res.json();
+    console.log(data);
+  }
+
   return (
     <div className="m-6">
       <div>
         <button onClick={handleClick}>Add</button><span className="ms-5">Count: {count},{count1}</span>
       </div>
+      <button onClick={handleApiCall}>Call</button>
       <NavBtn ref={ref} />
     </div>
   );
