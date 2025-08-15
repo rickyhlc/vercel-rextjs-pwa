@@ -1,15 +1,22 @@
 "use client";
 
-import { useState, useRef, Suspense } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import NavBtn from "@/app/test/testClient/navBtn";
 import ApiDiv from "@/app/test/testClient/apiDiv";
-import Data from "@/app/test/testClient/data";
 
 export default function TestClientPage() {
 
   console.log("~~~TestClientPage client component");
 
   const ref = useRef();
+
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCount(prevCount => prevCount + 1);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   function handleClick() {
     ref.current.setLbl("!!!");
@@ -32,9 +39,7 @@ export default function TestClientPage() {
       <Suspense fallback={<div>Loading...</div>}>
         {/* <ApiDiv /> */}
       </Suspense>
-      <Suspense fallback={<div>Loading...</div>}>
-      <Data url="https://data.etabus.gov.hk/v1/transport/kmb/route/" />
-      </Suspense>
+      <div className="mt-4">Count: {count}</div>
     </div>
   );
 }
