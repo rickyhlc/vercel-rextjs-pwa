@@ -1,12 +1,11 @@
 "use client";
 
 import { useState, useEffect, useTransition } from "react";
-import EditIcon from "@/icons/edit";
 import AddIcon from "@/icons/add";
 import BinIcon from "@/icons/bin";
 import CostEditor from "./costEditor";
 import { getServerPushSubscriptions, subscribeServerPush, unsubscribeServerPush } from "@/actions/scheduleJob";
-import { CAT_LIST, CAT_TYPE_LIST, FLAG_LIST } from "./indexedDB";
+import { CAT_LIST, CAT_TYPE_LIST, FLAG_LIST } from "@/app/bank/constant";
 import { getPushSubscription, PLAIN_BTN_BLUE, BORDER_BTN_BLUE } from "@/lib/utils";
 import { Divider, TextField, CircularProgress } from '@mui/material';
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { CAT_LIST, FLAG_LIST } from "./indexedDB";
+import { CAT_LIST, FLAG_LIST } from "@/app/bank/constant";
 import ResetIcon from "@/icons/reset";
 import { getFlagIcon, BTN_BLUER } from "@/lib/utils";
 import { Divider, NativeSelect, Checkbox } from '@mui/material';

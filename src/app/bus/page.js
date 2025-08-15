@@ -1,9 +1,8 @@
 "use client";
-
+//TODOricky
 import { useEffect, useState, useRef, Suspense, useCallback } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { initDB } from "@/lib/indexedDB";
-import { CAT_LIST, CAT_TYPE_LIST, FLAG_LIST } from "@/app/bank/constant";
+import { initDB, CAT_LIST, CAT_TYPE_LIST, FLAG_LIST } from "./indexedDB";
 import { getToday, dateFormat, getFlagIcon, getServiceWorkerRegistration, BTN_BLUER, PLAIN_BTN_BLUE, ALL_ZINC, TXT_ZINC } from "@/lib/utils";
 import DownArrowIcon from "@/icons/downArrow";
 import EditIcon from "@/icons/edit";
@@ -11,14 +10,8 @@ import AddIcon from "@/icons/add";
 import MenuDotsIcon from "@/icons/menuDots";
 import FilterIcon from "@/icons/filter";
 import { Accordion, AccordionSummary, AccordionDetails, ToggleButton, ToggleButtonGroup } from '@mui/material';
-import EditCostPanel from "./editCostPanel";
-import MorePanel from "./morePanel";
-import FilterPanel from "./filterPanel";
-import DatePicker from "@/components/datePicker";
 import BottomDrawer from "@/components/bottomDrawer";
 
-import './bank.css';
-//import { ca } from "date-fns/locale";
 
 export default function BankPage() {
   return <Suspense><BankPageMain/></Suspense>;

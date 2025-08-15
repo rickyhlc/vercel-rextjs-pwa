@@ -26,9 +26,9 @@
     ],
     "shortcuts": [
       {
-        "name": "Traffic",
-        "short_name": "Traffic",
-        "url": "/bank?cat=TRAFFIC&type=TRAFFIC",
+        "name": "Bus",
+        "short_name": "Bus",
+        "url": "/bus",
         "icons": [
           {
             "src": "/traffic-192x192.png",
