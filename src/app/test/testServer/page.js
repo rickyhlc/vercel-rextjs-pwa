@@ -8,5 +8,6 @@ export default function TestServerPage({  }) {
 
   return (<div>
    <Suspense><NavBtn  /></Suspense>
+   
   </div>);
 }
