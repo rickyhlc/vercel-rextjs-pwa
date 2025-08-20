@@ -1,7 +1,7 @@
 
 
 export async function generateStaticParams() {
-  console.log("~~~generateStaticParams2");
+  console.log("~~~generateStaticParams prerender /x and /a");
   return [{ param: "x"}, { param: "a"}];
 }
 

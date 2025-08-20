@@ -5,7 +5,11 @@ const nextConfig = {
     reactStrictMode: true,      // Enable React strict mode for improved error handling
     compiler: {
         removeConsole: false     // Remove console.log in production
-    }
+    },
+    // this doesn't work for this version
+    // experimental: {
+    //     ppr: 'incremental',
+    // },
 };
 
 export default withPWA({

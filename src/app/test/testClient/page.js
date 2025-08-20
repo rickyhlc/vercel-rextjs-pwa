@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, Suspense } from "react";
 import NavBtn from "@/app/test/testClient/navBtn";
-import ApiDiv from "@/app/test/testClient/apiDiv";
+import TestItem from "@/app/test/testItem";
 
 export default function TestClientPage() {
 
@@ -40,6 +40,7 @@ export default function TestClientPage() {
         {/* <ApiDiv /> */}
       </Suspense>
       <div className="mt-4">Count: {count}</div>
+      <TestItem />
     </div>
   );
 }

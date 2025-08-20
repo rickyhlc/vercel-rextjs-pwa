@@ -92,6 +92,21 @@ export const unsubscribeSWPush = async () => {
   await subscription?.unsubscribe();
 }
 
+export const getSignInURL = () => "/signIn";
+export const getBankURL = () => "/bank";
+export const getBusURL = () => `/bus`;
+export const getSearchBusURL = () => "/bus/search";
+  // workaround for nextjs bug(?)
+  // if using dynamic route, it will call an extra fetch to the icon-192x192.png in the wrong path
+  // and this will trigger an extra rendering and cached in ISR
+  // adding /workaround at the end makes the icon path 404 thus prevent extra rendering and caching
+export const getRouteURL = (routeId, direction, serviceType) => {
+  return `/bus/route/${routeId}/${direction}/${serviceType}/workaround`;
+}
+export const getBusBookmarkURL = (bookmarkId) => {
+  return `/bus/bookmark/${bookmarkId}/workaround`;
+}
+
 export const TXT_ZINC = "text-zinc-800 dark:text-zinc-200";
 export const BG_ZINC = "bg-zinc-200 dark:bg-zinc-800";
 export const TXT_DISABLED = "disabled:text-zinc-400 dark:disabled:text-zinc-600";

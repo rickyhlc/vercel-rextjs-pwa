@@ -3,7 +3,7 @@
  * @returns {Promise<BankDB>} a promise that resolves to a BankDB instance
  * @description open the indexedDB and create the schema
  */
-export const initDB = (a, data) => {
+export const initDB = () => {
   return new Promise((resolve, reject) => {
     const request = window.indexedDB.open("BankDB", 6);
     request.onupgradeneeded = function(event) {
@@ -35,15 +35,15 @@ export const initDB = (a, data) => {
         case 5:
           event.currentTarget.transaction.objectStore("cost").createIndex("byCat", "cat");
         default:
-          console.log("DB version changed");
+          console.log("BankDB version changed");
       }
     }
     request.onsuccess = function() {
-      console.log("DB open success");
+      console.log("BankDB open success");
       const db = request.result;
       db.onversionchange = function() {
         db.close();
-        alert("DB is outdated, please reload the page.");
+        alert("BankDB is outdated, please reload the page.");
       }
       db.onerror = function(event) { // general error handling if not handled in transaction
         console.log("Error", event.target.error);
@@ -52,7 +52,7 @@ export const initDB = (a, data) => {
     }
     request.onerror = function(event) {
       reject(event);
-      alert("unable to open DB");
+      alert("unable to open BankDB");
     }
   });
 }

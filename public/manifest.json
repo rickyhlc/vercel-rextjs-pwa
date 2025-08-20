@@ -9,17 +9,17 @@
     "start_url": "/home",
     "icons": [
       {
-        "src": "/icon-192x192.png",
+        "src": "icons/icon-192x192.png",
         "type": "image/png",
         "sizes": "192x192"
       },
       {
-        "src": "/icon-256x256.png",
+        "src": "icons/icon-256x256.png",
         "type": "image/png",
         "sizes": "256x256"
       },
       {
-        "src": "/icon-512x512.png",
+        "src": "icons/icon-512x512.png",
         "type": "image/png",
         "sizes": "512x512"
       }
@@ -58,19 +58,6 @@
             "src": "/sport-192x192.png",
             "type": "image/png",
             "sizes": "192x192"
-          }
-        ]
-      },
-      {
-        "name": "Camera",
-        "short_name": "Camera",
-        "url": "/camera",
-        "icons": [
-          {
-            "src": "/camera-192x192.png",
-            "type": "image/png",
-            "sizes": "192x192",
-            "purpose": "maskable"
           }
         ]
       }

@@ -38,8 +38,6 @@ self.addEventListener("notificationclick", (event) => {
     if (data.flags?.length) {
       url += `&flags=${data.flags.join()}`;
     }
-  } else {
-    url = `${url}/camera/p1/p2/123`;
   }
   // this open a new window in desktop and open pwa in android
   event.waitUntil(clients.openWindow(url));

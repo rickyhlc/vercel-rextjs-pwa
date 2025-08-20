@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { getSession, logout } from "@/actions/auth";
 import { sendTestNotification } from "@/actions/scheduleJob";
-import { timeFormat, dateFormat, getPushSubscription } from "@/lib/utils";
+import { timeFormat, dateFormat, getPushSubscription, getBankURL, getBusURL, getSignInURL } from "@/lib/utils";
 
 export default function HomePage() {
   const router = useRouter();
@@ -39,11 +39,6 @@ export default function HomePage() {
     }
   }
 
-  // push notification
-  async function showNotification() {
-
-  }
-
   async function testPushNotification() {
     //TODOricky first time sw is not ready?
     const sub = await getPushSubscription(true);
@@ -60,17 +55,17 @@ export default function HomePage() {
         {deferredPrompt != null  && <button className="bg-blue-700 text-white w-25 py-2 rounded hover:bg-blue-800 active:bg-blue-900" onClick={handleInstall}>Install me</button>}
       </div>
       <div className="flex gap-8 items-center">
-        <button className="bg-blue-700 text-white w-25 py-2 rounded hover:bg-blue-800 active:bg-blue-900" onClick={showNotification}>--</button>
+        <button className="bg-blue-700 text-white w-25 py-2 rounded hover:bg-blue-800 active:bg-blue-900" onClick={() => router.push("/test/camera")}>Camera</button>
         <button className="bg-blue-700 text-white w-25 py-2 rounded hover:bg-blue-800 active:bg-blue-900" onClick={testPushNotification}>Web Push</button>
       </div>
       <div className="">{expTime ? dateFormat(expTime) + " " + timeFormat(expTime, "second") : "-"} ({count})</div>
       <div className="flex gap-8 items-center">
-        <button className="bg-blue-700 text-white w-20 py-2 rounded hover:bg-blue-800 active:bg-blue-900" onClick={() => router.push("/signIn")}>Login</button>
+        <button className="bg-blue-700 text-white w-20 py-2 rounded hover:bg-blue-800 active:bg-blue-900" onClick={() => router.push(getSignInURL())}>Login</button>
         <button className="bg-blue-300 text-white w-20 py-2 rounded hover:bg-blue-400 active:bg-blue-500" onClick={() => logout()}>Logout</button>
       </div>
       <div className="flex gap-8 items-center">
-        <button className="bg-blue-700 text-white w-20 py-2 rounded hover:bg-blue-800 active:bg-blue-900" onClick={() => router.push("/camera")}>Camera</button>
-        <button className="bg-blue-700 text-white w-20 py-2 rounded hover:bg-blue-800 active:bg-blue-900" onClick={() => router.push("/bank")}>Bank</button>
+        <button className="bg-blue-700 text-white w-20 py-2 rounded hover:bg-blue-800 active:bg-blue-900" onClick={() => router.push(getBusURL())}>Bus</button>
+        <button className="bg-blue-700 text-white w-20 py-2 rounded hover:bg-blue-800 active:bg-blue-900" onClick={() => router.push(getBankURL())}>Bank</button>
       </div>
       <Image
         className="dark:invert"

@@ -5,14 +5,9 @@ import CameraIcon from "@/icons/camera";
 import VideoIcon from "@/icons/video";
 import MediaIcon from "@/icons/media";
 
-// export default function CameraPage({ params }) {
 export default function Camera() {
 
   console.log("~~~Camera client component");
-
-
-
-  // const x = use(params); // better use <Suspense> to wrap this component
 
   const [source, setSource] = useState(null);
 

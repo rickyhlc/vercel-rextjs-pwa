@@ -2,11 +2,11 @@
 
 import { useSearchParams, useRouter } from "next/navigation";
 
-export default function NavBtn() {
+export default function NavBtn({ searchParams }) {
 
   const sp = useSearchParams();
 
-  console.log("~~~TestServerPage->navBtn (should log only at CLIENT side)", sp);
+  console.log("~~~TestServerPage2->navBtn (should log at SERVER and CLIENT side)", sp);
 
   const router = useRouter();
 
