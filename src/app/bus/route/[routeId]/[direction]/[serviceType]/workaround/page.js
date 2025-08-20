@@ -1,0 +1,25 @@
+import { Suspense } from "react";
+import { CircularProgress } from '@mui/material';
+import { ALL_ZINC } from "@/lib/utils";
+import { DataProvider } from "@/app/bus/route/dataProvider";
+
+// nothing will be prerendered at BUILD time when generateStaticParams returns empty array
+// but it enabled ISR, so each route will need to be rendered once
+export async function generateStaticParams() {
+  return [];
+}
+
+export default function RoutePage({ params }) {
+
+  console.log("RoutePage");
+
+  return (
+    <div className={`flex flex-col min-h-screen max-h-screen justify-between ${ALL_ZINC}`}>
+      <Suspense fallback={<div className="text-center mt-16"><CircularProgress size={32} /></div>}>
+        <DataProvider params={params}>
+          <div>Route Page Content</div>
+        </DataProvider>
+      </Suspense>
+    </div>
+  );
+}
