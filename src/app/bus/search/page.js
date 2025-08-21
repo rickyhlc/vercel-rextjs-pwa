@@ -1,11 +1,14 @@
 import { Suspense } from "react";
+import dynamic from 'next/dynamic';
 import { CircularProgress } from '@mui/material';
 import { ALL_ZINC } from "@/lib/utils";
 import { DataProvider } from "./dataProvider";
-import RouteList from "./routeList";
+// import RouteList from "./routeList";
 import NumPad from "./numPad";
 import Title from "./title";
 import TestItem from "@/app/test/testItem";
+
+const RouteList = dynamic(() => import('./routeList'));
 
 export default function SearchPage() {
 
@@ -20,9 +23,7 @@ export default function SearchPage() {
             <Title />
           </div>
           <div className="grow-1 basis-0 overflow-y-auto bg-zinc-900">
-            <Suspense fallback={<div className="text-center mt-20"><CircularProgress size={32} /></div>}>
-              <RouteList />
-            </Suspense>
+            <RouteList />
           </div>
           <NumPad />
         </DataProvider>
