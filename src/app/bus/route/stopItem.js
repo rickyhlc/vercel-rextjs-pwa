@@ -10,7 +10,11 @@ export default function StopItem({ stop, name, seq }) {
 
 //TODOricky
   return (
-    <Accordion square={true} TransitionProps={{ onEnter: () => setShowDetail(true), onExited: () => setShowDetail(false) }}>
+    <Accordion
+      className="accordion dark"
+      square={true}
+      TransitionProps={{ onEnter: () => setShowDetail(true), onExited: () => setShowDetail(false) }}
+    >
       <AccordionSummary>
         <div className="flex justify-between items-center w-full pe-4 text-lg font-bold">
           <span>{`${seq}. ${name}`}</span>
