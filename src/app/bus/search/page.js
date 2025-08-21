@@ -1,14 +1,11 @@
 import { Suspense } from "react";
-import dynamic from 'next/dynamic';
 import { CircularProgress } from '@mui/material';
 import { ALL_ZINC } from "@/lib/utils";
 import { DataProvider } from "./dataProvider";
-// import RouteList from "./routeList";
+import RouteList from "./routeList";
 import NumPad from "./numPad";
 import Title from "./title";
 import TestItem from "@/app/test/testItem";
-
-const RouteList = dynamic(() => import('./routeList'));
 
 export default function SearchPage() {
 
@@ -18,7 +15,7 @@ export default function SearchPage() {
     <div className={`flex flex-col min-h-screen max-h-screen justify-between ${ALL_ZINC}`}>
       <Suspense fallback={<div className="text-center mt-20"><CircularProgress size={32} /></div>}>
         <DataProvider>
-          <TestItem />{/* for testing only, this will be still a server component and statically prerendered */}
+          <TestItem />{/* for testing only, this will be still a server component and prerendered at BUILD time */}
           <div className={`flex p-2 items-center ${ALL_ZINC}`}>
             <Title />
           </div>
