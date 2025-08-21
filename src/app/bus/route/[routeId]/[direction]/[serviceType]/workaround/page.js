@@ -15,7 +15,7 @@ export default function RoutePage({ params }) {
 
   return (
     <div className={`flex flex-col min-h-screen max-h-screen justify-between ${ALL_ZINC}`}>
-      <Suspense fallback={<div className="text-center mt-16"><CircularProgress size={32} /></div>}>
+      <Suspense fallback={<div className="text-center mt-20"><CircularProgress size={32} /></div>}>
         <DataProvider params={params}>
           <div>Route Page Content</div>
         </DataProvider>

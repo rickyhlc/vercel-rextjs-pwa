@@ -37,7 +37,7 @@ export default function NumPad() {
           <button
             key={lbl}
             onClick={() => setSearchText(searchText + lbl)}
-            className={`${PLAIN_BTN_BLUE} grow-0 basis-1/3 py-1`}
+            className={`${PLAIN_BTN_BLUE} grow-0 basis-1/3 py-2`}
           >
             {lbl}
           </button>
@@ -48,16 +48,16 @@ export default function NumPad() {
           <button
             key={lbl}
             onClick={() => setSearchText(searchText + lbl)}
-            className={`${PLAIN_BTN_BLUE} grow-0 basis-1/3 py-1`}
+            className={`${PLAIN_BTN_BLUE} grow-0 basis-1/3 py-2`}
             disabled={!numSet.has(lbl)}
           >
             {lbl}
           </button>
         )}
-        <button className={`${PLAIN_BTN_BLUE} grow-0 basis-1/3 py-1`} onClick={handleBack}>
+        <button className={`${PLAIN_BTN_BLUE} grow-0 basis-1/3 py-2`} onClick={handleBack}>
           <BackIcon className="w-6 h-6 text-inherit m-auto" />
         </button>
-        <button className={`${PLAIN_BTN_BLUE} grow-0 basis-1/3 py-1`} onClick={handleClear}>
+        <button className={`${PLAIN_BTN_BLUE} grow-0 basis-1/3 py-2`} onClick={handleClear}>
           <RefreshIcon className="w-5 h-5 text-inherit m-auto" />
         </button>
       </div>

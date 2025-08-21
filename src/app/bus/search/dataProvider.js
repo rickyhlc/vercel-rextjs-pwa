@@ -3,7 +3,7 @@ import { DataProviderClient, DataContext } from "./dataProviderClient";
 
 export async function DataProvider({ children }) {
 
-  console.log("DataProvider");
+  console.log("DataProvider (server)");
  
   // fetch route data in server component
   let routes = await getData();
@@ -16,7 +16,7 @@ export function useDataContext() {
 }
 
 /*
- * data { 
+ * data [{ 
  *   "route": "1",
  *   "bound": "O",
  *   "service_type": "1",
@@ -26,7 +26,7 @@ export function useDataContext() {
  *   "dest_en": "STAR FERRY",
  *   "dest_tc": "尖沙咀碼頭",
  *   "dest_sc": "尖沙咀码头"
- * }
+ * }]
  */
 async function getData() {
   console.log("Fetching route data...");
@@ -38,7 +38,7 @@ async function getData() {
     res = await res.json();
     return res.data;
   } catch (error) {
-    console.error("Error fetching data:", error);
+    console.error("Error fetching route data:", error);
     return { error };
   } finally {
     console.timeEnd("fetchRoute");

@@ -169,7 +169,7 @@ export default function NotificationSection({ onClose }) {
   return (
     <>
       <Divider variant="middle" className="pb-1">
-        <span className="text-xs">Notification</span>
+        <span className="text-xs">Reminder</span>
       </Divider>
       {notificationElm}
     </>
