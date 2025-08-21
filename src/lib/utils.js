@@ -100,8 +100,8 @@ export const getSearchBusURL = () => "/bus/search";
   // if using dynamic route, it will call an extra fetch to the icon-192x192.png in the wrong path
   // and this will trigger an extra rendering and cached in ISR
   // adding /workaround at the end makes the icon path 404 thus prevent extra rendering and caching
-export const getRouteURL = (routeId, direction, serviceType) => {
-  return `/bus/route/${routeId}/${direction}/${serviceType}/workaround`;
+export const getRouteURL = (routeId, bound, serviceType) => {
+  return `/bus/route/${routeId}/${bound}/${serviceType}/workaround`;
 }
 export const getBusBookmarkURL = (bookmarkId) => {
   return `/bus/bookmark/${bookmarkId}/workaround`;

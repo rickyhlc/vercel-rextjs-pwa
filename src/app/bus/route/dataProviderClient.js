@@ -5,7 +5,7 @@ import { createContext, useState } from "react";
 export const DataContext = createContext({});
 
 export function DataProviderClient({ data, children }) {
-
+//TODOricky
   console.log("DataProviderClient");
 
   const [searchText, _setSearchText] = useState("");
