@@ -11,6 +11,7 @@ export default function RouteList() {
 
   const { filteredList } = useDataContext();
   
+  // loading the list is slow in mobile, do it in useEffect to enable a quick initial render first
   const [elm, setElm] = useState(<div className="text-center mt-20"><CircularProgress size={32} /></div>);
   useEffect(() => {
     setElm(
