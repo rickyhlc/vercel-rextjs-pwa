@@ -6,9 +6,14 @@ export async function DataProvider({ children }) {
   console.log("DataProvider (server)");
  
   // fetch route data in server component
-  let routes = await getData();
+  let clientData = await getRoutesInfoData();
+  if (clientData.error) {
+    clientData = { apiData: { error: clientData.error } };
+  } else {
+    clientData = { apiData: { filteredList: clientData } };
+  }
 
-  return <DataProviderClient data={routes}>{children}</DataProviderClient>;
+  return <DataProviderClient data={clientData}>{children}</DataProviderClient>;
 }
 
 export function useDataContext() {
@@ -28,8 +33,8 @@ export function useDataContext() {
  *   "dest_sc": "尖沙咀码头"
  * }]
  */
-async function getData() {
-  console.log("Fetching route data...");
+async function getRoutesInfoData() {
+  console.log("Fetching routes info data...");
   console.time("fetchRoute");
   try {
     // fetch in server component is cached by default, so this component can be statically rendered
@@ -38,7 +43,7 @@ async function getData() {
     res = await res.json();
     return res.data;
   } catch (error) {
-    console.error("Error fetching route data:", error);
+    console.error("Error fetching routes info data:", error);
     return { error };
   } finally {
     console.timeEnd("fetchRoute");

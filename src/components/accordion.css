@@ -1,0 +1,38 @@
+/* accordion */
+.accordion.MuiPaper-root.MuiAccordion-root {
+  background-color: var(--color-zinc-800);
+  color: var(--color-zinc-200);
+  box-shadow: none;
+  &:before {
+    display: none;
+  }
+  &.Mui-expanded {
+    margin: 0;
+  }
+  .MuiAccordionSummary-expandIconWrapper {
+    color: inherit;
+  }
+  .MuiAccordionSummary-root {
+    min-height: 0;
+    .MuiAccordionSummary-content {
+      margin: 8px 0;
+    }
+  }
+  .MuiAccordionDetails-root {
+    background-color: var(--color-zinc-900);
+  }
+  /* children accordion */
+  .MuiPaper-root.MuiAccordion-root {
+    background-color: inherit;
+    .MuiAccordionSummary-root {
+      padding-left: 0;
+      padding-right: 0;
+      .MuiAccordionSummary-content {
+        margin: 5px 0;
+      }
+    }
+    .MuiAccordionDetails-root {
+      padding: 0 0 8px 0;
+    }
+  }
+}

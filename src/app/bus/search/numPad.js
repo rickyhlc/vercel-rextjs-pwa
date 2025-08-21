@@ -9,7 +9,7 @@ export default function NumPad() {
 
   console.log("NumPad");
   
-  const { searchText, setSearchText, filteredList } = useDataContext();
+  const { searchText, setSearchText, apiData: { filteredList } } = useDataContext();
 
   function handleBack() {
     setSearchText(searchText.slice(0, -1));

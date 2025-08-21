@@ -9,7 +9,7 @@ export default function RouteList() {
 
   console.log("RouteList");
 
-  const { filteredList } = useDataContext();
+  const { apiData: { filteredList, error } } = useDataContext();
   
   // loading the list is slow in mobile, do it in useEffect to enable a quick initial render first
   const [elm, setElm] = useState(<div className="text-center mt-20"><CircularProgress size={32} /></div>);
@@ -31,7 +31,7 @@ export default function RouteList() {
     );
   }, [filteredList]);
 
-  if (filteredList.error) {
+  if (error) {
     return <div className="text-center mt-20">Unable to load routes...</div>;
   } else {
     return (

@@ -5,15 +5,15 @@ import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { initDB } from "@/app/bank/indexedDB";
 import { CAT_LIST, CAT_TYPE_LIST, FLAG_LIST } from "@/app/bank/constant";
 import { getToday, dateFormat, getFlagIcon, getServiceWorkerRegistration, BTN_BLUER, PLAIN_BTN_BLUE, ALL_ZINC, TXT_ZINC } from "@/lib/utils";
-import DownArrowIcon from "@/icons/downArrow";
 import EditIcon from "@/icons/edit";
 import AddIcon from "@/icons/add";
 import MenuDotsIcon from "@/icons/menuDots";
 import FilterIcon from "@/icons/filter";
-import { Accordion, AccordionSummary, AccordionDetails, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 import EditCostPanel from "./editCostPanel";
 import MorePanel from "./morePanel";
 import FilterPanel from "./filterPanel";
+import { Accordion, AccordionSummary, AccordionDetails } from "@/components/accordion";
 import DatePicker from "@/components/datePicker";
 import BottomDrawer from "@/components/bottomDrawer";
 
@@ -173,7 +173,7 @@ function BankPageMain() {
         {costs && (catFilter ? [catFilter] : CAT_LIST).map(cat => {
           return (
             <Accordion key={cat} square={true}>
-              <AccordionSummary expandIcon={<DownArrowIcon colorClass="text-inherit" />}>
+              <AccordionSummary>
                 <div className="flex justify-between items-center w-full pe-4 text-lg font-bold">
                   <span>{cat}</span>
                   <span>${summary[cat]?.toFixed(1)}</span>
@@ -183,7 +183,7 @@ function BankPageMain() {
                 {CAT_TYPE_LIST[cat].map(type => (
                   <Accordion key={`${cat}-${type}`} square={true} defaultExpanded={true}>
                     {CAT_TYPE_LIST[cat].length > 1 &&
-                      <AccordionSummary expandIcon={<DownArrowIcon colorClass="text-inherit" />}>
+                      <AccordionSummary>
                         <div className="flex justify-between items-center w-full pe-4">
                           <span>{`${cat} - ${type}`}</span>
                           <span>${summary[`${cat}-${type}`]?.toFixed(1)}</span>
