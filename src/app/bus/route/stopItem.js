@@ -2,13 +2,12 @@
 
 import { useState } from "react";
 import { Accordion, AccordionSummary, AccordionDetails } from "@/components/accordion";
-import { PLAIN_BTN_BLUE, getRouteURL } from "@/lib/utils";
+import StopETAs from "../stopETAs";
 
-export default function StopItem({ stop, name, seq }) {
+export default function StopItem({ stop, name, seq, route, bound, serviceType }) {
 
   const [showDetail, setShowDetail] = useState(false);
 
-//TODOricky
   return (
     <Accordion
       className="accordion dark"
@@ -21,18 +20,8 @@ export default function StopItem({ stop, name, seq }) {
         </div>
       </AccordionSummary>
       {showDetail && <AccordionDetails>
-        TODOricky
+        <StopETAs stop={stop} routes={[{company: "TODOricky", route, bound, serviceType}]} />
       </AccordionDetails>}
     </Accordion>
-    // <button className={`px-2 py-1 flex items-center w-full ${PLAIN_BTN_BLUE}`} onClick={() => router.push(getRouteURL(route, bound, serviceType))}>
-    //   <div className="grow-0 basis-14 me-2">
-    //     <div className="font-bold text-lg">{route}</div>
-    //     <div className="text-xs">{company}{serviceType == "1" && " (特)"}</div>
-    //   </div>
-    //   <div className="grow-1 text-left">
-    //     <div className="text-lg">往 {dest}</div>
-    //     <div className="text-xs">{orig}</div>
-    //   </div>
-    // </button>
   );
 }

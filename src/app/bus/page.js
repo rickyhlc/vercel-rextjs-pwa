@@ -1,5 +1,5 @@
 import { ALL_ZINC, getSearchBusURL } from "@/lib/utils";
-import BookmarkList from "./bookmarkList";
+import BookmarkList from "./bookmark/bookmarkList";
 import NavBtn from "@/components/navBtn";
 import SearchIcon from "@/icons/search";
 

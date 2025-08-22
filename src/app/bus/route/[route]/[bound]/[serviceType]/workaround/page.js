@@ -22,7 +22,7 @@ export default function RoutePage({ params }) {
           <div className={`flex p-2 items-center justify-center ${ALL_ZINC}`}>
             <Title />
           </div>
-          {/* show map later */}
+          {/* show here map later */}
           <div className="grow-1 basis-0 overflow-y-auto bg-zinc-900">
             <StopList />
           </div>

@@ -108,6 +108,7 @@ export const getBusBookmarkURL = (bookmarkId) => {
 }
 
 export const TXT_ZINC = "text-zinc-800 dark:text-zinc-200";
+export const TXT_SOFT = "text-zinc-600 dark:text-zinc-400";
 export const BG_ZINC = "bg-zinc-200 dark:bg-zinc-800";
 export const TXT_DISABLED = "disabled:text-zinc-400 dark:disabled:text-zinc-600";
 export const BG_DISABLED = "disabled:bg-zinc-400 dark:disabled:bg-zinc-600";

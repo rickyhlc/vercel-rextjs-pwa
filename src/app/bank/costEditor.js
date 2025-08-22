@@ -82,7 +82,7 @@ export default function CostEditor({ onSaveAsync, onCancel, cost, valueRequired 
             disabled={disableSave}
             onClick={onCancel}
           >
-            <CrossIcon sizeClass="w-8 h-8 text-inherit"/>
+            <CrossIcon className="w-8 h-8 text-inherit"/>
           </button>
         )}
         <button
@@ -90,7 +90,7 @@ export default function CostEditor({ onSaveAsync, onCancel, cost, valueRequired 
           disabled={disableSave}
           onClick={handleSave}
         >
-          <TickIcon sizeClass="w-8 h-8 text-inherit"/>
+          <TickIcon className="w-8 h-8 text-inherit"/>
         </button>
       </div>
     </>
