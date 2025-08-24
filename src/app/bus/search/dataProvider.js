@@ -10,7 +10,7 @@ export async function DataProvider({ children }) {
   if (clientData.error) {
     clientData = { apiData: { error: clientData.error } };
   } else {
-    clientData = { apiData: { filteredList: clientData } };
+    clientData = { apiData: { filteredList: clientData, company: "KMB" } };
   }
 
   return <DataProviderClient data={clientData}>{children}</DataProviderClient>;

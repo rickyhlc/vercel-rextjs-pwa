@@ -8,8 +8,6 @@ import { TXT_SOFT, TXT_ZINC } from "@/lib/utils";
  */
 export default function StopETA({ etas }) {
 
-  console.log("StopETA");
-
   return (
     <div className="grow-1 text-left text-sm">
       {etas && etas.map((eta, i) => (

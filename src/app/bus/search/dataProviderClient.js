@@ -20,7 +20,7 @@ export function DataProviderClient({ data, children }) {
   }
 
   return (
-    <DataContext.Provider value={{ searchText, setSearchText, apiData: { filteredList, error: data.apiData.error } }}>
+    <DataContext.Provider value={{ searchText, setSearchText, apiData: { company: data.apiData.company, filteredList, error: data.apiData.error } }}>
       {children}
     </DataContext.Provider>
   );

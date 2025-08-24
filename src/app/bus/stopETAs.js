@@ -5,7 +5,8 @@ import ErrorIcon from "@/icons/error";
 import StopETA from "./stopETA";
 import RouteNum from "./routeNum";
 
-/*
+/**
+ * all routes must be of the same stop
  * routes [{ 
  *   "company": "KMB",
  *   "route": "170",
@@ -13,9 +14,7 @@ import RouteNum from "./routeNum";
  *   "serviceType": "1",
  * }]
  */
-export default function StopETAs({ stop, routes }) {
-
-  console.log("StopETAs");
+export default function StopETAs({ stop, routes, showRoute }) {
 
   const [etasData, setETAsData] = useState(routes.map(r => ({
     ...r,
@@ -29,16 +28,19 @@ export default function StopETAs({ stop, routes }) {
     const getMinutes = (eta, now) => {
       if (eta) {
         let m = (new Date(eta).getTime() - now) / 60000;
-        return m >= 1 ? Math.floor(m) : m > 0 ? "0" : "<1";
+        return m >= 1 ? Math.floor(m) : m > 0 ? "<1" : "0";
       } else {
         return "-";
       }
     }
     
     const loadData = async () => {
-      // get data
-      // setETAsData(prev => prev.map(p => ({ ...p, loading: true, error: false })));
-      let res = await getStopETAsData(stop);
+      if (!keepPolling)  {
+        return;
+      }
+      
+      // use stop-eta to get all by one api call if there are multiple routes
+      let res = routes.length  === 1 ? await getStopETAsData(stop) : await getStopRouteETAsData(stop, route, serviceType);
       const now = Date.now();
 
       // update after getting api response
@@ -78,7 +80,7 @@ export default function StopETAs({ stop, routes }) {
     <>
       {etasData.map(item => (
         <div key={`${item.route}-${item.serviceType}`} className="px-2 py-2 flex items-center">
-          <RouteNum company={item.company} route={item.route} serviceType={item.serviceType} />
+          {showRoute && <RouteNum company={item.company} route={item.route} serviceType={item.serviceType} />}
           <StopETA etas={item.etas} />
           {item.error ? <ErrorIcon className="w-8 h-8 text-amber-500" /> : null}
         </div>

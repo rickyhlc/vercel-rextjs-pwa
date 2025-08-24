@@ -54,7 +54,7 @@ class BusDB {
 
   /**
    * 
-   * @param data (id[update], TODOricky)
+   * @param data { (id[update], title, children [{ subTitles list[{ stop company route bound serviceType }] }] }
    * @returns promise the new key
    * @description add or update bookmark to the DB
    */
@@ -67,7 +67,7 @@ class BusDB {
   }
   /**
    * 
-   * @param datas object[(id[update], TODOricky)]
+   * @param datas [{ (id[update], title, children [{ subTitles list[{ stop company route bound serviceType }] }] }]
    * @returns promise the new key
    * @description add or update bookmark to the DB
    */

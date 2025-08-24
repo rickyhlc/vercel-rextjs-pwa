@@ -20,7 +20,7 @@ export default function StopItem({ stop, name, seq, route, bound, serviceType })
         </div>
       </AccordionSummary>
       {showDetail && <AccordionDetails>
-        <StopETAs stop={stop} routes={[{company: "TODOricky", route, bound, serviceType}]} />
+        <StopETAs stop={stop} routes={[{company: null, route, bound, serviceType}]} />
       </AccordionDetails>}
     </Accordion>
   );

@@ -19,7 +19,7 @@ export default function RoutePage({ params }) {
     <div className={`flex flex-col min-h-screen max-h-screen justify-between ${ALL_ZINC}`}>
       <Suspense fallback={<div className="text-center mt-20"><CircularProgress size={32} /></div>}>
         <DataProvider params={params}>
-          <div className={`flex p-2 items-center justify-center ${ALL_ZINC}`}>
+          <div className={`flex flex-col p-2 items-center justify-center ${ALL_ZINC}`}>
             <Title />
           </div>
           {/* show here map later */}

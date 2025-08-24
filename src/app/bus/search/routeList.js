@@ -9,7 +9,7 @@ export default function RouteList() {
 
   console.log("RouteList");
 
-  const { apiData: { filteredList, error } } = useDataContext();
+  const { apiData: { company, filteredList, error } } = useDataContext();
   
   // loading the list is slow in mobile, do it in useEffect to enable a quick initial render first
   const [elm, setElm] = useState(<div className="text-center mt-20"><CircularProgress size={32} /></div>);
@@ -19,7 +19,7 @@ export default function RouteList() {
         {filteredList.map(r => (
           <RouteItem
             key={`${r.route}-${r.bound}-${r.service_type}`}
-            company={"KMB"}
+            company={company}
             route={r.route}
             bound={r.bound}
             serviceType={r.service_type}
