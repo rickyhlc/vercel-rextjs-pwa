@@ -79,7 +79,7 @@ export default function StopETAs({ stop, routes, showRoute }) {
   return (
     <>
       {etasData.map(item => (
-        <div key={`${item.route}-${item.serviceType}`} className="px-2 py-2 flex items-center">
+        <div key={`${item.route}-${item.serviceType}`} className="px-2 pt-2 flex items-center">
           {showRoute && <RouteNum company={item.company} route={item.route} serviceType={item.serviceType} />}
           <StopETA etas={item.etas} />
           {item.error ? <ErrorIcon className="w-8 h-8 text-amber-500" /> : null}
@@ -110,8 +110,6 @@ export default function StopETAs({ stop, routes, showRoute }) {
 async function getStopETAsData(stop) {
   console.log("Fetching stop eta data...");
   try {
-    // fetch in server component is cached by default, so this component can be statically rendered
-    // revalidate daily
     let res = await fetch(`https://data.etabus.gov.hk/v1/transport/kmb/stop-eta/${stop}`);
     res = await res.json();
     return res.data;
@@ -123,8 +121,6 @@ async function getStopETAsData(stop) {
 async function getStopRouteETAsData(stop, route, serviceType) {
   console.log("Fetching stop route eta data...");
   try {
-    // fetch in server component is cached by default, so this component can be statically rendered
-    // revalidate daily
     let res = await fetch(`https://data.etabus.gov.hk/v1/transport/kmb/eta/${stop}/${route}/${serviceType}`);
     res = await res.json();
     return res.data;

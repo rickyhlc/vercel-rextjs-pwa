@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Accordion, AccordionSummary, AccordionDetails } from "@/components/accordion";
-import StopETAs from "../stopETAs";
+import StopETAs from "@/app/bus/stopETAs";
 
 export default function StopItem({ stop, name, seq, route, bound, serviceType }) {
 
@@ -11,7 +11,6 @@ export default function StopItem({ stop, name, seq, route, bound, serviceType })
   return (
     <Accordion
       className="accordion dark"
-      square={true}
       TransitionProps={{ onEnter: () => setShowDetail(true), onExited: () => setShowDetail(false) }}
     >
       <AccordionSummary>

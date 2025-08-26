@@ -5,7 +5,7 @@ import DownArrowIcon from "@/icons/downArrow";
 import './accordion.css';
 
 export function Accordion(props) {
-  return <MuiAccordion className="accordion" {...props}>{props.children}</MuiAccordion>;
+  return <MuiAccordion className="accordion" square={true} {...props}>{props.children}</MuiAccordion>;
 }
 
 export function AccordionSummary(props) {

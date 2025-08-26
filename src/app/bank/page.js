@@ -172,7 +172,7 @@ function BankPageMain() {
       <div className="grow-1 basis-0 overflow-auto">
         {costs && (catFilter ? [catFilter] : CAT_LIST).map(cat => {
           return (
-            <Accordion key={cat} square={true}>
+            <Accordion key={cat}>
               <AccordionSummary>
                 <div className="flex justify-between items-center w-full pe-4 text-lg font-bold">
                   <span>{cat}</span>
