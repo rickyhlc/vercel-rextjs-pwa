@@ -1,7 +1,7 @@
 "use client";
 
 import { useContext, createContext, useEffect, useRef, useState } from "react";
-import { initDB } from "@/app/bus/bookmark/indexedDB";
+import { initDB } from "@/app/bus/indexedDB";
 
 export const DataContext = createContext({});
 
@@ -50,7 +50,7 @@ export function DataProvider({ children }) {
         title: "返",
         stops: []
       },
-    }));console.log(updates, bookmarks);
+    }));
     updates = updates.map(u => ({
       ...bookmarks.find(b => u.id === b.id),
       title: u.title,

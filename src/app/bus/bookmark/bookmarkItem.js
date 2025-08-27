@@ -55,12 +55,12 @@ export default function BookmarkItem({ bookmark }) {
   let accordionClickHandle = null;
   if (bookmark.back.stops.length != bookmark.go.stops.length) {
     if (bookmark.back.stops.length == 0) {
-      accordionClickHandle = "go";
+      accordionClickHandle = () => toggleExpanded("go");
     } else if (bookmark.go.stops.length == 0) {
-      accordionClickHandle = "back";
+      accordionClickHandle = () => toggleExpanded("back");
     }
   }
-
+//TODOricky
   return (
     <Accordion
       expanded={!expanded}
@@ -73,15 +73,15 @@ export default function BookmarkItem({ bookmark }) {
       <AccordionSummary expandIcon={null} onClick={accordionClickHandle}>
         <div className="flex justify-between items-center w-full text-lg font-bold">
           <span className="grow-1 basis-0">{bookmark.title}</span>
-          {bookmark.go.stops.length > 0 && (
+          {!accordionClickHandle && bookmark.go.stops.length > 0 && (
             <div
               className={`ms-2 text-center w-16 ${dir == "go" && showDetail ? "border-1 border-blue-400 rounded-full bg-blue-400": BORDER_BTN_BLUE}`}
               onClick={() => toggleExpanded("go")}
             >
-              {bookmark.back.title}
+              {bookmark.go.title}
             </div>
           )}
-          {bookmark.back.stops.length > 0 && (
+          {!accordionClickHandle && bookmark.back.stops.length > 0 && (
             <div
               className={`ms-2 text-center w-16 ${dir == "back" && showDetail ? "border-1 border-blue-400 rounded-full bg-blue-400": BORDER_BTN_BLUE}`}
               onClick={() => toggleExpanded("back")}

@@ -5,14 +5,14 @@ export async function DataProvider({ params, children }) {
 
   console.log("DataProvider (server)");
 
-  const { route, bound, serviceType } = await params;
+  const { route, bound, serviceType, company } = await params;
 
   // fetch data and then capture only the necessary values in the server side
   const res = await Promise.all([getStopsInfoData(), getRouteStopsData(route, bound, serviceType), getRouteInfoData(route, bound, serviceType)]);
   const stops = res[0];
   const routeStops = res[1];
   const stopInfo = res[2];
-  const clientData = { apiData: {route, bound, service_type: serviceType, orig_tc: stopInfo.orig_tc, dest_tc: stopInfo.dest_tc} }; // align with api response's convention to use "_"
+  const clientData = { apiData: {co: company, route, bound, service_type: serviceType, orig_tc: stopInfo.orig_tc, dest_tc: stopInfo.dest_tc} }; // align with api response's convention to use "_"
   if (stops.error || routeStops.error) {
     clientData.apiData.error = stops.error || routeStops.error;
   } else {
@@ -44,7 +44,6 @@ export function useDataContext() {
  */
 async function getStopsInfoData() {
   console.log("Fetching stops info data...");
-  console.time("fetchStop");
   try {
     // fetch in server component is cached by default, so this component can be statically rendered
     // revalidate daily
@@ -54,8 +53,6 @@ async function getStopsInfoData() {
   } catch (error) {
     console.error("Error fetching stops info data:", error);
     return { error };
-  } finally {
-    console.timeEnd("fetchStop");
   }
 }
 

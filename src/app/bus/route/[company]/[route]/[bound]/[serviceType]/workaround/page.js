@@ -3,6 +3,7 @@ import { CircularProgress } from '@mui/material';
 import { ALL_ZINC } from "@/lib/utils";
 import { DataProvider } from "@/app/bus/route/dataProvider";
 import StopList from "@/app/bus/route/stopList";
+import BookmarkDrawer from "@/app/bus/route/bookmarkDrawer";
 import Title from "@/app/bus/route/title";
 
 // nothing will be prerendered at BUILD time when generateStaticParams returns empty array
@@ -26,6 +27,7 @@ export default function RoutePage({ params }) {
           <div className="grow-1 basis-0 overflow-y-auto bg-zinc-900">
             <StopList />
           </div>
+          <BookmarkDrawer />
         </DataProvider>
       </Suspense>
     </div>
