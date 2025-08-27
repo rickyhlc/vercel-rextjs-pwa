@@ -1,7 +1,8 @@
-import { ALL_ZINC, getSearchBusURL } from "@/lib/utils";
+import { ALL_ZINC } from "@/lib/utils";
 import BookmarkList from "./bookmark/bookmarkList";
-import NavBtn from "@/components/navBtn";
-import SearchIcon from "@/icons/search";
+import Title from "./bookmark/title";
+import BottomBar from "./bookmark/bottomBar";
+
 import { DataProvider } from "./bookmark/dataProvider";
 
 export default function BusPage() {
@@ -10,14 +11,17 @@ export default function BusPage() {
 
   return (
     <div className={`flex flex-col min-h-screen max-h-screen justify-between ${ALL_ZINC}`}>
-      <div className="grow-1">
-        <DataProvider>
+      <DataProvider>
+        <div className="flex p-2 items-center">
+          <Title />
+        </div>
+        <div className="grow-1">
           <BookmarkList />
-        </DataProvider>
-      </div>
-      <div className="flex justify-end p-4">
-        <NavBtn path={getSearchBusURL()} iconElm={<SearchIcon className="w-8 h-8 text-inherit" />} />
-      </div>
+        </div>
+        <div className="flex items-center p-4">
+          <BottomBar />
+        </div>
+      </DataProvider>
     </div>
   );
 }

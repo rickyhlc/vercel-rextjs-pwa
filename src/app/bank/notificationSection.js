@@ -7,7 +7,8 @@ import CostEditor from "./costEditor";
 import { getServerPushSubscriptions, subscribeServerPush, unsubscribeServerPush } from "@/actions/scheduleJob";
 import { CAT_LIST, CAT_TYPE_LIST, FLAG_LIST } from "@/app/bank/constant";
 import { getPushSubscription, PLAIN_BTN_BLUE, BORDER_BTN_BLUE } from "@/lib/utils";
-import { Divider, TextField, CircularProgress } from '@mui/material';
+import { Divider, CircularProgress } from '@mui/material';
+import TextField from '@/components/textField';
 
 export default function NotificationSection({ onClose }) {
 

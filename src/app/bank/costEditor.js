@@ -2,7 +2,8 @@
 
 import { useState, useTransition } from "react";
 import { CAT_LIST, CAT_TYPE_LIST, FLAG_LIST } from "@/app/bank/constant";
-import { TextField, NativeSelect, Checkbox } from '@mui/material';
+import { NativeSelect, Checkbox } from '@mui/material';
+import TextField from '@/components/textField';
 import { BTN_BLUER, PLAIN_BTN_BLUE, TXT_ZINC, getFlagIcon } from "@/lib/utils";
 import TickIcon from "@/icons/tick";
 import CrossIcon from "@/icons/cross";

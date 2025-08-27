@@ -54,7 +54,7 @@ class BusDB {
 
   /**
    * 
-   * @param data { (id[update], title, children [{ subTitles list[{ stop company route bound serviceType }] }] }
+   * @param data { (id[update], title, go: { title, stops: [{ stop, routes: [{company, route, bound, serviceType }] }] }, back: { title, stops: [{ stop, routes: [{company, route, bound, serviceType }] }] } }
    * @returns promise the new key
    * @description add or update bookmark to the DB
    */
@@ -67,7 +67,7 @@ class BusDB {
   }
   /**
    * 
-   * @param datas [{ (id[update], title, children [{ subTitles list[{ stop company route bound serviceType }] }] }]
+   * @param data { (id[update], title, go: { title, stops: [{ stop, routes: [{company, route, bound, serviceType }] }] }, back: { title, stops: [{ stop, routes: [{company, route, bound, serviceType }] }] } }
    * @returns promise the new key
    * @description add or update bookmark to the DB
    */
@@ -82,7 +82,7 @@ class BusDB {
   }
   /**
    * 
-   * @returns promise
+   * @returns promise { (id, title, go: { title, stops: [{ stop, routes: [{company, route, bound, serviceType }] }] }, back: { title, stops: [{ stop, routes: [{company, route, bound, serviceType }] }] } }
    * @description get all bookmarks
    */
   getBookmarks() {

@@ -2,18 +2,25 @@
 
 import { useDataContext } from "./dataProvider";
 import BookmarkItem from "./bookmarkItem";
+import BookmarkEditor from "./bookmarkEditor";
 import { CircularProgress } from '@mui/material';
 
 export default function BoomkarkList() {
 
   console.log("BookmarkList");
-//TODOricky
-  const { db, bookmarks } = useDataContext();
+
+  const { bookmarks, bookmarkStructures, editMode } = useDataContext();
 
   if (bookmarks) {
-    return <>
-      {bookmarks.map(bm => <BookmarkItem key={bm.id} data={bm} />)}
-    </>;
+    if (editMode) {
+      return <>
+        {bookmarkStructures.map(bm => <BookmarkEditor key={`${bm.id}-${bm.tmpId}`} bookmark={bm} />)}
+      </>;
+    } else {
+      return <>
+        {bookmarks.map(bm => <BookmarkItem key={bm.id} bookmark={bm} />)}
+      </>;
+    }
   } else {
     return <div className="text-center mt-20"><CircularProgress size={32} /></div>;
   }

@@ -1,0 +1,24 @@
+.MuiTextField-root {
+  .MuiInputLabel-root {
+    color: var(--color-zinc-400);
+    &.Mui-focused,
+    &.MuiFormLabel-filled {
+      color: var(--color-blue-400);
+    }
+    &:not(.Mui-focused):not(.MuiFormLabel-filled) {
+      transform: translate(14px, 14px) scale(1);
+    }
+  }
+  .MuiInputBase-input {
+    color: var(--color-zinc-200);
+    padding-top: 12.5px;
+    padding-bottom: 12.5px;
+  }
+  .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline,
+  .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+    border-color: var(--color-blue-400);
+  }
+  .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: var(--color-blue-400);
+  }
+}

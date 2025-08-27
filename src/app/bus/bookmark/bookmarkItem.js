@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { Accordion, AccordionSummary, AccordionDetails } from "@/components/accordion";
 import StopETAs from "@/app/bus/stopETAs";
 import { useDataContext } from "./dataProvider";
@@ -10,70 +10,85 @@ import { BORDER_BTN_BLUE } from "@/lib/utils";
  * data {
  *   id: 1,
  *   title: "ust",
- *   children: [{
- *   title: "go",
- *   list: [{ stop: "4FDB108B1B5186DF", company: "ff", route: "113", bound: "I", serviceType: "1" }]
+ *   go: {
+ *     title: "go",
+ *     stops: [{ stop: "4FDB108B1B5186DF", routes: [{company: "KMB", route: "113", bound: "I", serviceType: "1"}] }]
+ *   }
+ *   back: {
+ *     title: "go",
+ *     stops: [{ stop: "4FDB108B1B5186DF", routes: [{company: "CTB", route: "113", bound: "O", serviceType: "1"}] }]
+ *   }
  * }
  */
-export default function BookmarkItem({ data }) {
+export default function BookmarkItem({ bookmark }) {
 
-  const [expanded, setExpanded] = useState(false);
-  const [showDetail, setShowDetail] = useState(false);
-  const [childNum, setChildNum] = useState(0);
+  const [expanded, setExpanded] = useState(null); //go, back or null
+  const [showDetail, setShowDetail] = useState(false); // true when expanded or the close animation is not finished
+  const [dir, setDir] = useState("go"); //go or back only
 
   const { stopInfoMap, loadBookmarkStopInfo } = useDataContext();
 
-  const bookmark = useMemo(() => {
-    let res = { ...data };
-    res.children = res.children.map(c => ({ ...c, stops: Object.groupBy(c.list, (r) => r.stop) }));
-    return res;
-  }, [data]);
-
-  function toggleExpanded(childInd) {
-    if (childInd !== expanded) { // open or switch case
-      loadBookmarkStopInfo(bookmark.id);
-      setExpanded(childInd);
-      setChildNum(childInd);
-    } else if (childInd !== false) { // close case
-      setExpanded(false);
+  function toggleExpanded(direction) {
+    if (direction !== expanded) { // open or switch case
+      loadBookmarkStopInfo(bookmark.id, direction);
+      setExpanded(direction);
+      setDir(direction);
+    } else if (direction === dir) { // close case
+      setExpanded(null);
     }
   }
 
   function generateDetailsElms() {
-    let stops = bookmark.children[childNum].stops;
+    let stops = bookmark[dir].stops;
     let elms = [];
-    for (let k in stops) {
-      let s = stops[k];
+    stops.forEach(s => {
       elms.push(
-        <div key={k} className="flex justify-between items-center w-full pe-4 text-lg font-bold">
-          <span>{stopInfoMap[k]?.name_tc || "---"}</span>
+        <div key={s.stop} className="flex justify-between items-center w-full pe-4 text-lg font-bold">
+          <span>{stopInfoMap[s.stop]?.name_tc || "---"}</span>
         </div>
       );
-      elms.push(<StopETAs key={`${s.company}-${s.route}-${s.bound}-${s.serviceType}`} stop={k} routes={s} showRoute={true} />);
-    }
+      elms.push(<StopETAs key={`${s.stop}-eta`} stop={s.stop} routes={s.routes} showRoute={true} />);
+    });
     return elms;
+  }
+
+  let accordionClickHandle = null;
+  if (bookmark.back.stops.length != bookmark.go.stops.length) {
+    if (bookmark.back.stops.length == 0) {
+      accordionClickHandle = "go";
+    } else if (bookmark.go.stops.length == 0) {
+      accordionClickHandle = "back";
+    }
   }
 
   return (
     <Accordion
-      expanded={expanded !== false}
+      expanded={!expanded}
+      className="accordion dark"
       TransitionProps={{
         onEnter: () => setShowDetail(true),
         onExited: () => setShowDetail(false)
       }}
     >
-      <AccordionSummary expandIcon={null} onClick={bookmark.children.length == 0 ? () => toggleExpanded(0) : null}>
+      <AccordionSummary expandIcon={null} onClick={accordionClickHandle}>
         <div className="flex justify-between items-center w-full text-lg font-bold">
           <span className="grow-1 basis-0">{bookmark.title}</span>
-          {bookmark.children.length > 1 && bookmark.children.map((c, i) => (
+          {bookmark.go.stops.length > 0 && (
             <div
-              key={i}
-              className={`ms-2 text-center w-16 ${childNum == i && showDetail ? "border-1 border-blue-400 rounded-full bg-blue-400": BORDER_BTN_BLUE}`}
-              onClick={() => toggleExpanded(i)}
+              className={`ms-2 text-center w-16 ${dir == "go" && showDetail ? "border-1 border-blue-400 rounded-full bg-blue-400": BORDER_BTN_BLUE}`}
+              onClick={() => toggleExpanded("go")}
             >
-              {c.title}
+              {bookmark.back.title}
             </div>
-          ))}
+          )}
+          {bookmark.back.stops.length > 0 && (
+            <div
+              className={`ms-2 text-center w-16 ${dir == "back" && showDetail ? "border-1 border-blue-400 rounded-full bg-blue-400": BORDER_BTN_BLUE}`}
+              onClick={() => toggleExpanded("back")}
+            >
+              {bookmark.back.title}
+            </div>
+          )}
         </div>
       </AccordionSummary>
       {showDetail && <AccordionDetails>
