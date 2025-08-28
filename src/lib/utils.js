@@ -77,7 +77,7 @@ export const getPushSubscription = async (autoCreate) => {
           applicationServerKey: convertVapidKey(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY),
         });
       } else {
-        console.log("no notification permission");
+        alert("Please enable push notification in your browser");
         return null;
       }
     }

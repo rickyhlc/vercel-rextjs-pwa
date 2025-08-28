@@ -18,7 +18,7 @@ self.addEventListener("push", (event) => {
       data: data
     }));
   } else {
-    event.waitUntil(self.registration.showNotification("Test Notification", {
+    event.waitUntil(self.registration.showNotification("Notification from ExpressJs", {
       body: data.msg,
       icon: "/icon-192x192.png",
       data: data

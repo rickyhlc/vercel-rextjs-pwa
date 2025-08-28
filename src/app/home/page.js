@@ -36,6 +36,7 @@ export default function HomePage() {
       deferredPrompt.prompt();
       await deferredPrompt.userChoice;
       setDeferredPrompt(null);
+      setCount(count+1);
     }
   }
 
@@ -45,20 +46,16 @@ export default function HomePage() {
     if (sub) {
       sendTestNotification(sub, {msg: "The push notification is working!"});
     }
+    setCount(count+1);
   }
 
   return (
-  <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+  <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8  font-[family-name:var(--font-geist-sans)]">
     <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-      <div className="flex gap-8 items-center">
-        <button className="bg-blue-700 text-white w-25 py-2 rounded hover:bg-blue-800 active:bg-blue-900" onClick={() => router.push("/test/testClient")}>Test</button>
-        {deferredPrompt != null  && <button className="bg-blue-700 text-white w-25 py-2 rounded hover:bg-blue-800 active:bg-blue-900" onClick={handleInstall}>Install me</button>}
+      {deferredPrompt != null  && <div className="flex gap-8 items-center">
+        <button className="bg-blue-700 text-white w-50 py-2 rounded hover:bg-blue-800 active:bg-blue-900" onClick={handleInstall}>Install PWA</button>
       </div>
-      <div className="flex gap-8 items-center">
-        <button className="bg-blue-700 text-white w-25 py-2 rounded hover:bg-blue-800 active:bg-blue-900" onClick={() => router.push("/test/camera")}>Camera</button>
-        <button className="bg-blue-700 text-white w-25 py-2 rounded hover:bg-blue-800 active:bg-blue-900" onClick={testPushNotification}>Web Push</button>
-      </div>
-      <div className="">{expTime ? dateFormat(expTime) + " " + timeFormat(expTime, "second") : "-"} ({count})</div>
+      }
       <div className="flex gap-8 items-center">
         <button className="bg-blue-700 text-white w-20 py-2 rounded hover:bg-blue-800 active:bg-blue-900" onClick={() => router.push(getSignInURL())}>Login</button>
         <button className="bg-blue-300 text-white w-20 py-2 rounded hover:bg-blue-400 active:bg-blue-500" onClick={() => logout()}>Logout</button>
@@ -66,6 +63,7 @@ export default function HomePage() {
       <div className="flex gap-8 items-center">
         <button className="bg-blue-700 text-white w-20 py-2 rounded hover:bg-blue-800 active:bg-blue-900" onClick={() => router.push(getBusURL())}>Bus</button>
         <button className="bg-blue-700 text-white w-20 py-2 rounded hover:bg-blue-800 active:bg-blue-900" onClick={() => router.push(getBankURL())}>Bank</button>
+        <button className="bg-blue-700 text-white w-20 py-2 rounded hover:bg-blue-800 active:bg-blue-900" onClick={() => router.push("/portfolio")}>Portfolio</button>
       </div>
       <Image
         className="dark:invert"
@@ -75,6 +73,12 @@ export default function HomePage() {
         height={38}
         priority
       />
+      <div className="flex gap-8 items-center">
+        <button className="bg-blue-700 text-white w-30 py-2 rounded hover:bg-blue-800 active:bg-blue-900" onClick={() => router.push("/test/testClient")}>Test</button>
+        <button className="bg-blue-700 text-white w-30 py-2 rounded hover:bg-blue-800 active:bg-blue-900" onClick={() => router.push("/test/camera")}>Test Camera</button>
+        <button className="bg-blue-700 text-white w-30 py-2 rounded hover:bg-blue-800 active:bg-blue-900" onClick={testPushNotification}>Test Web Push</button>
+      </div>
+      <div className="">{expTime ? dateFormat(expTime) + " " + timeFormat(expTime, "second") : "-"} ({count})</div>
       <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
         <li className="mb-2 tracking-[-.01em]">
         Get started by editing{" "}

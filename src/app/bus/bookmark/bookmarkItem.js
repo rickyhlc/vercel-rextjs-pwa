@@ -62,7 +62,7 @@ export default function BookmarkItem({ bookmark }) {
       accordionClickHandle = () => toggleExpanded("back");
     }
   }
-//TODOricky click 2 times expand, styling
+
   return (
     <Accordion
       expanded={expanded}
