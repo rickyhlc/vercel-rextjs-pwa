@@ -42,15 +42,15 @@ export default function PortfolioPage() {
       <div className="pt-12">sign in page</div>
       <Image alt="" src={signin} style={styleH} className="pt-4" />
 
-      <div className="pt-12">Home page with responsive design, allow user to have quick control to their workstations' device (lighting/fan/aircon...etc)</div>
+      <div className="pt-12">Home page with responsive design, allow user to have quick control to their workstations&apos; device (lighting, fan, aircon...etc)</div>
       <Image alt="" src={home1} style={styleH} className="pt-4" />
       <Image alt="" src={home2} style={styleH} className="pt-4" />
       <Image alt="" src={home3} style={styleV} className="pt-4" />
 
-      <div className="pt-12">Control other's workstation or common area in home page</div>
+      <div className="pt-12">Control other&apos;s workstation or common area in home page</div>
       <Image alt="" src={home4} style={styleH} className="pt-4" />
 
-      <div className="pt-12">Switch to map view (the polygon in different color represent to location of workstations/common areas)</div>
+      <div className="pt-12">Switch to map view (the polygon in different color represent to location of workstations)</div>
       <Image alt="" src={home5} style={styleH} className="pt-4" />
 
       <div className="pt-12">Select a polygon to show the control panel (with responsive design)</div>
