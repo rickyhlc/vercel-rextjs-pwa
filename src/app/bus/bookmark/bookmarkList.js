@@ -17,8 +17,13 @@ export default function BoomkarkList() {
         {bookmarkStructures.map(bm => <BookmarkEditor key={`${bm.id}-${bm.tmpId}`} bookmark={bm} />)}
       </>;
     } else {
+
       return <>
-        {bookmarks.map(bm => <BookmarkItem key={bm.id} bookmark={bm} />)}
+        {bookmarks.length ? (
+           bookmarks.map(bm => <BookmarkItem key={bm.id} bookmark={bm} />)
+         ) : (
+          <div className="text-center mt-20">Bookmark is empty...</div>
+        )}
       </>;
     }
   } else {

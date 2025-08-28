@@ -1,5 +1,4 @@
-import { ALL_ZINC } from "@/lib/utils";
-import Image from 'next/image';
+import Image from "next/image";
 
 import signin from "./screens/1_signin.png";
 import home1 from "./screens/2_home1-1.png";
@@ -59,7 +58,7 @@ export default function PortfolioPage() {
       <Image alt="" src={home7} style={styleH} className="pt-4" />
       <Image alt="" src={home8} style={styleV} className="pt-4" />
 
-      <div className="pt-12">Location page for admin to do settings for all workstation/common area, icons on the map show the devices</div>
+      <div className="pt-12">Location page for admin to do settings for all workstation or common area, icons on the map show the devices</div>
       <Image alt="" src={location1} style={styleH} className="pt-4" />
 
       <div className="pt-12">Location page with the setting panel</div>
