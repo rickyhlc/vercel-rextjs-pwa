@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+.accordion.bookmark .MuiCollapse-root .MuiAccordionDetails-root {
+  padding-top: 0;
+}
+
+.stopName {
+  @apply flex justify-between items-center w-full;
+}
+.etas {
+  @apply px-2 py-1 flex items-center;
+}
+.etas + .etas {
+  @apply pt-0;
+}
+.etas + .stopName {
+  @apply pt-1;
+}

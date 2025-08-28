@@ -6,6 +6,8 @@ import StopETAs from "@/app/bus/stopETAs";
 import { useDataContext } from "./dataProvider";
 import { BORDER_BTN_BLUE } from "@/lib/utils";
 
+import "./bookmark.css";
+
 /**
  * data {
  *   id: 1,
@@ -43,11 +45,11 @@ export default function BookmarkItem({ bookmark }) {
     let elms = [];
     stops.forEach(s => {
       elms.push(
-        <div key={s.stop} className="flex justify-between items-center w-full pe-4 text-lg font-bold">
+        <div key={s.stop} className="stopName">
           <span>{stopInfoMap[s.stop]?.name_tc || "---"}</span>
         </div>
       );
-      elms.push(<StopETAs key={`${s.stop}-eta`} stop={s.stop} routes={s.routes} showRoute={true} />);
+      elms.push(<StopETAs key={`${s.stop}-eta`} stop={s.stop} routes={s.routes} showRoute={true} className="etas"/>);
     });
     return elms;
   }
@@ -60,11 +62,11 @@ export default function BookmarkItem({ bookmark }) {
       accordionClickHandle = () => toggleExpanded("back");
     }
   }
-//TODOricky
+//TODOricky click 2 times expand, styling
   return (
     <Accordion
-      expanded={!expanded}
-      className="accordion dark"
+      expanded={expanded}
+      className="accordion dark bookmark"
       TransitionProps={{
         onEnter: () => setShowDetail(true),
         onExited: () => setShowDetail(false)

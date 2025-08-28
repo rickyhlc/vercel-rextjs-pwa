@@ -15,10 +15,10 @@ export default function BusPage() {
         <div className="flex p-2 items-center">
           <Title />
         </div>
-        <div className="grow-1">
+        <div className="grow-1 basis-0 overflow-y-auto bg-zinc-900">
           <BookmarkList />
         </div>
-        <div className="flex items-center p-4">
+        <div className="flex items-center p-4 bg-zinc-900">
           <BottomBar />
         </div>
       </DataProvider>

@@ -14,7 +14,7 @@ import RouteNum from "./routeNum";
  *   "serviceType": "1",
  * }]
  */
-export default function StopETAs({ stop, routes, showRoute }) {
+export default function StopETAs({ stop, routes, showRoute, className }) {
 
   const [etasData, setETAsData] = useState(routes.map(r => ({
     ...r,
@@ -40,7 +40,7 @@ export default function StopETAs({ stop, routes, showRoute }) {
       }
       
       // use stop-eta to get all by one api call if there are multiple routes
-      let res = routes.length  === 1 ? await getStopETAsData(stop) : await getStopRouteETAsData(stop, route, serviceType);
+      let res = routes.length  === 1 ? await getStopRouteETAsData(stop, routes[0].route, routes[0].serviceType) : await getStopETAsData(stop);
       const now = Date.now();
 
       // update after getting api response
@@ -79,7 +79,7 @@ export default function StopETAs({ stop, routes, showRoute }) {
   return (
     <>
       {etasData.map(item => (
-        <div key={`${item.route}-${item.serviceType}`} className="px-2 pt-2 flex items-center">
+        <div key={`${item.route}-${item.serviceType}`} className={className || "px-2 pt-2 flex items-center"}>
           {showRoute && <RouteNum company={item.company} route={item.route} serviceType={item.serviceType} />}
           <StopETA etas={item.etas} />
           {item.error ? <ErrorIcon className="w-8 h-8 text-amber-500" /> : null}
