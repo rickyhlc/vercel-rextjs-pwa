@@ -38,7 +38,6 @@ export default function WebContent() {
 
   return (
     <>
-      <div className="text-lg">Here are some screenshots of my work in my previous company</div>
       <div className="pt-12">sign in page</div>
       <Image alt="" src={signin} style={styleH} className="pt-4" />
 
