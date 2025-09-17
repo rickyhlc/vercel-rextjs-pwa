@@ -79,7 +79,7 @@ export default function HomePage() {
       </div>
       <div className="flex gap-8 items-center">
         <button className="bg-blue-700 text-white w-30 py-2 rounded hover:bg-blue-800 active:bg-blue-900" onClick={testPushNotification}>Test Web Push</button>
-        <a className="text-center bg-blue-700 text-white w-30 py-2 rounded hover:bg-blue-800 active:bg-blue-900" href="https://wa.me/85261263612">wa</a>
+        <a className="text-center bg-blue-700 text-white w-30 py-2 rounded hover:bg-blue-800 active:bg-blue-900" href="https://wa.me/85261263612?text=test">wa</a>
       </div>
       <div className="">{expTime ? dateFormat(expTime) + " " + timeFormat(expTime, "second") : "-"} ({count})</div>
       <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
