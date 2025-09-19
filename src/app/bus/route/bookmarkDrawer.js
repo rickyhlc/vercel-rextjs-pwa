@@ -23,8 +23,8 @@ export default function BookmarkDrawer() {
 
   return (
     <BottomDrawer isOpen={bookmarkDrawerData} onCancel={() => setBookmarkDrawerData(null)}>
-      <div className="p-4">
-        {allBookmarks.map(bm => (
+      {allBookmarks.length ? allBookmarks.map(bm => (
+        <div className="p-4">
           <div className="flex items-center p2" key={bm.id}>
             <span className="me-auto">{bm.title}</span>
             <button className={`me-2 flex rounded-full py-1 px-2 ${PLAIN_BTN_BLUE}`} onClick={() => updateBookmark(bm, "go")}>
@@ -44,8 +44,12 @@ export default function BookmarkDrawer() {
               <span className="ms-2">{bm.back.title}</span>
             </button>
           </div>
-        ))}
-      </div>
+        </div>
+      )) : (
+        <div className="p-4 flex justify-center">
+          <span>沒有收藏夾, 請先在主頁創建</span>
+        </div>
+      )}
     </BottomDrawer>
   );
 }
