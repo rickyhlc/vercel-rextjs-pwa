@@ -12,7 +12,7 @@ export default function BottomBar() {
 
   console.log("BottomBar");
 
-  const { saveEdit, cancelEdit, updateBookmarkStructure, editMode } = useDataContext();
+  const { saveEdit, cancelEdit, bookmarkStructures, updateBookmarkStructure, editMode } = useDataContext();
 
   function addBookmark() {
     updateBookmarkStructure({ title: "" });
@@ -28,7 +28,7 @@ export default function BottomBar() {
           <button className={`ms-auto rounded-full p-2 ${PLAIN_BTN_BLUE}`} onClick={cancelEdit}>
             <CrossIcon className="w-8 h-8 text-inherit" />
           </button>
-          <button className={`ms-2 rounded-full p-2 ${BTN_BLUER}`} onClick={saveEdit}>
+          <button className={`ms-2 rounded-full p-2 ${BTN_BLUER}`} disabled={bookmarkStructures?.some(b => !b.title?.trim())} onClick={saveEdit}>
             <TickIcon className="w-8 h-8 text-inherit" />
           </button>
         </>
