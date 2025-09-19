@@ -31,7 +31,7 @@ export default function BoomkarkList() {
         {bookmarks.length ? (
            bookmarks.map(bm => <BookmarkItem key={bm.id} bookmark={bm} />)
          ) : (
-          <div className="text-center mt-20">Bookmark is empty...</div>
+          <div className="text-center mt-20">現在沒有收藏夾, 你可以點下編輯按鈕來創建新的收藏夾</div>
         )}
       </>;
     }
