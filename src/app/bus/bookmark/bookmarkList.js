@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { useDataContext } from "./dataProvider";
 import BookmarkItem from "./bookmarkItem";
 import BookmarkEditor from "./bookmarkEditor";
@@ -9,12 +10,20 @@ export default function BoomkarkList() {
 
   console.log("BookmarkList");
 
-  const { bookmarks, bookmarkStructures, editMode } = useDataContext();
+  const { bookmarks, bookmarkStructures, keyboardTrigger, editMode } = useDataContext();
+  const newTextFieldRef = useRef({});
+
+  // show keyboard automatically when clicking the add button
+  useEffect(() => {
+    setTimeout(() => {
+      newTextFieldRef.current?.[keyboardTrigger]?.focus();
+    });
+  }, [keyboardTrigger]);
 
   if (bookmarks) {
     if (editMode) {
       return <>
-        {bookmarkStructures.map(bm => <BookmarkEditor key={`${bm.id}-${bm.tmpId}`} bookmark={bm} />)}
+        {bookmarkStructures.map(bm => <BookmarkEditor key={`${bm.id}-${bm.tmpId}`} bookmark={bm} ref={tf => newTextFieldRef.current[bm.tmpId] = tf} />)}
       </>;
     } else {
 

@@ -13,7 +13,7 @@ import { PLAIN_BTN_BLUE } from "@/lib/utils";
  *   delete: true, (optional)
  * }
  */
-export default function BookmarkEditor({ bookmark }) {
+export default function BookmarkEditor({ bookmark, ref }) {
 
   const { updateBookmarkStructure } = useDataContext();
 
@@ -23,6 +23,7 @@ export default function BookmarkEditor({ bookmark }) {
         className="grow-1"
         value={bookmark.title}
         onChange={(e) => updateBookmarkStructure({ ...bookmark, title: e.target.value })}
+        inputRef={ref}
       />
       <button className={`rounded-full p-1 ms-2 ${PLAIN_BTN_BLUE}`} onClick={() => updateBookmarkStructure({ ...bookmark, delete: true })}>
         <BinIcon className="w-6 h-6 text-inherit" />

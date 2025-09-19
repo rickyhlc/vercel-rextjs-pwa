@@ -9,13 +9,13 @@ export function DataProvider({ children }) {
 
   console.log("DataProvider");
 
-  const idGeneratorRef = useRef(1);
   const dbRef = useRef(null);
   const [bookmarks, setBookmarks] = useState(null);
   const [stopInfoMap, setStopInfoMap] = useState({});
   const [editMode, setEditMode] = useState(false);
   const [bookmarkStructures, setBookmarkStructures] = useState(null);
   const [bmDeleteId, setBmDeleteId] = useState(null);
+  const [newTmpId, setNewTmpId] = useState(1);
 
   useEffect(() => {
     initDB().then(db => {
@@ -108,8 +108,9 @@ export function DataProvider({ children }) {
         setBookmarkStructures(list);
       }
     } else {
-      idGeneratorRef.current++;
-      setBookmarkStructures([...bookmarkStructures, {...bmStructure, tmpId: idGeneratorRef.current}]);
+      let tmpId = newTmpId + 1;
+      setNewTmpId(tmpId)
+      setBookmarkStructures([...bookmarkStructures, {...bmStructure, tmpId}]);
     }
   }
 
@@ -122,7 +123,8 @@ export function DataProvider({ children }) {
     saveEdit,
     cancelEdit,
     updateBookmarkStructure,
-    bookmarkStructures
+    bookmarkStructures,
+    keyboardTrigger: newTmpId,
   }
 
   return <DataContext.Provider value={data}>{children}</DataContext.Provider>;
