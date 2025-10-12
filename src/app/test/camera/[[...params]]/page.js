@@ -2,12 +2,13 @@ import Camera from "../camera";
 
 // test prerendering
 // /test/camera, /test/camera/1/2, /test/camera/a will be prerendered
-// other paths will get 404
-export const dynamicParams = false;
 export async function generateStaticParams() {
   console.log("~~~generateStaticParams");
   return [{ params: ['1','2']},{ params: ['a']},{ params: []}];
 }
+
+// other paths will get 404
+export const dynamicParams = false;
 
 export default function CameraPage() {
 

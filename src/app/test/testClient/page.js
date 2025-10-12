@@ -2,25 +2,20 @@
 
 import { useState, useEffect, useRef, Suspense, useReducer } from "react";
 import NavBtn from "@/app/test/testClient/navBtn";
-import TestRerender from "@/app/test/testClient/test19Rerender";
 import TestItem from "@/app/test/testItem";
+import TestClientItem from "@/app/test/testClientItem";
 
 export default function TestClientPage() {
 
-  console.log("~~~TestClientPage client component");
-
-  function testRerender19(){
-    console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~rerendered");
-    return "~~~"
-  }
+  console.log("~~~~~~TestClientPage (should log in BUILD and CLIENT) sss");
 
   const ref = useRef();
 
   const [state, dispatch] = useReducer((prev, action) => {
     return { x: prev.x + 1}
   }, { x: 1 });
-
   const [count, setCount] = useState(0);
+
   useEffect(() => {
     const interval = setInterval(() => {
       setCount(prevCount => prevCount + 1);
@@ -42,16 +37,12 @@ export default function TestClientPage() {
     console.log(data);
   }
 
-  function handleTest() {
-    console.log("clicked~~~");
-  }
+  console.log("~~~~~~TestClientPage (should log in BUILD and CLIENT) eee");
 
   return (
     <div className="m-6">
-      <TestRerender onClick={handleTest} />
       <div>
         <button onClick={handleClick}>Add</button><span className="ms-5">---</span>
-        {testRerender19()}
       </div>
       <button onClick={handleApiCall}>Call</button>
       <NavBtn ref={ref} />
@@ -60,6 +51,7 @@ export default function TestClientPage() {
       </Suspense>
       <div className="mt-4">Count: {count}</div>
       <TestItem />
+      <TestClientItem />
     </div>
   );
 }

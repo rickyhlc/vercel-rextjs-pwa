@@ -49,18 +49,11 @@ export default function BookmarkItem({ bookmark }) {
           <span>{stopInfoMap[s.stop]?.name_tc || "---"}</span>
         </div>
       );
-      elms.push(<StopETAs key={`${s.stop}-eta`} stop={s.stop} routes={s.routes} showRoute={true} className="etas"/>);
+      elms.push(
+        <StopETAs key={`${s.stop}-eta`} stop={s.stop} routes={s.routes} showRoute={true} bookmarkId={bookmark.id} direction={dir} className="etas"/>
+      );
     });
     return elms;
-  }
-
-  let accordionClickHandle = null;
-  if (bookmark.back.stops.length != bookmark.go.stops.length) {
-    if (bookmark.back.stops.length == 0) {
-      accordionClickHandle = () => toggleExpanded("go");
-    } else if (bookmark.go.stops.length == 0) {
-      accordionClickHandle = () => toggleExpanded("back");
-    }
   }
 
   return (
@@ -72,25 +65,23 @@ export default function BookmarkItem({ bookmark }) {
         onExited: () => setShowDetail(false)
       }}
     >
-      <AccordionSummary expandIcon={null} onClick={accordionClickHandle}>
+      <AccordionSummary expandIcon={null}>
         <div className="flex justify-between items-center w-full text-lg font-bold">
           <span className="grow-1 basis-0">{bookmark.title}</span>
-          {!accordionClickHandle && bookmark.go.stops.length > 0 && (
-            <div
-              className={`ms-2 text-center w-16 ${dir == "go" && showDetail ? "border-1 border-blue-400 rounded-full bg-blue-400": BORDER_BTN_BLUE}`}
-              onClick={() => toggleExpanded("go")}
-            >
-              {bookmark.go.title}
-            </div>
-          )}
-          {!accordionClickHandle && bookmark.back.stops.length > 0 && (
-            <div
-              className={`ms-2 text-center w-16 ${dir == "back" && showDetail ? "border-1 border-blue-400 rounded-full bg-blue-400": BORDER_BTN_BLUE}`}
-              onClick={() => toggleExpanded("back")}
-            >
-              {bookmark.back.title}
-            </div>
-          )}
+          <div
+            className={`ms-2 text-center w-16 ${dir == "go" && showDetail ? "border-1 border-blue-400 rounded-full bg-blue-400": BORDER_BTN_BLUE}`}
+            onClick={() => toggleExpanded("go")}
+            disabled={bookmark.go.stops.length == 0} //TODOricky: cant use button, div cant be disabled
+          >
+            {bookmark.go.title}
+          </div>
+          <div
+            className={`ms-2 text-center w-16 ${dir == "back" && showDetail ? "border-1 border-blue-400 rounded-full bg-blue-400": BORDER_BTN_BLUE}`}
+            onClick={() => toggleExpanded("back")}
+            disabled={bookmark.back.stops.length == 0}
+          >
+            {bookmark.back.title}
+          </div>
         </div>
       </AccordionSummary>
       {showDetail && <AccordionDetails>

@@ -114,6 +114,29 @@ export function DataProvider({ children }) {
     }
   }
 
+  //TODOricky refresh after remove??
+  function removeBookmark(bookmarkId, direction, company, stop, route, serviceType, bound) {
+    let b = bookmarks.find(b => b.id === bookmarkId);
+    b = {...b};
+    b[direction] = {...b[direction]};
+    b[direction].stops = [...b[direction].stops];
+    let sInd = b[direction].stops.findIndex(s => s.stop === stop);
+    let newStop;
+    if (sInd != -1) {
+      newStop = {...b[direction].stops[sInd]};
+      b[direction].stops.splice(sInd, 1, newStop);
+      newStop.routes = [...newStop.routes];
+      let rInd = newStop.routes.findIndex(r => company === r.company && route === r.route && bound === r.bound && serviceType === r.serviceType);
+      if (rInd != -1) {
+        newStop.routes.splice(rInd, 1);
+        if (newStop.routes.length === 0) {
+          b[direction].stops.splice(sInd, 1);
+        }
+        dbRef.current.saveBookmark(b).then(() => dbRef.current.getBookmarks().then(setBookmarks));
+      }
+    }
+  }
+
   const data = {
     bookmarks,
     loadBookmarkStopInfo,
@@ -124,6 +147,7 @@ export function DataProvider({ children }) {
     cancelEdit,
     updateBookmarkStructure,
     bookmarkStructures,
+    removeBookmark,
     keyboardTrigger: newTmpId,
   }
 

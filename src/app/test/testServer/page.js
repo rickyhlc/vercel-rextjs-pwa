@@ -1,6 +1,7 @@
-import {Suspense} from "react"
+import {Suspense, use, useMemo} from "react";
 import NavBtn from "@/app/test/testServer/navBtn";
 import TestItem from "@/app/test/testItem";
+import TestClientItem from "@/app/test/testClientItem";
 
 export default function TestServerPage({  }) {
 
@@ -9,7 +10,23 @@ export default function TestServerPage({  }) {
   // inside Suspense, the content will dynamically rendered later
 
   return (<div>
-   <Suspense><NavBtn  /></Suspense>
+   <Suspense><ItemWithUse /></Suspense>
+   <Suspense><NavBtn /></Suspense>
+   <TestClientItem />
    <TestItem />
+
   </div>);
+}
+
+function ItemWithUse() {
+  const data = useMemo(() => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve("data x");
+      }, 6456);
+    });
+  });
+  const x = use(data);
+
+  return <div>{x}!!</div>;
 }

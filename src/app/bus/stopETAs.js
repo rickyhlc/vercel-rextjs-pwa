@@ -1,9 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { PLAIN_BTN_BLUE, getRouteURL } from "@/lib/utils";
+import BookmarkSolidIcon from "@/icons/bookmarkSolid";
 import ErrorIcon from "@/icons/error";
 import StopETA from "./stopETA";
 import RouteNum from "./routeNum";
+import { useDataContext } from "./bookmark/dataProvider";
 
 /**
  * all routes must be of the same stop
@@ -14,7 +18,10 @@ import RouteNum from "./routeNum";
  *   "serviceType": "1",
  * }]
  */
-export default function StopETAs({ stop, routes, showRoute, className }) {
+export default function StopETAs({ stop, routes, showRoute, bookmarkId, direction, className }) {
+
+  const router = useRouter();
+  const { removeBookmark } = useDataContext();
 
   const [etasData, setETAsData] = useState(routes.map(r => ({
     ...r,
@@ -80,9 +87,23 @@ export default function StopETAs({ stop, routes, showRoute, className }) {
     <>
       {etasData.map(item => (
         <div key={`${item.route}-${item.serviceType}`} className={className || "px-2 pt-2 flex items-center"}>
-          {showRoute && <RouteNum company={item.company} route={item.route} serviceType={item.serviceType} />}
-          <StopETA etas={item.etas} />
-          {item.error ? <ErrorIcon className="w-8 h-8 text-amber-500" /> : null}
+          {showRoute ? (
+            <button className={`flex items-center grow-1 ${PLAIN_BTN_BLUE}`} onClick={() => router.push(getRouteURL(item.company, item.route, item.bound, item.serviceType))}>
+              <RouteNum company={item.company} route={item.route} serviceType={item.serviceType} />
+              <StopETA etas={item.etas} />
+              {item.error ? <ErrorIcon className="w-8 h-8 text-amber-500" /> : null}
+            </button>
+          ) : (
+            <>
+              <StopETA etas={item.etas} />
+              {item.error ? <ErrorIcon className="w-8 h-8 text-amber-500" /> : null}
+            </>
+          )}
+          {bookmarkId && (
+            <button className={`rounded-full p-1 ${PLAIN_BTN_BLUE}`} onClick={() => removeBookmark(bookmarkId, direction, item.company, stop, item.route, item.serviceType, item.bound)} >
+              <BookmarkSolidIcon className="w-6 h-6 text-inherit" />
+            </button>
+          )}
         </div>
       ))}
     </>

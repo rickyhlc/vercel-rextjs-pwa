@@ -26,7 +26,6 @@ export default function BoomkarkList() {
         {bookmarkStructures.map(bm => <BookmarkEditor key={`${bm.id}-${bm.tmpId}`} bookmark={bm} ref={tf => newTextFieldRef.current[bm.tmpId] = tf} />)}
       </>;
     } else {
-
       return <>
         {bookmarks.length ? (
            bookmarks.map(bm => <BookmarkItem key={bm.id} bookmark={bm} />)

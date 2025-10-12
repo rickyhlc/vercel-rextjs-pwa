@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import TestItem from "../testItem";
 
 export default function Btn2() {
 
@@ -9,7 +10,7 @@ export default function Btn2() {
   const [x, setX] = useState(0);
   return (
   <button onClick={() => setX(x + 1)} className="bg-blue-400 p-2.5 text-center text-white">
-    {x}
+    {x} {x > 4 && <TestItem />}
   </button>
   );
 }
