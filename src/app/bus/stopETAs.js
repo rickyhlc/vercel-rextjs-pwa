@@ -23,14 +23,15 @@ export default function StopETAs({ stop, routes, showRoute, bookmarkId, directio
   const router = useRouter();
   const { removeBookmark } = useDataContext();
 
-  const [etasData, setETAsData] = useState(routes.map(r => ({
-    ...r,
-    etas: [],
-    // loading: true
-  })));
+  const [etasData, setETAsData] = useState(null);
 
   useEffect(() => {
     let keepPolling = true;
+
+    setETAsData(routes.map(r => ({
+      ...r,
+      etas: [],
+    })));
 
     const getMinutes = (eta, now) => {
       if (eta) {
@@ -81,11 +82,11 @@ export default function StopETAs({ stop, routes, showRoute, bookmarkId, directio
 
     loadData();
     return () => keepPolling = false;
-  }, []);
+  }, [routes]);
 
   return (
     <>
-      {etasData.map(item => (
+      {etasData && etasData.map(item => (
         <div key={`${item.route}-${item.serviceType}`} className={className || "px-2 pt-2 flex items-center"}>
           {showRoute ? (
             <button className={`flex items-center grow-1 ${PLAIN_BTN_BLUE}`} onClick={() => router.push(getRouteURL(item.company, item.route, item.bound, item.serviceType))}>

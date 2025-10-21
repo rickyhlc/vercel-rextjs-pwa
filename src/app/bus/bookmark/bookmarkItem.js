@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Accordion, AccordionSummary, AccordionDetails } from "@/components/accordion";
 import StopETAs from "@/app/bus/stopETAs";
 import { useDataContext } from "./dataProvider";
@@ -29,6 +29,15 @@ export default function BookmarkItem({ bookmark }) {
   const [dir, setDir] = useState("go"); //go or back only
 
   const { stopInfoMap, loadBookmarkStopInfo } = useDataContext();
+
+  // handle auto close whenn remove bookmark
+  useEffect(() => {
+    if (expanded === "go" && bookmark.go.stops.length == 0) {
+      toggleExpanded("go");
+    } else if (expanded === "back" && bookmark.back.stops.length == 0) {
+      toggleExpanded("back");
+    }
+  }, [bookmark]);
 
   function toggleExpanded(direction) {
     if (direction !== expanded) { // open or switch case
@@ -68,17 +77,23 @@ export default function BookmarkItem({ bookmark }) {
       <AccordionSummary expandIcon={null}>
         <div className="flex justify-between items-center w-full text-lg font-bold">
           <span className="grow-1 basis-0">{bookmark.title}</span>
-          <div
-            className={`ms-2 text-center w-16 ${dir == "go" && showDetail ? "border-1 border-blue-400 rounded-full bg-blue-400": BORDER_BTN_BLUE}`}
-            onClick={() => toggleExpanded("go")}
-            disabled={bookmark.go.stops.length == 0} //TODOricky: cant use button, div cant be disabled
+          <div // cant use button inside button, use div instead
+            className={`ms-2 text-center w-16 ${dir == "go" && showDetail ? "border-1 border-blue-400 rounded-full bg-blue-400": BORDER_BTN_BLUE} ${bookmark.go.stops.length == 0 ? DIV_DISABLED_BTN : ""}`}
+            onClick={() => {
+              if (bookmark.go.stops.length > 0) {
+                toggleExpanded("go")
+              }
+            }}
           >
             {bookmark.go.title}
           </div>
           <div
-            className={`ms-2 text-center w-16 ${dir == "back" && showDetail ? "border-1 border-blue-400 rounded-full bg-blue-400": BORDER_BTN_BLUE}`}
-            onClick={() => toggleExpanded("back")}
-            disabled={bookmark.back.stops.length == 0}
+            className={`ms-2 text-center w-16 ${dir == "back" && showDetail ? "border-1 border-blue-400 rounded-full bg-blue-400": BORDER_BTN_BLUE} ${bookmark.back.stops.length == 0 ? DIV_DISABLED_BTN : ""}`}
+            onClick={() => {
+              if (bookmark.back.stops.length > 0) {
+                toggleExpanded("back")
+              }
+            }}
           >
             {bookmark.back.title}
           </div>
@@ -90,3 +105,5 @@ export default function BookmarkItem({ bookmark }) {
     </Accordion>
   );
 }
+
+const DIV_DISABLED_BTN = " hover:dark:bg-transparent hover:active:dark:bg-transparent dark:text-zinc-600 hover:dark:border-zinc-600 hover:active:dark:border-zinc-600 cursor-default"
