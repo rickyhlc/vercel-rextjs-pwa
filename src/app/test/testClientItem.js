@@ -1,9 +1,14 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 // this file is for testing purpose only
 export default function TestClientItem() {
+
+  const [test, setTest] = useState(() => {
+    console.log("+++++++");
+    return 1;
+  });
 
   useEffect(() => {
     // this wont call during prerendering

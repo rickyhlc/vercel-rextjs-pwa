@@ -1,0 +1,8 @@
+@import "tailwindcss";
+
+.grabHandle {
+  @apply cursor-grab inline-block w-5;
+  &:after {
+    @apply content-['≡'] block text-center text-gray-700 text-xl;
+  }
+}

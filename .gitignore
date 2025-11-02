@@ -43,3 +43,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# workspace
+pwa.code-workspace
+
+# docker compose
+compose.yaml
