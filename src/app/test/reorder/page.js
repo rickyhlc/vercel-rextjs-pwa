@@ -19,6 +19,7 @@ export default function ReorderListPage() {
       {items.map(item => <Item key={item.id} item={item} onNameChange={handleInput} />)}
     </Reorder.Group>
     <div>
+      <div className="mb-5">List data:</div>
       {JSON.stringify(items)}
     </div>
     </div>
