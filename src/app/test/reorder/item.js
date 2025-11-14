@@ -1,7 +1,4 @@
-
 import { Reorder, useDragControls } from "framer-motion";
-
-import "./item.css";
 
 export default function Item({ item, onNameChange }) {
 

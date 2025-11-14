@@ -9,6 +9,7 @@ export function DataProvider({ children }) {
 
   console.log("DataProvider");
 
+  const reorderTimerRef = useRef(null);
   const dbRef = useRef(null);
   const [bookmarks, setBookmarks] = useState(null);
   const [stopInfoMap, setStopInfoMap] = useState({});
@@ -39,26 +40,35 @@ export function DataProvider({ children }) {
 
   async function saveEdit() {
     let promises = (bmDeleteId || []).map(id => dbRef.current.deleteBookmark(id));
-    let { adds = [], updates = [] } = Object.groupBy(bookmarkStructures, (s => s.tmpId ? "adds" : "updates"));
-    adds = adds.map(a => ({
-      title: a.title,
-      go: {
-        title: "往",
-        stops: []
-      },
-      back: {
-        title: "返",
-        stops: []
-      },
-    }));
-    updates = updates.map(u => ({
-      ...bookmarks.find(b => u.id === b.id),
-      title: u.title,
-    }));
+    let adds = [];
+    let updates = [];
+
+    bookmarkStructures?.forEach((s, i) => {
+      if (s.tmpId) {
+        adds.push({
+          title: s.title,
+          order: i,
+          go: {
+            title: "往",
+            stops: []
+          },
+          back: {
+            title: "返",
+            stops: []
+          }
+        });
+      } else {
+        updates.push({
+          ...bookmarks.find(b => s.id === b.id),
+          title: s.title,
+          order: i
+        });
+      }
+    });
     promises.push(dbRef.current.saveBookmarks([...adds, ...updates]));
 
     try {
-      const res = await Promise.all(promises);
+      await Promise.all(promises);
       setBookmarks(await dbRef.current.getBookmarks());
       cancelEdit();
     } catch(e) {
@@ -137,6 +147,16 @@ export function DataProvider({ children }) {
     }
   }
 
+  async function saveBookmarkOrder(bookmarks) {
+    //update display
+    setBookmarks(bookmarks);
+    //update db
+    clearTimeout(reorderTimerRef.current);
+    reorderTimerRef.current = setTimeout(() => {
+      dbRef.current.saveBookmarks(bookmarks.map((bm, i) => ({ ...bm, order: i })));
+    }, 400);
+  }
+
   const data = {
     bookmarks,
     loadBookmarkStopInfo,
@@ -148,6 +168,7 @@ export function DataProvider({ children }) {
     updateBookmarkStructure,
     bookmarkStructures,
     removeBookmark,
+    saveBookmarkOrder,
     keyboardTrigger: newTmpId,
   }
 

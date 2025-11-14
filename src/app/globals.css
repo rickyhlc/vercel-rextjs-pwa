@@ -24,3 +24,10 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.grabHandle {
+  @apply cursor-grab inline-block w-5;
+  &:after {
+    @apply content-['≡'] block text-center text-gray-700 text-xl font-normal;
+  }
+}

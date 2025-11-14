@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { Reorder } from "framer-motion";
 import { useDataContext } from "./dataProvider";
 import BookmarkItem from "./bookmarkItem";
 import BookmarkEditor from "./bookmarkEditor";
@@ -10,7 +11,7 @@ export default function BoomkarkList() {
 
   console.log("BookmarkList");
 
-  const { bookmarks, bookmarkStructures, keyboardTrigger, editMode } = useDataContext();
+  const { bookmarks, saveBookmarkOrder, bookmarkStructures, keyboardTrigger, editMode } = useDataContext();
   const newTextFieldRef = useRef({});
 
   // show keyboard automatically when clicking the add button
@@ -28,8 +29,10 @@ export default function BoomkarkList() {
     } else {
       return <>
         {bookmarks.length ? (
-           bookmarks.map(bm => <BookmarkItem key={bm.id} bookmark={bm} />)
-         ) : (
+          <Reorder.Group values={bookmarks} onReorder={saveBookmarkOrder}>
+            {bookmarks.map(bm => <BookmarkItem key={bm.id} bookmark={bm} />)}
+          </Reorder.Group>
+        ) : (
           <div className="text-center mt-20">現在沒有收藏夾, 你可以點下編輯按鈕來創建新的收藏夾</div>
         )}
       </>;

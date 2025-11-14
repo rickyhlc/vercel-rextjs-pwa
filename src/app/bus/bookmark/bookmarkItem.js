@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Reorder, useDragControls } from "framer-motion";
 import { Accordion, AccordionSummary, AccordionDetails } from "@/components/accordion";
 import StopETAs from "@/app/bus/stopETAs";
 import { useDataContext } from "./dataProvider";
@@ -29,6 +30,7 @@ export default function BookmarkItem({ bookmark }) {
   const [dir, setDir] = useState("go"); //go or back only
 
   const { stopInfoMap, loadBookmarkStopInfo } = useDataContext();
+  const controls = useDragControls();
 
   // handle auto close whenn remove bookmark
   useEffect(() => {
@@ -66,43 +68,46 @@ export default function BookmarkItem({ bookmark }) {
   }
 
   return (
-    <Accordion
-      expanded={expanded}
-      className="accordion dark bookmark"
-      TransitionProps={{
-        onEnter: () => setShowDetail(true),
-        onExited: () => setShowDetail(false)
-      }}
-    >
-      <AccordionSummary expandIcon={null}>
-        <div className="flex justify-between items-center w-full text-lg font-bold">
-          <span className="grow-1 basis-0">{bookmark.title}</span>
-          <div // cant use button inside button, use div instead
-            className={`ms-2 text-center w-16 ${dir == "go" && showDetail ? "border-1 border-blue-400 rounded-full bg-blue-400": BORDER_BTN_BLUE} ${bookmark.go.stops.length == 0 ? DIV_DISABLED_BTN : ""}`}
-            onClick={() => {
-              if (bookmark.go.stops.length > 0) {
-                toggleExpanded("go")
-              }
-            }}
-          >
-            {bookmark.go.title}
+    <Reorder.Item key={bookmark.id} value={bookmark} dragListener={false} dragControls={controls}>
+      <Accordion
+        expanded={expanded}
+        className="accordion dark bookmark"
+        TransitionProps={{
+          onEnter: () => setShowDetail(true),
+          onExited: () => setShowDetail(false)
+        }}
+      >
+        <AccordionSummary expandIcon={null}>
+          <div className="flex justify-between items-center w-full text-lg font-bold">
+            <div className="grabHandle me-2" onPointerDown={(e) => controls.start(e)}></div>
+            <span className="grow-1 basis-0">{bookmark.title}</span>
+            <div // cant use button inside button, use div instead
+              className={`ms-2 text-center w-16 ${dir == "go" && showDetail ? "border-1 border-blue-400 rounded-full bg-blue-400": BORDER_BTN_BLUE} ${bookmark.go.stops.length == 0 ? DIV_DISABLED_BTN : ""}`}
+              onClick={() => {
+                if (bookmark.go.stops.length > 0) {
+                  toggleExpanded("go")
+                }
+              }}
+            >
+              {bookmark.go.title}
+            </div>
+            <div
+              className={`ms-2 text-center w-16 ${dir == "back" && showDetail ? "border-1 border-blue-400 rounded-full bg-blue-400": BORDER_BTN_BLUE} ${bookmark.back.stops.length == 0 ? DIV_DISABLED_BTN : ""}`}
+              onClick={() => {
+                if (bookmark.back.stops.length > 0) {
+                  toggleExpanded("back")
+                }
+              }}
+            >
+              {bookmark.back.title}
+            </div>
           </div>
-          <div
-            className={`ms-2 text-center w-16 ${dir == "back" && showDetail ? "border-1 border-blue-400 rounded-full bg-blue-400": BORDER_BTN_BLUE} ${bookmark.back.stops.length == 0 ? DIV_DISABLED_BTN : ""}`}
-            onClick={() => {
-              if (bookmark.back.stops.length > 0) {
-                toggleExpanded("back")
-              }
-            }}
-          >
-            {bookmark.back.title}
-          </div>
-        </div>
-      </AccordionSummary>
-      {showDetail && <AccordionDetails>
-        {generateDetailsElms()}
-      </AccordionDetails>}
-    </Accordion>
+        </AccordionSummary>
+        {showDetail && <AccordionDetails>
+          {generateDetailsElms()}
+        </AccordionDetails>}
+      </Accordion>
+    </Reorder.Item>
   );
 }
 

@@ -54,7 +54,7 @@ class BusDB {
 
   /**
    * 
-   * @param data { (id[update], title, go: { title, stops: [{ stop, routes: [{company, route, bound, serviceType }] }] }, back: { title, stops: [{ stop, routes: [{company, route, bound, serviceType }] }] } }
+   * @param data { (id[update], title, order, go: { title, stops: [{ stop, routes: [{company, route, bound, serviceType }] }] }, back: { title, stops: [{ stop, routes: [{company, route, bound, serviceType }] }] } }
    * @returns promise the new key
    * @description add or update bookmark to the DB
    */
@@ -67,28 +67,36 @@ class BusDB {
   }
   /**
    * 
-   * @param data { (id[update], title, go: { title, stops: [{ stop, routes: [{company, route, bound, serviceType }] }] }, back: { title, stops: [{ stop, routes: [{company, route, bound, serviceType }] }] } }
+   * @param data { (id[update], title, order, go: { title, stops: [{ stop, routes: [{company, route, bound, serviceType }] }] }, back: { title, stops: [{ stop, routes: [{company, route, bound, serviceType }] }] } }
    * @returns promise the new key
    * @description add or update bookmark to the DB
    */
   saveBookmarks(datas) {
     return this.#openObjectStore("bookmark", true, (objectStore, resolve, reject, transaction) => {
-      transaction.oncomplete = (e) => {
-        resolve(e);
-      }
+      transaction.oncomplete = (e) => resolve(e);
       transaction.onerror = (event) => reject(event);
       datas.forEach(d => objectStore.put(d));
     });
   }
   /**
    * 
-   * @returns promise { (id, title, go: { title, stops: [{ stop, routes: [{company, route, bound, serviceType }] }] }, back: { title, stops: [{ stop, routes: [{company, route, bound, serviceType }] }] } }
+   * @returns promise { (id, title, order, go: { title, stops: [{ stop, routes: [{company, route, bound, serviceType }] }] }, back: { title, stops: [{ stop, routes: [{company, route, bound, serviceType }] }] } }
    * @description get all bookmarks
    */
   getBookmarks() {
     return this.#openObjectStore("bookmark", false, (objectStore, resolve, reject) => {
       const request = objectStore.getAll();
-      request.onsuccess = () => resolve(request.result);
+      request.onsuccess = () => {
+        let list = request.result;
+        if (list?.length) {
+          if (list[0].order === undefined) {
+            let i = 0;
+            list.forEach(item => item.order = i++);
+          }
+          list.sort((a, b) => a.order - b.order);
+        }
+        resolve(list);
+      }
       request.onerror = (event) => reject(event);
     });
   }
