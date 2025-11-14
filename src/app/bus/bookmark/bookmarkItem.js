@@ -68,7 +68,7 @@ export default function BookmarkItem({ bookmark }) {
   }
 
   return (
-    <Reorder.Item key={bookmark.id} value={bookmark} dragListener={false} dragControls={controls} style={{ touchAction: "none" }}>
+    <Reorder.Item key={bookmark.id} value={bookmark} dragListener={false} dragControls={controls}>
       <Accordion
         expanded={expanded}
         className="accordion dark bookmark"
@@ -79,7 +79,7 @@ export default function BookmarkItem({ bookmark }) {
       >
         <AccordionSummary expandIcon={null}>
           <div className="flex justify-between items-center w-full text-lg font-bold">
-            <div className="grabHandle me-2" onPointerDown={(e) => controls.start(e)}></div>
+            <div className="grabHandle me-2" onPointerDown={(e) => controls.start(e)} style={{ touchAction: "none" }}></div>
             <span className="grow-1 basis-0">{bookmark.title}</span>
             <div // cant use button inside button, use div instead
               className={`ms-2 text-center w-16 ${dir == "go" && showDetail ? "border-1 border-blue-400 rounded-full bg-blue-400": BORDER_BTN_BLUE} ${bookmark.go.stops.length == 0 ? DIV_DISABLED_BTN : ""}`}
