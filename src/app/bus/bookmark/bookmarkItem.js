@@ -68,7 +68,7 @@ export default function BookmarkItem({ bookmark }) {
   }
 
   return (
-    <Reorder.Item key={bookmark.id} value={bookmark} dragListener={false} dragControls={controls}>
+    <Reorder.Item key={bookmark.id} value={bookmark} dragListener={false} dragControls={controls} style={{ touchAction: "none" }}>
       <Accordion
         expanded={expanded}
         className="accordion dark bookmark"
